@@ -1,0 +1,136 @@
+import subprocess
+from yt_dlp import YoutubeDL
+
+
+DEFAULT_YT_DLP_ARGS = {
+    "quiet": True,
+    "noprogress": True,
+    "no_warnings": True,
+    "ignoreerrors": False,
+    "nocheckcertificate": True,
+    "check_formats": False,
+    "writeinfojson": False,
+    "restrictfilenames": True,
+}
+
+DEFAULT_YT_DLP_INFO_ARGS = {
+    "simulate": True,
+    "skip_download": True,
+    "dump_single_json": True,
+    "no_color": True,
+}
+
+
+def _get_closest_available_format(
+    formats,
+    resolution,
+    fps=30,
+    ext=None,
+    vcodec=None
+    # preffered_format_id=None,
+):
+    try:
+        format_ = next(
+            (
+                format_
+                for format_ in formats[::-1]
+                if (ext is None or format_.get("ext") == ext)
+                and format_.get("height") is not None
+                and format_.get("height") <= resolution
+                and format_.get("fps") is not None
+                and round(format_.get("fps")) <= fps
+                and (vcodec is None or vcodec in format_.get("vcodec", ""))
+            ),
+            None,
+        )
+        if not format_:
+            # if there are no available formats with the same extension,
+            # find the extension that maintains the same format_type (video or audio)
+            # and return the closest
+            format_ = None
+            for ft in formats:
+                if ft.get("format_note") == "DASH audio" or ft.get("ext") == "mhtml":
+                    continue
+                if ft.get("height") is not None and ft.get("height") <= resolution:
+                    format_ = ft
+                    break
+
+        return format_
+    except Exception as exc:
+        print(exc)
+        return None
+
+
+def download_twitch_stream_info(url: str):
+    with YoutubeDL({**DEFAULT_YT_DLP_ARGS, **DEFAULT_YT_DLP_INFO_ARGS}) as ydl:
+        return ydl.extract_info(url, download=False)
+
+
+def download_twitch_vod(url):
+    info = download_twitch_stream_info(url)
+    print([f.get("height") for f in info["formats"]])
+    format_ = _get_closest_available_format(
+        info["formats"],
+        resolution=1440,
+        fps=30,
+    )
+    print(format_)
+    with YoutubeDL({}) as ydl:
+        ydl.download(url)
+
+
+def download_youtube_info(url):
+    ydl_opts = {
+        **DEFAULT_YT_DLP_ARGS,
+        **DEFAULT_YT_DLP_INFO_ARGS,
+        "no_playlist": True,
+        "default_search": "ytsearch",
+        "extractor_args": {
+            "youtube:search_max_results": 1000,
+        },
+    }
+    with YoutubeDL(ydl_opts) as ydl:
+        return ydl.extract_info(url, download=False)
+
+
+def download_youtube_vod(url):
+    info = download_youtube_info(url)
+    print([f.get("height") for f in info["formats"]])
+    format_ = _get_closest_available_format(
+        info["formats"],
+        resolution=1440,
+        fps=30,
+    )
+    print(format_)
+    with YoutubeDL({}) as ydl:
+        ydl.download(url)
+
+
+def extract_clip(path, start, end):
+    output_path = path.rsplit(".", 1)[0] + "_trimmed.mp4"
+    try:
+        # Constructing the FFMPEG command
+        command = [
+            "ffmpeg",
+            "-i",
+            path,  # Input file
+            "-ss",
+            str(start),  # Start time
+            "-to",
+            str(end),  # End time
+            "-c",
+            "copy",  # Copy the stream directly, no re-encoding
+            output_path,  # Output file
+        ]
+
+        # Execute the command
+        subprocess.run(command, check=True)
+        print(f"Clip extracted successfully to {output_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+
+
+if __name__ == "__main__":
+    # 1:17:08 - 1:17:49
+    extract_clip("pron.mp4", 60, 180)
+    # download_youtube_vod("https://www.youtube.com/watch?v=qKI-auJl2C8")
