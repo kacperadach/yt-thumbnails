@@ -16,7 +16,7 @@ interface ThumbnailCompositionProps {
 }
 
 function ThumbnailComposition(props: Record<string, unknown>) {
-  const { thumbnail, width } = props;
+  const { thumbnail, width, editable } = props;
 
   const { background, assets } = thumbnail as Thumbnail;
 
@@ -62,6 +62,7 @@ function ThumbnailComposition(props: Record<string, unknown>) {
                 key={index}
                 text={asset as Text}
                 pixelScaleFactor={pixelScaleFactor}
+                editable={!!editable}
               />
             );
           } else if (asset.type === "image") {
@@ -85,17 +86,18 @@ function ThumbnailComposition(props: Record<string, unknown>) {
 
 interface ThumbnailPreviewProps {
   thumbnail: Thumbnail;
+  editable?: boolean;
   width?: number;
   height?: number;
 }
 
 export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
-  const { thumbnail, width, height } = props;
+  const { thumbnail, width, height, editable } = props;
 
   return (
     <RemotionThumbnail
       component={ThumbnailComposition}
-      inputProps={{ thumbnail, width }}
+      inputProps={{ thumbnail, width, editable }}
       compositionWidth={width || 1280}
       compositionHeight={height || 720}
       frameToDisplay={0}

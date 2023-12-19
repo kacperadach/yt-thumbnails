@@ -41,3 +41,13 @@ export function getBaseCssProperties(asset: ThumbnailAsset) {
     width: `${asset.width}%`,
   };
 }
+
+export function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+export function addSpaceBeforeCaps(str: string) {
+  // Use a regular expression to add space before each capital letter
+  // except for the first character.
+  return str.replace(/(.)([A-Z])/g, "$1 $2");
+}

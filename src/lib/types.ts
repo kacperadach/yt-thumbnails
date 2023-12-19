@@ -1,6 +1,5 @@
-import { type } from "os";
-
 export type ThumbnailAsset = {
+  id: string;
   type: "image" | "text" | "shape";
   top?: number;
   bottom?: number;
@@ -28,6 +27,11 @@ export type DropShadow = {
   color: string;
 };
 
+export type LongShadow = {
+  width: number;
+  color: string;
+};
+
 export type Text = ThumbnailAsset & {
   height: number;
   text: string;
@@ -39,10 +43,7 @@ export type Text = ThumbnailAsset & {
   borderRight?: Border;
   borderBottom?: Border;
   borderLeft?: Border;
-  longShadow?: {
-    width: number;
-    color: string;
-  };
+  longShadow?: LongShadow;
   fontFamily?: string;
   fontSize?: number;
   fontWeight?: number;

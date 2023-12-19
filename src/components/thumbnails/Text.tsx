@@ -1,35 +1,29 @@
 import { CSSProperties } from "react";
 import { Text } from "../../lib/types";
 import { generateFullLongShadow } from "../../lib/textShadow";
-import { formatBorder,  getBaseCssProperties } from "../../lib/utils";
+import { formatBorder, getBaseCssProperties } from "../../lib/utils";
 import { DEFAULT_TEXT_PROPERTIES } from "../../lib/constants";
+import BaseAsset from "./BaseAsset";
 
 interface TextAssetProps {
   text: Text;
   pixelScaleFactor: number;
+  editable: boolean;
 }
 
 export default function TextAsset(props: TextAssetProps) {
-  const { text, pixelScaleFactor } = props;
+  const { text, pixelScaleFactor, editable } = props;
 
   const textProperties = {
     ...DEFAULT_TEXT_PROPERTIES,
     ...text,
   };
 
-
   const containerStyles: CSSProperties = {
-    ...getBaseCssProperties(text),
-    left: `${textProperties.left}%`,
-    right: `${textProperties.right}%`,
-    top: `${textProperties.top}%`,
-    bottom: `${textProperties.bottom}%`,
     height: "fit-content",
-    zIndex: textProperties.zIndex,
-    position: "absolute",
+    // height: `${textProperties.height * pixelScaleFactor}px`,
     backgroundColor: textProperties.backgroundColor,
     padding: `${textProperties.padding * pixelScaleFactor}px`,
-    transform: `rotate(${textProperties.rotation}deg)`,
     textShadow:
       textProperties.longShadow &&
       `${generateFullLongShadow(
@@ -62,8 +56,10 @@ export default function TextAsset(props: TextAssetProps) {
   };
 
   return (
-    <div style={containerStyles}>
-      <span style={textStyles}>{text.text}</span>
-    </div>
+    <BaseAsset editable={editable} thumbnailAsset={text}>
+      <div style={containerStyles}>
+        <span style={textStyles}>{text.text}</span>
+      </div>
+    </BaseAsset>
   );
 }

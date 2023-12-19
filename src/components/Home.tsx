@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import { Thumbnail } from "../lib/types";
 import Templates from "./Templates";
+import { thumbnail } from "../lib/signals";
+import Editor from "./Editor";
 
 export default function Home() {
-  const [thumbnail, setThumbnail] = useState<Thumbnail | null>(null);
-
-  return <div>{!thumbnail && <Templates />}</div>;
+  console.log(thumbnail);
+  return (
+    <div>
+      {!thumbnail.value && <Templates />}
+      {thumbnail.value && <Editor />}
+    </div>
+  );
 }
