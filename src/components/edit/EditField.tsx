@@ -73,11 +73,17 @@ export default function EditField(props: EditFieldProps) {
       </div>
     );
   } else if (fieldName.toLowerCase() === "style") {
-    return <BorderStyleField />;
+    return (
+      <BorderStyleField
+        style={value}
+        onChange={(style: string) => onUpdate({ [fieldName]: style })}
+      />
+    );
   } else {
     return (
       <input
-        className="border-2 border-gray-200 rounded-md p-1 w-full"
+        className="border-2 border-gray-200 rounded-md p-1"
+        style={{ width: "fit-content" }}
         type={typeof value}
         name={fieldName}
         value={value}

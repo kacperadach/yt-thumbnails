@@ -80,6 +80,7 @@ export const TEMPLATES: Thumbnail[] = [
           color: "black",
         },
         borderRadius: 15,
+        fontFamily: "Arial",
         fontSize: 72,
         borderBottom: {
           width: 16,
@@ -110,6 +111,7 @@ export const TEMPLATES: Thumbnail[] = [
           color: "black",
         },
         borderRadius: 15,
+        fontFamily: "Arial",
         fontSize: 72,
         borderBottom: {
           width: 16,
