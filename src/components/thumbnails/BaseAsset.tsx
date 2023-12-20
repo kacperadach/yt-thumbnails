@@ -1,34 +1,76 @@
 import React from "react";
-import { ThumbnailAsset } from "../../lib/types";
+import { Image, Shape, Text, ThumbnailAsset } from "../../lib/types";
 import { getBaseCssProperties } from "../../lib/utils";
-import { selectedAssetId } from "../../lib/signals";
+import { selectedAssetId, selectedMenu } from "../../lib/signals";
+import TextAsset from "./Text";
+import ImageComponent from "./Image";
+import ShapeComponent from "./Shape";
+import styles from "./baseAsset.module.css";
 
 interface BaseAssetProps {
-  children: React.ReactNode;
+  asset: ThumbnailAsset;
   editable: boolean;
-  thumbnailAsset: ThumbnailAsset;
+  pixelScaleFactor: number;
 }
 
 export default function BaseAsset(props: BaseAssetProps) {
-  const { children, editable, thumbnailAsset } = props;
+  const { asset, editable, pixelScaleFactor } = props;
+
+  let child;
+  if (asset.type === "text") {
+    child = (
+      <TextAsset
+        text={asset as Text}
+        pixelScaleFactor={pixelScaleFactor}
+        editable={!!editable}
+      />
+    );
+  } else if (asset.type === "image") {
+    child = <ImageComponent image={asset as Image} />;
+  } else if (asset.type === "shape") {
+    child = (
+      <ShapeComponent
+        shape={asset as Shape}
+        pixelScaleFactor={pixelScaleFactor}
+      />
+    );
+  }
 
   return (
     <div
-      className={`absolute ${
+      className={`absolute cursor-pointer ${
         editable &&
-        "hover:outline-dashed hover:outline-offset-2 hover:outline-gray-800 cursor-pointer"
+        selectedAssetId.value !== asset.id &&
+        "hover:outline-dashed hover:outline-offset-2 hover:outline-white "
       }`}
       style={{
-        ...getBaseCssProperties(thumbnailAsset),
+        ...getBaseCssProperties(asset),
       }}
       onClick={() => {
         if (!editable) {
           return;
         }
-        selectedAssetId.value = thumbnailAsset.id;
+        selectedAssetId.value = asset.id;
+        selectedMenu.value = null;
       }}
     >
-      {children}
+      {selectedAssetId.value === asset.id && (
+        <>
+          <span
+            className={`${styles.subtitleActiveBorder} ${styles.subtitleEditingLeft}`}
+          />
+          <span
+            className={`${styles.subtitleActiveBorder} ${styles.subtitleEditingRight}`}
+          />
+          <span
+            className={`${styles.subtitleActiveBorder} ${styles.subtitleEditingTop}`}
+          />
+          <span
+            className={`${styles.subtitleActiveBorder} ${styles.subtitleEditingBottom}`}
+          />
+        </>
+      )}
+      {child}
     </div>
   );
 }

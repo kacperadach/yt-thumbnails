@@ -8,6 +8,7 @@ import TextAsset from "./Text";
 import { getPixelScaleFactor } from "../../lib/utils";
 import ShapeComponent from "./Shape";
 import ImageComponent from "./Image";
+import BaseAsset from "./BaseAsset";
 
 const FPS = 30;
 
@@ -16,7 +17,7 @@ interface ThumbnailCompositionProps {
 }
 
 function ThumbnailComposition(props: Record<string, unknown>) {
-  const { thumbnail, width, editable } = props;
+  const { thumbnail, width, editable, selectedAssetId } = props;
 
   const { background, assets } = thumbnail as Thumbnail;
 
@@ -24,11 +25,11 @@ function ThumbnailComposition(props: Record<string, unknown>) {
 
   return (
     <AbsoluteFill className="relative overflow-visible">
-      {background.type === "video" && (
+      {background.type === "video" && background.videoSrc && (
         <div className={styles.videoContainer}>
           <RemotionThumbnail
             component={() => (
-              <Video src={background.src} width={1920} height={1080} />
+              <Video src={background.videoSrc} width={1920} height={1080} />
             )}
             compositionWidth={1920}
             compositionHeight={1080}
@@ -40,8 +41,20 @@ function ThumbnailComposition(props: Record<string, unknown>) {
       )}
 
       {background.type === "image" && (
-        <div>
-          <Img src={background.src || ""} />
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url('${background.imageSrc}')`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
+        >
+          {/* {background.src && (
+            <img
+              src={background.src || ""}
+              className="w-full h-full object-contain"
+            />
+          )} */}
         </div>
       )}
 
@@ -56,28 +69,14 @@ function ThumbnailComposition(props: Record<string, unknown>) {
 
       <>
         {assets.map((asset, index) => {
-          if (asset.type === "text") {
-            return (
-              <TextAsset
-                key={index}
-                text={asset as Text}
-                pixelScaleFactor={pixelScaleFactor}
-                editable={!!editable}
-              />
-            );
-          } else if (asset.type === "image") {
-            return <ImageComponent key={index} image={asset as Image} />;
-          } else if (asset.type === "shape") {
-            return (
-              <ShapeComponent
-                key={index}
-                shape={asset as Shape}
-                pixelScaleFactor={pixelScaleFactor}
-              />
-            );
-          }
-
-          return null;
+          return (
+            <BaseAsset
+              key={index}
+              asset={asset}
+              editable={!!editable}
+              pixelScaleFactor={pixelScaleFactor}
+            />
+          );
         })}
       </>
     </AbsoluteFill>
@@ -89,15 +88,16 @@ interface ThumbnailPreviewProps {
   editable?: boolean;
   width?: number;
   height?: number;
+  selectedAssetId?: string;
 }
 
 export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
-  const { thumbnail, width, height, editable } = props;
+  const { thumbnail, width, height, editable, selectedAssetId } = props;
 
   return (
     <RemotionThumbnail
       component={ThumbnailComposition}
-      inputProps={{ thumbnail, width, editable }}
+      inputProps={{ thumbnail, width, editable, selectedAssetId }}
       compositionWidth={width || 1280}
       compositionHeight={height || 720}
       frameToDisplay={0}

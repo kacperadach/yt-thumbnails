@@ -8,6 +8,7 @@ export type ThumbnailAsset = {
   width: number;
   zIndex: number;
   rotation?: number;
+  aspectRatio?: string;
 };
 
 export type Image = ThumbnailAsset & {
@@ -70,7 +71,8 @@ export type Arrow = Shape & {
 export type Background = {
   type: "color" | "image" | "video";
   color?: string;
-  src?: string;
+  imageSrc?: string;
+  videoSrc?: string;
   videoTime?: number;
 
   // TODO: gradient?

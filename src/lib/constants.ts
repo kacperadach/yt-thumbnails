@@ -1,5 +1,5 @@
 import { staticFile } from "remotion";
-import { Thumbnail, Text, Border } from "./types";
+import { Thumbnail, Text, Border, Image, Circle, LongShadow } from "./types";
 import { v4 as uuidv4 } from "uuid";
 
 export const EDITOR_WIDTH = 1280;
@@ -22,7 +22,7 @@ export const DEFAULT_BORDER_OBJECT: Border = {
   color: "white",
 };
 
-export const DEFAULT_LONG_SHADOW_OBJECT = {
+export const DEFAULT_LONG_SHADOW_OBJECT: LongShadow = {
   width: 0,
   color: "white",
 };
@@ -54,6 +54,35 @@ export const DEFAULT_TEXT_OBJECT: Text = {
   color: "black",
 };
 
+export const DEFAULT_IMAGE_OBJECT: Image = {
+  id: "",
+  type: "image",
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  width: 0,
+  zIndex: 0,
+  rotation: 0,
+  src: "",
+};
+
+export const DEFAULT_CIRCLE_OBJECT: Circle = {
+  id: "",
+  type: "image",
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  width: 0,
+  zIndex: 0,
+  rotation: 0,
+  shapeType: "circle",
+  border: DEFAULT_BORDER_OBJECT,
+  outline: DEFAULT_BORDER_OBJECT,
+  backgroundColor: "transparent",
+};
+
 export const TEMPLATE_PREVIEW_WIDTH = 25;
 export const TEMPLATES: Thumbnail[] = [
   {
@@ -81,6 +110,7 @@ export const TEMPLATES: Thumbnail[] = [
         },
         borderRadius: 15,
         fontFamily: "Arial",
+        fontWeight: 400,
         fontSize: 72,
         borderBottom: {
           width: 16,
@@ -112,6 +142,7 @@ export const TEMPLATES: Thumbnail[] = [
         },
         borderRadius: 15,
         fontFamily: "Arial",
+        fontWeight: 400,
         fontSize: 72,
         borderBottom: {
           width: 16,
@@ -130,6 +161,7 @@ export const TEMPLATES: Thumbnail[] = [
         shapeType: "circle",
         left: 0,
         width: 60,
+        aspectRatio: "1/1",
         zIndex: 1,
         border: {
           width: 16,

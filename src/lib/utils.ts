@@ -39,6 +39,7 @@ export function getBaseCssProperties(asset: ThumbnailAsset) {
     zIndex: asset.zIndex,
     transform: `rotate(${asset.rotation || 0}deg)`,
     width: `${asset.width}%`,
+    aspectRatio: asset.aspectRatio,
   };
 }
 

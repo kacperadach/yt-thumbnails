@@ -7,7 +7,11 @@ import {
 } from "../../lib/constants";
 import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
 
-const IGNORED_FIELDS = ["id", "type"];
+const IGNORED_FIELDS = ["id", "type", "aspectRatio"];
+
+const FIELD_RENAME_MAP = {
+  src: "Image Url",
+};
 
 interface EditMenuProps {
   defaultObject: any;
@@ -38,7 +42,8 @@ export default function EditMenu(props: EditMenuProps) {
           key === "borderRight" ||
           key === "borderLeft" ||
           key === "borderTop" ||
-          key === "borderBottom"
+          key === "borderBottom" ||
+          key === "outline"
         ) {
           const obj = (asset[key] as any) || {};
           fieldComponent = (
@@ -75,12 +80,16 @@ export default function EditMenu(props: EditMenuProps) {
 
         return (
           <Row className="flex my-1 items-center">
-            <Col md={2}>
+            <Col md={3}>
               <label className="font-bold mx-2 ">
-                {addSpaceBeforeCaps(capitalizeFirstLetter(key))}
+                {addSpaceBeforeCaps(
+                  capitalizeFirstLetter(
+                    FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] ||
+                      key
+                  )
+                )}
               </label>
             </Col>
-
             <Col className="flex">{fieldComponent}</Col>
           </Row>
         );

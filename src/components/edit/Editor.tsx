@@ -4,12 +4,15 @@ import {
   DEFAULT_TEXT_OBJECT,
   EDITOR_HEIGHT,
   EDITOR_WIDTH,
-} from "../lib/constants";
-import { selectedAsset, thumbnail } from "../lib/signals";
-import { ThumbnailAsset } from "../lib/types";
-import EditMenuContainer from "./edit/EditMenuContainer";
-import ThumbnailPreview from "./thumbnails/ThumbnailComposition";
-import { remToPx } from "../lib/utils";
+} from "../../lib/constants";
+import { selectedAsset, selectedMenu, thumbnail } from "../../lib/signals";
+import { ThumbnailAsset } from "../../lib/types";
+import EditMenuContainer from "./EditMenuContainer";
+import ThumbnailPreview from "../thumbnails/ThumbnailComposition";
+import { remToPx } from "../../lib/utils";
+import EditorSidebar from "./EditorSidebar";
+import BackgroundMenu from "./BackgroundMenu";
+import AssetsMenu from "./AssetsMenu";
 
 export default function Editor() {
   const [previewWidth, setPreviewWidth] = useState<number | null>(null);
@@ -36,6 +39,9 @@ export default function Editor() {
   return (
     <Container fluid className="flex">
       <Row className="w-full">
+        <Col md={1}>
+          <EditorSidebar />
+        </Col>
         <Col md={8} ref={previewRef} className="flex justify-center">
           {previewWidth && (
             <ThumbnailPreview
@@ -46,12 +52,11 @@ export default function Editor() {
             />
           )}
         </Col>
-
-        {selectedAsset.value && (
-          <Col md={4} className="w-full">
-            <EditMenuContainer />
-          </Col>
-        )}
+        <Col md={3} className="w-full">
+          {selectedAsset.value && <EditMenuContainer />}
+          {selectedMenu.value === "background" && <BackgroundMenu />}
+          {selectedMenu.value === "assets" && <AssetsMenu />}
+        </Col>
       </Row>
     </Container>
   );

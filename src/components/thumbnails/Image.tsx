@@ -8,12 +8,12 @@ interface ImageProps {
 export default function ImageComponent(props: ImageProps) {
   const { image } = props;
 
-  const containerStyles = {
-    ...getBaseCssProperties(image),
-  };
+  if (!image.src) {
+    return null;
+  }
 
   return (
-    <div className="absolute" style={containerStyles}>
+    <div>
       <img src={image.src} className="w-full h-full object-contain" />
     </div>
   );

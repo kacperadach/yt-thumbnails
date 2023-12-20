@@ -56,10 +56,8 @@ export default function TextAsset(props: TextAssetProps) {
   };
 
   return (
-    <BaseAsset editable={editable} thumbnailAsset={text}>
-      <div style={containerStyles}>
-        <span style={textStyles}>{text.text}</span>
-      </div>
-    </BaseAsset>
+    <div style={containerStyles}>
+      <span style={textStyles}>{text.text}</span>
+    </div>
   );
 }
