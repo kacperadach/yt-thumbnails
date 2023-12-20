@@ -44,15 +44,17 @@ export default function Editor() {
         </Col>
         <Col md={8} ref={previewRef} className="flex justify-center">
           {previewWidth && (
-            <ThumbnailPreview
-              thumbnail={thumbnail.value}
-              editable={true}
-              width={previewWidth}
-              height={previewWidth * (9 / 16)}
-            />
+            <div className=" rounded-xl shadow-lg p-3">
+              <ThumbnailPreview
+                thumbnail={thumbnail.value}
+                editable={true}
+                width={previewWidth}
+                height={previewWidth * (9 / 16)}
+              />
+            </div>
           )}
         </Col>
-        <Col md={3} className="w-full">
+        <Col md={3} className="w-full my-2">
           {selectedAsset.value && <EditMenuContainer />}
           {selectedMenu.value === "background" && <BackgroundMenu />}
           {selectedMenu.value === "assets" && <AssetsMenu />}
