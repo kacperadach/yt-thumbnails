@@ -12,6 +12,7 @@ export type ThumbnailAsset = {
 };
 
 export type Image = ThumbnailAsset & {
+  type: "image";
   src: string;
 };
 
@@ -34,6 +35,7 @@ export type LongShadow = {
 };
 
 export type Text = ThumbnailAsset & {
+  type: "text";
   height: number;
   text: string;
   padding?: number;
@@ -52,6 +54,7 @@ export type Text = ThumbnailAsset & {
 };
 
 export type Shape = ThumbnailAsset & {
+  type: "shape";
   shapeType: "circle" | "arrow";
 };
 

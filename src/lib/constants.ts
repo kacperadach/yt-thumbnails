@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 export const EDITOR_WIDTH = 1280;
 export const EDITOR_HEIGHT = 720;
 
+export const DEFAULT_IMAGE_SRC = `${staticFile("/images/headshot.png")}`;
+
 export const DEFAULT_TEXT_PROPERTIES = {
   padding: 10,
   borderRadius: 10,
@@ -17,6 +19,12 @@ export const DEFAULT_TEXT_PROPERTIES = {
 };
 
 export const DEFAULT_BORDER_OBJECT: Border = {
+  width: 16,
+  style: "solid",
+  color: "black",
+};
+
+export const EMPTY_BORDER_OBJECT: Border = {
   width: 0,
   style: "solid",
   color: "white",
@@ -30,46 +38,47 @@ export const DEFAULT_LONG_SHADOW_OBJECT: LongShadow = {
 export const DEFAULT_TEXT_OBJECT: Text = {
   id: "",
   type: "text",
-  top: 0,
+  top: 50,
   bottom: 0,
-  left: 0,
+  left: 50,
   right: 0,
-  width: 0,
+  width: EDITOR_WIDTH * 0.3,
   height: 0,
   zIndex: 0,
   rotation: 0,
-  text: "",
-  padding: 0,
+  text: "Placeholder",
+  padding: 20,
   backgroundColor: "white",
-  borderRadius: 0,
+  borderRadius: 15,
   border: DEFAULT_BORDER_OBJECT,
-  borderTop: DEFAULT_BORDER_OBJECT,
-  borderRight: DEFAULT_BORDER_OBJECT,
-  borderBottom: DEFAULT_BORDER_OBJECT,
-  borderLeft: DEFAULT_BORDER_OBJECT,
+  borderTop: EMPTY_BORDER_OBJECT,
+  borderRight: EMPTY_BORDER_OBJECT,
+  borderBottom: EMPTY_BORDER_OBJECT,
+  borderLeft: EMPTY_BORDER_OBJECT,
   longShadow: DEFAULT_LONG_SHADOW_OBJECT,
-  fontFamily: "",
-  fontSize: 0,
-  fontWeight: 0,
+  fontFamily: "Arial",
+  fontWeight: 400,
+  fontSize: 72,
   color: "black",
 };
 
 export const DEFAULT_IMAGE_OBJECT: Image = {
   id: "",
   type: "image",
-  top: 0,
+  top: 50,
   bottom: 0,
-  left: 0,
+  left: 50,
   right: 0,
-  width: 0,
+  width: EDITOR_WIDTH * 0.2,
   zIndex: 0,
   rotation: 0,
-  src: "",
+  src: DEFAULT_IMAGE_SRC,
 };
 
 export const DEFAULT_CIRCLE_OBJECT: Circle = {
   id: "",
-  type: "image",
+  type: "shape",
+  shapeType: "circle",
   top: 0,
   bottom: 0,
   left: 0,
@@ -77,7 +86,6 @@ export const DEFAULT_CIRCLE_OBJECT: Circle = {
   width: 0,
   zIndex: 0,
   rotation: 0,
-  shapeType: "circle",
   border: DEFAULT_BORDER_OBJECT,
   outline: DEFAULT_BORDER_OBJECT,
   backgroundColor: "transparent",
@@ -96,8 +104,8 @@ export const TEMPLATES: Thumbnail[] = [
         type: "text",
         top: 75,
         left: 10,
-        width: 50,
-        height: 10,
+        width: EDITOR_WIDTH * 0.5,
+        height: EDITOR_HEIGHT * 0.2,
         zIndex: 3,
         rotation: -6,
         padding: 20,
@@ -128,8 +136,8 @@ export const TEMPLATES: Thumbnail[] = [
         type: "text",
         top: 5,
         left: 20,
-        width: 50,
-        height: 10,
+        width: EDITOR_WIDTH * 0.5,
+        height: EDITOR_HEIGHT * 0.2,
         zIndex: 2,
         rotation: 3,
         padding: 20,
@@ -160,7 +168,7 @@ export const TEMPLATES: Thumbnail[] = [
         type: "shape",
         shapeType: "circle",
         left: 0,
-        width: 60,
+        width: EDITOR_WIDTH * 0.6,
         aspectRatio: "1/1",
         zIndex: 1,
         border: {
@@ -180,9 +188,9 @@ export const TEMPLATES: Thumbnail[] = [
         type: "image",
         left: 70,
         top: 10,
-        width: 30,
+        width: EDITOR_WIDTH * 0.3,
         zIndex: 4,
-        src: `${staticFile("/images/headshot.png")}`,
+        src: DEFAULT_IMAGE_SRC,
       },
       {
         id: uuidv4(),

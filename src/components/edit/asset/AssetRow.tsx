@@ -1,13 +1,13 @@
 import { useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { ThumbnailAsset } from "../../lib/types";
+import { ThumbnailAsset } from "../../../lib/types";
 import {
   capitalizeFirstLetter,
   getPixelScaleFactor,
   remToPx,
-} from "../../lib/utils";
-import BaseAsset from "../thumbnails/BaseAsset";
-import { selectedAssetId, selectedMenu, thumbnail } from "../../lib/signals";
+} from "../../../lib/utils";
+import BaseAsset from "../../thumbnails/BaseAsset";
+import { selectedAssetId, selectedMenu, thumbnail } from "../../../lib/signals";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineTextFields } from "react-icons/md";
 import { BsCardImage } from "react-icons/bs";

@@ -1,62 +1,83 @@
+import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
-import { BsPlus } from "react-icons/bs";
-import { thumbnail } from "../../lib/signals";
-import { Container } from "react-bootstrap";
+import { BsPlus, BsTrash } from "react-icons/bs";
+import {
+  creatingAsset,
+  thumbnail,
+  isCreatingAsset,
+} from "../../../lib/signals";
+import { Container, Row, Col } from "react-bootstrap";
 import AssetRow from "./AssetRow";
 import { signal } from "@preact/signals-react";
 import { MdOutlineTextFields } from "react-icons/md";
 import { BsCardImage } from "react-icons/bs";
 import { FaShapes } from "react-icons/fa";
-import { capitalizeFirstLetter } from "../../lib/utils";
+import { capitalizeFirstLetter } from "../../../lib/utils";
+import EditField from "../EditField";
+import { Arrow, Circle, Image, Text } from "../../../lib/types";
+import {
+  DEFAULT_TEXT_OBJECT,
+  DEFAULT_IMAGE_OBJECT,
+  DEFAULT_CIRCLE_OBJECT,
+} from "../../../lib/constants";
+import CreateTextAsset from "./CreateAsset";
+import CreateAsset from "./CreateAsset";
 
 export default function AssetsMenu() {
-  const [creatingAsset, setCreatingAsset] = useState(false);
-  const [assetType, setAssetType] = useState<"text" | "image" | "shape" | null>(
-    null
-  );
+  console.log(creatingAsset.value);
 
   return (
-    <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+    <div>
       <div>
         <h4 className="text-4xl font-bold my-1">
-          {creatingAsset ? "Add New Asset" : "Assets"}
+          {isCreatingAsset.value ? "Add New Asset" : "Assets"}
         </h4>
       </div>
       <div>
         <div className="flex justify-center w-full cursor-pointer my-2">
-          {!creatingAsset && (
+          {!isCreatingAsset.value && (
             <div
               className="p-3 border mx-2 hover:bg-gray-200"
-              onClick={() => setCreatingAsset(true)}
+              onClick={() => (isCreatingAsset.value = true)}
             >
               <BsPlus size="2rem" />
             </div>
           )}
-          {creatingAsset && (
+          {isCreatingAsset.value && (
             <>
               <div
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  assetType === "text" && "bg-gray-200"
+                  creatingAsset.value?.type === "text" && "bg-gray-200"
                 }`}
-                onClick={() => setAssetType("text")}
+                onClick={() =>
+                  (creatingAsset.value = {
+                    ...DEFAULT_TEXT_OBJECT,
+                    id: uuidv4(),
+                  })
+                }
               >
                 <MdOutlineTextFields size="2rem" />
                 <label className="font-bold mx-2 ">Text</label>
               </div>
               <div
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  assetType === "image" && "bg-gray-200"
+                  creatingAsset.value?.type === "image" && "bg-gray-200"
                 }`}
-                onClick={() => setAssetType("image")}
+                onClick={() =>
+                  (creatingAsset.value = {
+                    ...DEFAULT_IMAGE_OBJECT,
+                    id: uuidv4(),
+                  })
+                }
               >
                 <BsCardImage size="2rem" />
                 <label className="font-bold mx-2 ">Image</label>
               </div>
               <div
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  assetType === "shape" && "bg-gray-200"
+                  creatingAsset.value?.type === "shape" && "bg-gray-200"
                 }`}
-                onClick={() => setAssetType("shape")}
+                onClick={() => (creatingAsset.value = null)}
               >
                 <FaShapes size="2rem" />
                 <label className="font-bold mx-2 ">Shape</label>
@@ -64,8 +85,9 @@ export default function AssetsMenu() {
             </>
           )}
         </div>
+        {creatingAsset.value && <CreateAsset />}
 
-        {!creatingAsset && (
+        {!isCreatingAsset.value && (
           <Container>
             {thumbnail.value?.assets.map((asset, index) => {
               return <AssetRow key={index} asset={asset} />;

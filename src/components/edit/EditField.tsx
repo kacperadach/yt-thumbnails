@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Row, Col } from "react-bootstrap";
-import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
-import { SketchPicker, Color } from "react-color";
+import { SketchPicker } from "react-color";
 import { BsCheck, BsPlus } from "react-icons/bs";
 import BorderStyleField from "./BorderStyleField";
 
@@ -20,12 +18,33 @@ export default function EditField(props: EditFieldProps) {
 
   const inputType = typeof defaultValue;
 
+  const emptyValue = inputType === "number" ? 0 : "";
+
   const handleChange = (e: any) => {
     let newValue = e.target.value;
     if (inputType === "number") {
       newValue = newValue ? parseFloat(newValue) : "";
     }
-    onUpdate({ [fieldName]: newValue });
+
+    const updatedFields = { [fieldName]: newValue };
+
+    if (fieldName === "top") {
+      updatedFields["bottom"] = undefined;
+    }
+
+    if (fieldName === "bottom") {
+      updatedFields["top"] = undefined;
+    }
+
+    if (fieldName === "left") {
+      updatedFields["right"] = undefined;
+    }
+
+    if (fieldName === "right") {
+      updatedFields["left"] = undefined;
+    }
+
+    onUpdate(updatedFields);
   };
 
   if (fieldName.toLowerCase().includes("color")) {
@@ -84,9 +103,9 @@ export default function EditField(props: EditFieldProps) {
       <input
         className="border-2 border-gray-200 rounded-md p-1"
         style={{ width: "fit-content" }}
-        type={typeof value}
+        type={inputType}
         name={fieldName}
-        value={value}
+        value={value !== undefined ? value : emptyValue}
         onChange={handleChange}
       />
     );

@@ -23,7 +23,7 @@ export default function BackgroundMenu() {
   };
 
   return (
-    <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+    <div>
       <div>
         <h4 className="text-4xl font-bold my-1">Editing Background</h4>
       </div>

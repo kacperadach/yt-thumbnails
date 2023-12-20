@@ -4,15 +4,14 @@ import { formatBorder } from "../../lib/utils";
 
 interface CircleProps {
   circle: Circle;
-  pixelScaleFactor: number;
 }
 
 export default function CircleComponent(props: CircleProps) {
-  const { circle, pixelScaleFactor } = props;
+  const { circle } = props;
 
   const circleStyles: CSSProperties = {
-    border: formatBorder(circle.border, pixelScaleFactor),
-    outline: circle.outline && formatBorder(circle.outline, pixelScaleFactor),
+    border: formatBorder(circle.border, 1),
+    outline: circle.outline && formatBorder(circle.outline, 1),
     backgroundColor: circle.backgroundColor,
     aspectRatio: "1/1",
   };

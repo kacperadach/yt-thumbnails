@@ -4,19 +4,13 @@ import CircleComponent from "./Circle";
 
 interface ShapeProps {
   shape: Shape;
-  pixelScaleFactor: number;
 }
 
 export default function ShapeComponent(props: ShapeProps) {
-  const { shape, pixelScaleFactor } = props;
+  const { shape } = props;
 
   if (shape.shapeType === "circle") {
-    return (
-      <CircleComponent
-        circle={shape as Circle}
-        pixelScaleFactor={pixelScaleFactor}
-      />
-    );
+    return <CircleComponent circle={shape as Circle} />;
   } else if (shape.shapeType === "arrow") {
     return <ArrowComponent arrow={shape as Arrow} />;
   }

@@ -24,7 +24,7 @@ function ThumbnailComposition(props: Record<string, unknown>) {
   const pixelScaleFactor = getPixelScaleFactor(width as number);
 
   return (
-    <AbsoluteFill className="relative overflow-visible">
+    <AbsoluteFill className="relative overflow-visible border">
       {background.type === "video" && background.videoSrc && (
         <div className={styles.videoContainer}>
           <RemotionThumbnail

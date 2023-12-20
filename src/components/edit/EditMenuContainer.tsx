@@ -1,6 +1,5 @@
-import { Container, Row } from "react-bootstrap";
-import { selectedAsset, thumbnail } from "../../lib/signals";
-import { Shape, Thumbnail, ThumbnailAsset } from "../../lib/types";
+import { useState, useEffect, useMemo } from "react";
+import { Shape, ThumbnailAsset } from "../../lib/types";
 import { capitalizeFirstLetter } from "../../lib/utils";
 import {
   DEFAULT_TEXT_OBJECT,
@@ -13,7 +12,6 @@ import { MdOutlineTextFields } from "react-icons/md";
 import { RxBorderAll, RxImage } from "react-icons/rx";
 import { BsCardImage } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
-import { useSignalEffect, signal, computed } from "@preact/signals-react";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
@@ -78,31 +76,19 @@ const FIELDS_BY_TYPE = {
   ],
 };
 
-const fieldFilter = signal("positioning");
+interface EditMenuContainerProps {
+  thumbnailAsset: ThumbnailAsset;
+  onUpdate: (newFields: Object) => void;
+}
 
-export default function EditMenuContainer() {
-  const thumbnailAsset = selectedAsset.value as ThumbnailAsset;
+export default function EditMenuContainer(props: EditMenuContainerProps) {
+  const { thumbnailAsset, onUpdate } = props;
 
-  const onUpdate = (newFields: Object) => {
-    if (!thumbnail.value) {
-      return;
-    }
+  console.log(thumbnailAsset);
 
-    thumbnail.value = {
-      background: thumbnail.value.background,
-      assets: thumbnail.value.assets.map((asset) => {
-        if (asset.id === thumbnailAsset.id) {
-          return {
-            ...asset,
-            ...newFields,
-          };
-        }
-        return asset;
-      }),
-    };
-  };
+  const [fieldFilter, setFieldFilter] = useState<string>("positioning");
 
-  const filterFields = computed(() => {
+  const filterFields = useMemo(() => {
     const fields: string[] = [];
     if (thumbnailAsset) {
       const typeKey =
@@ -113,14 +99,14 @@ export default function EditMenuContainer() {
       if (FIELDS_BY_TYPE[typeKey as keyof typeof FIELDS_BY_TYPE]) {
         fields.push(
           ...(FIELDS_BY_TYPE[typeKey as keyof typeof FIELDS_BY_TYPE].find(
-            (group) => group.type === fieldFilter.value
+            (group) => group.type === fieldFilter
           )?.fields || [])
         );
       }
     }
 
     return fields;
-  });
+  }, [thumbnailAsset, fieldFilter]);
 
   let defaultObject: any = null;
   if (thumbnailAsset.type === "text") {
@@ -133,22 +119,22 @@ export default function EditMenuContainer() {
     }
   }
 
-  useSignalEffect(() => {
-    if (selectedAsset.value) {
-      if (selectedAsset.value.type === "shape") {
-        fieldFilter.value = (selectedAsset.value as Shape).shapeType;
+  useEffect(() => {
+    if (thumbnailAsset) {
+      if (thumbnailAsset.type === "shape") {
+        setFieldFilter((thumbnailAsset as Shape).shapeType);
       } else {
-        fieldFilter.value = selectedAsset.value.type;
+        setFieldFilter(thumbnailAsset.type);
       }
     }
-  });
+  }, [thumbnailAsset?.id]);
 
   if (!defaultObject) {
     return null;
   }
 
   return (
-    <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+    <div>
       <div>
         <h4 className="text-4xl font-bold my-1">
           Editing {capitalizeFirstLetter(thumbnailAsset.type)}
@@ -168,13 +154,13 @@ export default function EditMenuContainer() {
                 <div
                   key={index}
                   className={`p-3 border mx-2 ${
-                    fieldFilter.value === group.type && "bg-gray-200"
+                    fieldFilter === group.type && "bg-gray-200"
                   }`}
                   onClick={() => {
                     if (group.type === "shape") {
-                      fieldFilter.value = (thumbnailAsset as Shape).shapeType;
+                      setFieldFilter((thumbnailAsset as Shape).shapeType);
                     } else {
-                      fieldFilter.value = group.type;
+                      setFieldFilter(group.type);
                     }
                   }}
                 >
@@ -190,7 +176,7 @@ export default function EditMenuContainer() {
         defaultObject={defaultObject}
         onUpdate={onUpdate}
         asset={thumbnailAsset}
-        filterFields={filterFields.value}
+        filterFields={filterFields}
       />
     </div>
   );

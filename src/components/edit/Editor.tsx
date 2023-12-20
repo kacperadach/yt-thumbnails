@@ -5,14 +5,20 @@ import {
   EDITOR_HEIGHT,
   EDITOR_WIDTH,
 } from "../../lib/constants";
-import { selectedAsset, selectedMenu, thumbnail } from "../../lib/signals";
+import {
+  selectedAsset,
+  selectedMenu,
+  thumbnail,
+  thumbnailWithCreatingAsset,
+} from "../../lib/signals";
 import { ThumbnailAsset } from "../../lib/types";
 import EditMenuContainer from "./EditMenuContainer";
 import ThumbnailPreview from "../thumbnails/ThumbnailComposition";
 import { remToPx } from "../../lib/utils";
 import EditorSidebar from "./EditorSidebar";
 import BackgroundMenu from "./BackgroundMenu";
-import AssetsMenu from "./AssetsMenu";
+import AssetsMenu from "./asset/AssetsMenu";
+import { useSignalEffect, signal, computed } from "@preact/signals-react";
 
 export default function Editor() {
   const [previewWidth, setPreviewWidth] = useState<number | null>(null);
@@ -32,7 +38,26 @@ export default function Editor() {
     setWidth();
   }, []);
 
-  if (!thumbnail.value) {
+  const onUpdate = (newFields: Object) => {
+    if (!thumbnail.value || !selectedAsset.value) {
+      return;
+    }
+
+    thumbnail.value = {
+      background: thumbnail.value.background,
+      assets: thumbnail.value.assets.map((asset) => {
+        if (asset.id === selectedAsset.value?.id) {
+          return {
+            ...asset,
+            ...newFields,
+          };
+        }
+        return asset;
+      }),
+    };
+  };
+
+  if (!thumbnailWithCreatingAsset.value) {
     return null;
   }
 
@@ -46,7 +71,7 @@ export default function Editor() {
           {previewWidth && (
             <div className=" rounded-xl shadow-lg p-3">
               <ThumbnailPreview
-                thumbnail={thumbnail.value}
+                thumbnail={thumbnailWithCreatingAsset.value}
                 editable={true}
                 width={previewWidth}
                 height={previewWidth * (9 / 16)}
@@ -55,9 +80,24 @@ export default function Editor() {
           )}
         </Col>
         <Col md={3} className="w-full my-2">
-          {selectedAsset.value && <EditMenuContainer />}
-          {selectedMenu.value === "background" && <BackgroundMenu />}
-          {selectedMenu.value === "assets" && <AssetsMenu />}
+          {selectedAsset.value && (
+            <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+              <EditMenuContainer
+                thumbnailAsset={selectedAsset.value as ThumbnailAsset}
+                onUpdate={onUpdate}
+              />
+            </div>
+          )}
+          {selectedMenu.value === "background" && (
+            <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+              <BackgroundMenu />
+            </div>
+          )}
+          {selectedMenu.value === "assets" && (
+            <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+              <AssetsMenu />
+            </div>
+          )}
         </Col>
       </Row>
     </Container>

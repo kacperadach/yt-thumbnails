@@ -9,7 +9,7 @@ export default function ArrowComponent(props: ArrowProps) {
   const { arrow } = props;
 
   const containerStyles = {
-    ...getBaseCssProperties(arrow),
+    // ...getBaseCssProperties(arrow),
     dropShadow: arrow.dropShadow && formatDropShadow(arrow.dropShadow),
     // transform: "none",
     overflow: "visible",

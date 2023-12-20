@@ -1,3 +1,4 @@
+import re
 import subprocess
 from yt_dlp import YoutubeDL
 
@@ -19,6 +20,14 @@ DEFAULT_YT_DLP_INFO_ARGS = {
     "dump_single_json": True,
     "no_color": True,
 }
+
+
+class DownloadHook:
+    filename = None
+
+    def get_filename(self, info):
+        if not self.filename:
+            self.filename = info["filename"]
 
 
 def _get_closest_available_format(
@@ -66,17 +75,22 @@ def download_twitch_stream_info(url: str):
         return ydl.extract_info(url, download=False)
 
 
-def download_twitch_vod(url):
+def download_twitch_vod(url, resolution=720):
     info = download_twitch_stream_info(url)
     print([f.get("height") for f in info["formats"]])
     format_ = _get_closest_available_format(
         info["formats"],
-        resolution=1440,
+        resolution=resolution,
         fps=30,
     )
     print(format_)
-    with YoutubeDL({}) as ydl:
+    twitch_download = DownloadHook()
+    with YoutubeDL(
+        {"progress_hooks": [twitch_download.get_filename], "paths": {"home": "tmp"}}
+    ) as ydl:
         ydl.download(url)
+
+    return twitch_download.filename
 
 
 def download_youtube_info(url):
@@ -93,17 +107,22 @@ def download_youtube_info(url):
         return ydl.extract_info(url, download=False)
 
 
-def download_youtube_vod(url):
+def download_youtube_vod(url, resolution=720):
     info = download_youtube_info(url)
     print([f.get("height") for f in info["formats"]])
     format_ = _get_closest_available_format(
         info["formats"],
-        resolution=1440,
+        resolution=resolution,
         fps=30,
     )
     print(format_)
-    with YoutubeDL({}) as ydl:
+    youtube_download = DownloadHook()
+    with YoutubeDL(
+        {"progress_hooks": [youtube_download.get_filename], "paths": {"home": "tmp"}}
+    ) as ydl:
         ydl.download(url)
+
+    return re.sub(r"\.f\d+", "", youtube_download.filename)
 
 
 def extract_clip(path, start, end):
@@ -132,5 +151,5 @@ def extract_clip(path, start, end):
 
 if __name__ == "__main__":
     # 1:17:08 - 1:17:49
-    extract_clip("pron.mp4", 60, 180)
-    # download_youtube_vod("https://www.youtube.com/watch?v=qKI-auJl2C8")
+    # extract_clip("pron.mp4", 60, 180)
+    download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")

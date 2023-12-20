@@ -7,52 +7,77 @@ import BaseAsset from "./BaseAsset";
 
 interface TextAssetProps {
   text: Text;
-  pixelScaleFactor: number;
-  editable: boolean;
 }
 
 export default function TextAsset(props: TextAssetProps) {
-  const { text, pixelScaleFactor, editable } = props;
+  const { text } = props;
 
   const textProperties = {
     ...DEFAULT_TEXT_PROPERTIES,
     ...text,
   };
 
+  if (textProperties.border) {
+    console.log(formatBorder(textProperties.border, 1));
+  }
+
   const containerStyles: CSSProperties = {
     height: "fit-content",
     // height: `${textProperties.height * pixelScaleFactor}px`,
     backgroundColor: textProperties.backgroundColor,
-    padding: `${textProperties.padding * pixelScaleFactor}px`,
+    padding: `${textProperties.padding}px`,
     textShadow:
       textProperties.longShadow &&
       `${generateFullLongShadow(
-        textProperties.longShadow.width * pixelScaleFactor,
+        textProperties.longShadow.width,
         textProperties.longShadow.color
       )}`,
-    borderRadius: `${textProperties.borderRadius * pixelScaleFactor}px`,
-    border:
-      textProperties.border &&
-      formatBorder(textProperties.border, pixelScaleFactor),
-    borderBottom:
-      textProperties.borderBottom &&
-      formatBorder(textProperties.borderBottom, pixelScaleFactor),
-    borderTop:
-      textProperties.borderTop &&
-      formatBorder(textProperties.borderTop, pixelScaleFactor),
-    borderLeft:
-      textProperties.borderLeft &&
-      formatBorder(textProperties.borderLeft, pixelScaleFactor),
-    borderRight:
-      textProperties.borderRight &&
-      formatBorder(textProperties.borderRight, pixelScaleFactor),
+    borderRadius: `${textProperties.borderRadius}px`,
+    border: textProperties.border && formatBorder(textProperties.border, 1),
+    // borderBottom:
+    //   !textProperties.border && textProperties.borderBottom
+    //     ? formatBorder(textProperties.borderBottom, 1)
+    //     : undefined,
+    // borderTop:
+    //   !textProperties.border && textProperties.borderTop
+    //     ? formatBorder(textProperties.borderTop, 1)
+    //     : undefined,
+    // borderLeft:
+    //   !textProperties.border && textProperties.borderLeft
+    //     ? formatBorder(textProperties.borderLeft, 1)
+    //     : undefined,
+    // borderRight:
+    //   !textProperties.border && textProperties.borderRight
+    //     ? formatBorder(textProperties.borderRight, 1)
+    //     : undefined,
   };
+
+  if (!textProperties.border) {
+    if (textProperties.borderBottom) {
+      containerStyles.borderBottom = formatBorder(
+        textProperties.borderBottom,
+        1
+      );
+    }
+
+    if (textProperties.borderTop) {
+      containerStyles.borderTop = formatBorder(textProperties.borderTop, 1);
+    }
+
+    if (textProperties.borderLeft) {
+      containerStyles.borderLeft = formatBorder(textProperties.borderLeft, 1);
+    }
+
+    if (textProperties.borderRight) {
+      containerStyles.borderRight = formatBorder(textProperties.borderRight, 1);
+    }
+  }
+
+  console.log(containerStyles);
 
   const textStyles: CSSProperties = {
     color: textProperties.color,
-    font: `${textProperties.fontWeight} ${
-      textProperties.fontSize * pixelScaleFactor
-    }px ${textProperties.fontFamily}`,
+    font: `${textProperties.fontWeight} ${textProperties.fontSize}px ${textProperties.fontFamily}`,
   };
 
   return (
