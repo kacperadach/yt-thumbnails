@@ -4,35 +4,43 @@ import ThumbnailPreview from "./thumbnails/ThumbnailComposition";
 import { pxToRem, remToPx } from "../lib/utils";
 import { staticFile } from "remotion";
 import { TEMPLATES, TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
-import { thumbnail } from "../lib/signals";
+import { thumbnails, editingThumbnailId } from "../lib/signals";
+import { createThumbnail } from "../lib/api";
 
 export default function Templates() {
+  const onTemplateSelect = async (template: Thumbnail) => {
+    const response = await createThumbnail(template);
+    if (response.success) {
+      const newThumbnail = response.data as Thumbnail;
+      thumbnails.value = [...thumbnails.value, newThumbnail];
+      editingThumbnailId.value = newThumbnail.id;
+    }
+  };
+
   return (
     <Container fluid>
-      <div className="">
-        <div>
-          <div className="text-xl font-medium text-black">Templates</div>
-          <Row className="flex">
-            {TEMPLATES.map((template, index) => {
-              return (
-                <Col
-                  key={index}
-                  md={2}
-                  className="px-6 max-w-sm mx-10  rounded-xl shadow-lg flex items-center hover:bg-blue-300 transition duration-300 ease-in-out cursor-pointer"
-                  onClick={() => {
-                    thumbnail.value = template;
-                  }}
-                >
-                  <ThumbnailPreview
-                    thumbnail={template}
-                    width={remToPx(TEMPLATE_PREVIEW_WIDTH)}
-                    height={remToPx(TEMPLATE_PREVIEW_WIDTH) * (9 / 16)}
-                  />
-                </Col>
-              );
-            })}
-          </Row>
-        </div>
+      <div>
+        <div className="text-xl font-medium text-black">Templates</div>
+        <Row className="flex">
+          {TEMPLATES.map((template, index) => {
+            return (
+              <Col
+                key={index}
+                md={2}
+                className="px-6 max-w-sm mx-10 my-2 rounded-xl shadow-lg flex items-center hover:bg-blue-300 transition duration-300 ease-in-out cursor-pointer"
+                onClick={() => {
+                  onTemplateSelect(template);
+                }}
+              >
+                <ThumbnailPreview
+                  thumbnail={template}
+                  width={remToPx(TEMPLATE_PREVIEW_WIDTH)}
+                  height={remToPx(TEMPLATE_PREVIEW_WIDTH) * (9 / 16)}
+                />
+              </Col>
+            );
+          })}
+        </Row>
       </div>
     </Container>
   );

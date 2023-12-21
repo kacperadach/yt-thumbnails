@@ -19,8 +19,6 @@
 .videoContainer {
     position: absolute;
     z-index: 1;
-     bottom: -50%; 
-      left: -45% 
 }
 
 .thumbnailPrimaryTextBackground {

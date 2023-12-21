@@ -70,6 +70,7 @@ class Video(Base, BaseTable):
     url: String = Column(String, index=False)
     original_url: String = Column(String, index=False)
     platform: String = Column(String, index=True)
+    thumbnail_url: String = Column(String, index=False)
 
 
 # class Item(Base, BaseTable):

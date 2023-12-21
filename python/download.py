@@ -75,8 +75,10 @@ def download_twitch_stream_info(url: str):
         return ydl.extract_info(url, download=False)
 
 
-def download_twitch_vod(url, resolution=720):
-    info = download_twitch_stream_info(url)
+def download_twitch_vod(url, resolution=720, info=None):
+    if not info:
+        info = download_twitch_stream_info(url)
+
     print([f.get("height") for f in info["formats"]])
     format_ = _get_closest_available_format(
         info["formats"],
@@ -107,8 +109,9 @@ def download_youtube_info(url):
         return ydl.extract_info(url, download=False)
 
 
-def download_youtube_vod(url, resolution=720):
-    info = download_youtube_info(url)
+def download_youtube_vod(url, resolution=720, info=None):
+    if not info:
+        info = download_youtube_info(url)
     print([f.get("height") for f in info["formats"]])
     format_ = _get_closest_available_format(
         info["formats"],
@@ -152,4 +155,9 @@ def extract_clip(path, start, end):
 if __name__ == "__main__":
     # 1:17:08 - 1:17:49
     # extract_clip("pron.mp4", 60, 180)
-    download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")
+    # download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")
+    print(
+        download_youtube_info("https://www.youtube.com/watch?v=LPDTuHcua0o").get(
+            "thumbnail"
+        )
+    )

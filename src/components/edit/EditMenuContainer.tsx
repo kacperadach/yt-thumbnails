@@ -10,7 +10,7 @@ import EditMenu from "./EditMenu";
 import { FaArrowsUpDownLeftRight } from "react-icons/fa6";
 import { MdOutlineTextFields } from "react-icons/md";
 import { RxBorderAll, RxImage } from "react-icons/rx";
-import { BsCardImage } from "react-icons/bs";
+import { BsCardImage, BsTrash } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
 
 const POSITIONING_GROUP = {
@@ -79,12 +79,11 @@ const FIELDS_BY_TYPE = {
 interface EditMenuContainerProps {
   thumbnailAsset: ThumbnailAsset;
   onUpdate: (newFields: Object) => void;
+  handleDelete?: () => void;
 }
 
 export default function EditMenuContainer(props: EditMenuContainerProps) {
-  const { thumbnailAsset, onUpdate } = props;
-
-  console.log(thumbnailAsset);
+  const { thumbnailAsset, onUpdate, handleDelete } = props;
 
   const [fieldFilter, setFieldFilter] = useState<string>("positioning");
 
@@ -170,6 +169,16 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
             }
             return null;
           })}
+          <div
+            className={`p-3 border mx-2 bg-red-200`}
+            onClick={() => {
+              if (handleDelete) {
+                handleDelete();
+              }
+            }}
+          >
+            <BsTrash size="2rem" />
+          </div>
         </div>
       </div>
       <EditMenu

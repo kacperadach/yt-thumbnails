@@ -10,6 +10,8 @@ import {
   selectedMenu,
   thumbnail,
   thumbnailWithCreatingAsset,
+  editingThumbnailId,
+  thumbnails,
 } from "../../lib/signals";
 import { ThumbnailAsset } from "../../lib/types";
 import EditMenuContainer from "./EditMenuContainer";
@@ -39,22 +41,42 @@ export default function Editor() {
   }, []);
 
   const onUpdate = (newFields: Object) => {
-    if (!thumbnail.value || !selectedAsset.value) {
+    if (!thumbnail.value || !selectedAsset.value || !editingThumbnailId.value) {
       return;
     }
 
-    thumbnail.value = {
-      background: thumbnail.value.background,
-      assets: thumbnail.value.assets.map((asset) => {
-        if (asset.id === selectedAsset.value?.id) {
-          return {
-            ...asset,
-            ...newFields,
-          };
-        }
-        return asset;
-      }),
-    };
+    thumbnails.value = thumbnails.value.map((t) => {
+      if (t.id === editingThumbnailId.value) {
+        return {
+          ...t,
+          background: t.background,
+          assets: t.assets.map((asset) => {
+            if (asset.id === selectedAsset.value?.id) {
+              return {
+                ...asset,
+                ...newFields,
+              };
+            }
+            return asset;
+          }),
+        };
+      }
+      return t;
+    });
+
+    // thumbnail.value = {
+    //   ...thumbnail.value,
+    //   background: thumbnail.value.background,
+    //   assets: thumbnail.value.assets.map((asset) => {
+    //     if (asset.id === selectedAsset.value?.id) {
+    //       return {
+    //         ...asset,
+    //         ...newFields,
+    //       };
+    //     }
+    //     return asset;
+    //   }),
+    // };
   };
 
   if (!thumbnailWithCreatingAsset.value) {
@@ -85,6 +107,19 @@ export default function Editor() {
               <EditMenuContainer
                 thumbnailAsset={selectedAsset.value as ThumbnailAsset}
                 onUpdate={onUpdate}
+                handleDelete={() => {
+                  thumbnails.value = thumbnails.value.map((t) => {
+                    if (t.id === editingThumbnailId.value) {
+                      return {
+                        ...t,
+                        assets: t.assets.filter(
+                          (asset) => asset.id !== selectedAsset.value?.id
+                        ),
+                      };
+                    }
+                    return t;
+                  });
+                }}
               />
             </div>
           )}

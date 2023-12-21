@@ -17,10 +17,6 @@ export default function TextAsset(props: TextAssetProps) {
     ...text,
   };
 
-  if (textProperties.border) {
-    console.log(formatBorder(textProperties.border, 1));
-  }
-
   const containerStyles: CSSProperties = {
     height: "fit-content",
     // height: `${textProperties.height * pixelScaleFactor}px`,
@@ -72,8 +68,6 @@ export default function TextAsset(props: TextAssetProps) {
       containerStyles.borderRight = formatBorder(textProperties.borderRight, 1);
     }
   }
-
-  console.log(containerStyles);
 
   const textStyles: CSSProperties = {
     color: textProperties.color,

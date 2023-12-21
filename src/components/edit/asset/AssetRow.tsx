@@ -7,7 +7,13 @@ import {
   remToPx,
 } from "../../../lib/utils";
 import BaseAsset from "../../thumbnails/BaseAsset";
-import { selectedAssetId, selectedMenu, thumbnail } from "../../../lib/signals";
+import {
+  selectedAssetId,
+  selectedMenu,
+  thumbnail,
+  thumbnails,
+  editingThumbnailId,
+} from "../../../lib/signals";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { MdOutlineTextFields } from "react-icons/md";
 import { BsCardImage } from "react-icons/bs";
@@ -75,14 +81,24 @@ export default function AssetRow(props: AssetRowProps) {
         <button
           className="flex bg-red-400 rounded justify-center items-center p-2 font-bold"
           onClick={() => {
-            if (!thumbnail.value) {
+            if (!thumbnail.value || !editingThumbnailId.value) {
               return;
             }
 
-            thumbnail.value = {
-              ...thumbnail.value,
-              assets: thumbnail.value?.assets.filter((a) => a.id !== asset.id),
-            };
+            thumbnails.value = thumbnails.value.map((t) => {
+              if (t.id === editingThumbnailId.value) {
+                return {
+                  ...t,
+                  assets: t.assets.filter((a) => a.id !== asset.id),
+                };
+              }
+              return t;
+            });
+
+            // thumbnail.value = {
+            //   ...thumbnail.value,
+            //   assets: thumbnail.value?.assets.filter((a) => a.id !== asset.id),
+            // };
           }}
         >
           <span>Delete</span>

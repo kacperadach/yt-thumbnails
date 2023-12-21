@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Thumbnail as RemotionThumbnail } from "@remotion/player";
 import { AbsoluteFill, Img, staticFile } from "remotion";
 import styles from "./styles.module.css";
@@ -9,6 +10,7 @@ import { getPixelScaleFactor } from "../../lib/utils";
 import ShapeComponent from "./Shape";
 import ImageComponent from "./Image";
 import BaseAsset from "./BaseAsset";
+import { EDITOR_WIDTH } from "../../lib/constants";
 
 const FPS = 30;
 
@@ -23,16 +25,29 @@ function ThumbnailComposition(props: Record<string, unknown>) {
 
   const pixelScaleFactor = getPixelScaleFactor(width as number);
 
+  const [videoSrc, setVideoSrc] = useState(background.videoSrc || "");
+
+  useEffect(() => {
+    setVideoSrc(background.videoSrc || "");
+  }, [background]);
+
   return (
     <AbsoluteFill className="relative overflow-visible border">
-      {background.type === "video" && background.videoSrc && (
-        <div className={styles.videoContainer}>
+      {background.type === "video" && videoSrc && (
+        <div className="absolute w-full h-full">
           <RemotionThumbnail
             component={() => (
-              <Video src={background.videoSrc} width={1920} height={1080} />
+              <Video
+                src={videoSrc}
+                width={width as number}
+                height={(width as number) * (9 / 16)}
+                onError={(e) =>
+                  setVideoSrc(background.videoSrc + "?time=" + Date.now())
+                }
+              />
             )}
-            compositionWidth={1920}
-            compositionHeight={1080}
+            compositionWidth={width as number}
+            compositionHeight={(width as number) * (9 / 16)}
             frameToDisplay={FPS * (background.videoTime || 0)}
             durationInFrames={1000000}
             fps={FPS}

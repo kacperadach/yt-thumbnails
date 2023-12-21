@@ -94,6 +94,7 @@ export const DEFAULT_CIRCLE_OBJECT: Circle = {
 export const TEMPLATE_PREVIEW_WIDTH = 25;
 export const TEMPLATES: Thumbnail[] = [
   {
+    id: uuidv4(),
     background: {
       type: "color",
       color: "grey",
@@ -211,6 +212,7 @@ export const TEMPLATES: Thumbnail[] = [
     ],
   },
   {
+    id: uuidv4(),
     background: {
       type: "color",
       color: "blue",

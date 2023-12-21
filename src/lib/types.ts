@@ -74,14 +74,24 @@ export type Arrow = Shape & {
 export type Background = {
   type: "color" | "image" | "video";
   color?: string;
+  imageId?: string;
   imageSrc?: string;
+  videoId?: string;
   videoSrc?: string;
   videoTime?: number;
-
-  // TODO: gradient?
 };
 
 export type Thumbnail = {
+  id: string;
   assets: Array<Image | Text | Circle | Arrow>;
   background: Background;
+};
+
+export type Video = {
+  id: string;
+  original_url: string;
+  platform: "youtube" | "twitch";
+  url?: string;
+  thumbnail_url?: string;
+  created_at: number;
 };
