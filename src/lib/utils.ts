@@ -39,29 +39,35 @@ export function getBaseCssProperties(
     zIndex: asset.zIndex,
     width: `${asset.width}px`,
     aspectRatio: asset.aspectRatio,
-    transform: `rotate(${asset.rotation || 0}deg) scale(${pixelScaleFactor})`,
+    transform: `rotate(${
+      asset.rotation || 0
+    }deg) scale(${pixelScaleFactor}) translate(-50%, -50%)`,
   };
 
-  let transformOrigin = "";
-  if (asset.top !== undefined) {
-    transformOrigin += "top ";
-    baseCssProperties.top = `${asset.top}%`;
-  } else if (asset.bottom !== undefined) {
-    transformOrigin += "bottom ";
-    baseCssProperties.bottom = `${asset.bottom}%`;
-  } else {
-    transformOrigin += "top ";
-  }
+  baseCssProperties.top = `${asset.y}%`;
+  baseCssProperties.left = `${asset.x}%`;
 
-  if (asset.left !== undefined) {
-    transformOrigin += "left";
-    baseCssProperties.left = `${asset.left}%`;
-  } else if (asset.right !== undefined) {
-    transformOrigin += "right";
-    baseCssProperties.right = `${asset.right}%`;
-  } else {
-    transformOrigin += "left";
-  }
+  let transformOrigin = "top left";
+
+  // if (asset.top !== undefined) {
+  //   transformOrigin += "top ";
+  //   baseCssProperties.top = `${asset.top}%`;
+  // } else if (asset.bottom !== undefined) {
+  //   transformOrigin += "bottom ";
+  //   baseCssProperties.bottom = `${asset.bottom}%`;
+  // } else {
+  //   transformOrigin += "top ";
+  // }
+
+  // if (asset.left !== undefined) {
+  //   transformOrigin += "left";
+  //   baseCssProperties.left = `${asset.left}%`;
+  // } else if (asset.right !== undefined) {
+  //   transformOrigin += "right";
+  //   baseCssProperties.right = `${asset.right}%`;
+  // } else {
+  //   transformOrigin += "left";
+  // }
 
   baseCssProperties.transformOrigin = transformOrigin;
 

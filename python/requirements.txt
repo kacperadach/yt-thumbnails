@@ -39,6 +39,7 @@ python-dotenv==1.0.0
 python-multipart==0.0.6
 PyYAML==6.0.1
 requests==2.31.0
+rq==1.15.1
 s3transfer==0.9.0
 safetensors==0.4.1
 six==1.16.0

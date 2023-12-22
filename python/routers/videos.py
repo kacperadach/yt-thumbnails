@@ -22,6 +22,8 @@ from download import (
     download_twitch_stream_info,
     download_youtube_info,
 )
+from worker import q
+from files import TMP_DIR
 
 router = APIRouter()
 
@@ -52,7 +54,7 @@ async def download_video_and_upload(video_id: str, url: str):
     thumbnail = info.get("thumbnail")
 
     if thumbnail:
-        thumbnail_path = f"tmp/{video_id}_thumbnail.jpg"
+        thumbnail_path = os.path.join(TMP_DIR, f"{video_id}_thumbnail.jpg")
         download_image(thumbnail, thumbnail_path)
         if os.path.exists(thumbnail_path):
             thumbnail_s3_url = await upload_file_to_s3(
@@ -136,7 +138,8 @@ async def process_video(
     db.commit()
     db.refresh(video)
 
-    background_tasks.add_task(download_video_and_upload, video.id, video_request.url)
+    # background_tasks.add_task(download_video_and_upload, video.id, video_request.url)
+    q.enqueue(download_video_and_upload, video.id, video_request.url)
 
     return video
 

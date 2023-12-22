@@ -28,6 +28,8 @@ export default function EditMenu(props: EditMenuProps) {
     filterFields = Object.keys(defaultObject),
   } = props;
 
+  console.log(asset);
+
   return (
     <Container fluid>
       {Object.keys(defaultObject).map((key, index) => {
@@ -35,8 +37,16 @@ export default function EditMenu(props: EditMenuProps) {
           return null;
         }
 
-        let fieldComponent = null;
+        if (key === "transparent" && asset.type === "image" && !asset.imageId) {
+          return null;
+        }
 
+        let disabled = false;
+        // if (key === "src" && asset.type === "image") {
+        //   disabled = true;
+        // }
+
+        let fieldComponent = null;
         if (
           key === "border" ||
           key === "borderRight" ||
@@ -51,7 +61,22 @@ export default function EditMenu(props: EditMenuProps) {
               asset={obj}
               defaultObject={DEFAULT_BORDER_OBJECT}
               onUpdate={(newFields: Object) => {
-                onUpdate({ [key]: { ...obj, ...newFields } });
+                const updateFields = { [key]: { ...obj, ...newFields } };
+                if (key === "border") {
+                  updateFields["borderRight"] = undefined;
+                  updateFields["borderLeft"] = undefined;
+                  updateFields["borderTop"] = undefined;
+                  updateFields["borderBottom"] = undefined;
+                } else if (
+                  key === "borderRight" ||
+                  key === "borderLeft" ||
+                  key === "borderTop" ||
+                  key === "borderBottom"
+                ) {
+                  updateFields["border"] = undefined;
+                }
+
+                onUpdate(updateFields);
               }}
             />
           );
@@ -74,6 +99,8 @@ export default function EditMenu(props: EditMenuProps) {
               value={asset[key] as any}
               onUpdate={onUpdate}
               defaultValue={defaultObject[key] as any}
+              disabled={disabled}
+              asset={asset}
             />
           );
         }

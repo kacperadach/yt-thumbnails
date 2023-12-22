@@ -19,6 +19,7 @@ export default function TextAsset(props: TextAssetProps) {
 
   const containerStyles: CSSProperties = {
     height: "fit-content",
+    minWidth: "fit-content",
     // height: `${textProperties.height * pixelScaleFactor}px`,
     backgroundColor: textProperties.backgroundColor,
     padding: `${textProperties.padding}px`,
@@ -30,22 +31,6 @@ export default function TextAsset(props: TextAssetProps) {
       )}`,
     borderRadius: `${textProperties.borderRadius}px`,
     border: textProperties.border && formatBorder(textProperties.border, 1),
-    // borderBottom:
-    //   !textProperties.border && textProperties.borderBottom
-    //     ? formatBorder(textProperties.borderBottom, 1)
-    //     : undefined,
-    // borderTop:
-    //   !textProperties.border && textProperties.borderTop
-    //     ? formatBorder(textProperties.borderTop, 1)
-    //     : undefined,
-    // borderLeft:
-    //   !textProperties.border && textProperties.borderLeft
-    //     ? formatBorder(textProperties.borderLeft, 1)
-    //     : undefined,
-    // borderRight:
-    //   !textProperties.border && textProperties.borderRight
-    //     ? formatBorder(textProperties.borderRight, 1)
-    //     : undefined,
   };
 
   if (!textProperties.border) {

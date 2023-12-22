@@ -2,46 +2,68 @@ import { useState } from "react";
 import { SketchPicker } from "react-color";
 import { BsCheck, BsPlus } from "react-icons/bs";
 import BorderStyleField from "./BorderStyleField";
+import { Image, ThumbnailAsset } from "../../lib/types";
+import { images } from "../../lib/signals";
+import { Dropdown } from "react-bootstrap";
+import { AVAILABLE_DEFAULT_FONTS } from "../../lib/constants";
 
 interface EditFieldProps {
+  asset?: ThumbnailAsset;
   fieldName: string;
   value: any;
   defaultValue: any;
   onUpdate: (value: any) => void;
   type?: string;
+  disabled?: boolean;
+  step?: number;
 }
 
 export default function EditField(props: EditFieldProps) {
   const [editingColor, setEditingColor] = useState(false);
 
-  const { fieldName, onUpdate, value, defaultValue, type } = props;
+  const {
+    asset,
+    fieldName,
+    onUpdate,
+    value,
+    defaultValue,
+    type,
+    disabled,
+    step = 1,
+  } = props;
 
   const inputType = typeof defaultValue;
 
-  const emptyValue = inputType === "number" ? 0 : "";
+  let emptyValue;
+  if (inputType === "number") {
+    emptyValue = 0;
+  } else if (inputType === "string") {
+    emptyValue = "";
+  } else if (inputType === "boolean") {
+    emptyValue = false;
+  }
 
-  const handleChange = (e: any) => {
-    let newValue = e.target.value;
+  const handleChange = (value: any) => {
+    let newValue = value;
     if (inputType === "number") {
       newValue = newValue ? parseFloat(newValue) : "";
     }
 
     const updatedFields = { [fieldName]: newValue };
 
-    if (fieldName === "top") {
-      updatedFields["bottom"] = undefined;
+    if (fieldName === "src") {
+      updatedFields["imageId"] = undefined;
     }
 
-    if (fieldName === "bottom") {
-      updatedFields["top"] = undefined;
-    }
-
-    if (fieldName === "left") {
-      updatedFields["right"] = undefined;
-    }
-
-    if (fieldName === "right") {
-      updatedFields["left"] = undefined;
+    if (fieldName === "transparent" && asset?.type === "image") {
+      const imageResource = images.value.find(
+        (image) => image.id === (asset as Image).imageId
+      );
+      if (imageResource) {
+        updatedFields["src"] = newValue
+          ? imageResource.url_transparent
+          : imageResource.url;
+      }
     }
 
     onUpdate(updatedFields);
@@ -98,15 +120,58 @@ export default function EditField(props: EditFieldProps) {
         onChange={(style: string) => onUpdate({ [fieldName]: style })}
       />
     );
+  } else if (inputType === "boolean") {
+    return (
+      <input
+        className={`border-2 border-gray-200 rounded-md p-1 ${
+          disabled && "bg-gray-200 opacity-60"
+        }`}
+        style={{ width: "fit-content" }}
+        type="checkbox"
+        name={fieldName}
+        checked={value}
+        onChange={(e) => {
+          handleChange(e.target.checked);
+        }}
+        disabled={disabled}
+      />
+    );
+  } else if (fieldName === "fontFamily") {
+    return (
+      <Dropdown className="bg-white text-black">
+        <Dropdown.Toggle className="bg-white text-black border border-2 rounded-md">
+          {value}
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {AVAILABLE_DEFAULT_FONTS.map((font, index) => {
+            return (
+              <Dropdown.Item
+                key={index}
+                onClick={() => onUpdate({ [fieldName]: font })}
+                style={{
+                  fontFamily: font,
+                }}
+              >
+                {font}
+              </Dropdown.Item>
+            );
+          })}
+        </Dropdown.Menu>
+      </Dropdown>
+    );
   } else {
     return (
       <input
-        className="border-2 border-gray-200 rounded-md p-1"
+        className={`border-2 border-gray-200 rounded-md p-1 ${
+          disabled && "bg-gray-200 opacity-60"
+        }`}
         style={{ width: "fit-content" }}
         type={inputType}
         name={fieldName}
         value={value !== undefined ? value : emptyValue}
-        onChange={handleChange}
+        onChange={(e) => handleChange(e.target.value)}
+        disabled={disabled}
+        step={step}
       />
     );
   }

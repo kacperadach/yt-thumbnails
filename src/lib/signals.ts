@@ -6,7 +6,8 @@ import {
   Arrow,
   Thumbnail,
   ThumbnailAsset,
-  Video,
+  VideoResource,
+  ImageResource,
 } from "./types";
 import { fetchVideos, updateThumbnail } from "./api";
 
@@ -16,8 +17,9 @@ export const selectedAssetId = signal<string | null>(null);
 export const selectedMenu = signal<"assets" | "background" | null>(null);
 export const isCreatingAsset = signal<boolean>(false);
 export const creatingAsset = signal<Image | Text | Circle | Arrow | null>(null);
-export const videos = signal<Video[]>([]);
+export const videos = signal<VideoResource[]>([]);
 export const processingVideoId = signal<string | null>(null);
+export const images = signal<ImageResource[]>([]);
 
 export const fetchedVideos = signal<boolean>(false);
 
@@ -78,15 +80,15 @@ effect(() => {
       videos.value = [
         ...response.data,
         ...videos.value.filter(
-          (v) => !response.data.find((v2: Video) => v.id === v2.id)
+          (v) => !response.data.find((v2: VideoResource) => v.id === v2.id)
         ),
       ];
       if (timeoutSignal.value) {
         return;
       }
       const processingVideoIds = response.data
-        .filter((v: Video) => !v.url)
-        .map((v: Video) => v.id);
+        .filter((v: VideoResource) => !v.url)
+        .map((v: VideoResource) => v.id);
       if (processingVideoIds.length === 0) {
         console.log("no processing videos");
         return;

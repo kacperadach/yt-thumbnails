@@ -30,14 +30,18 @@ export type ApiResponse = Promise<{
 async function makeRequest(
   url: string,
   method: string = "GET",
-  body?: any
+  body?: any,
+  headers?: any
 ): Promise<ApiResponse> {
   const response = await fetch(url, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
+    headers:
+      headers !== undefined
+        ? headers
+        : {
+            "Content-Type": "application/json",
+          },
+    body,
   });
   if (!response.ok) {
     apiError.value = response.statusText;
@@ -85,10 +89,14 @@ export async function createThumbnail(
   };
 
   const userId = getOrSetUserId();
-  const apiResponse = await makeRequest(`${apiUrl}${THUMBNAIL_PATH}`, "POST", {
-    user_id: userId,
-    thumbnail: thumbnailCopy,
-  });
+  const apiResponse = await makeRequest(
+    `${apiUrl}${THUMBNAIL_PATH}`,
+    "POST",
+    JSON.stringify({
+      user_id: userId,
+      thumbnail: thumbnailCopy,
+    })
+  );
 
   if (!apiResponse.success) {
     return apiResponse;
@@ -112,10 +120,10 @@ export async function updateThumbnail(
   const apiResponse = await makeRequest(
     `${apiUrl}${THUMBNAIL_PATH}/${thumbnail.id}`,
     "PUT",
-    {
+    JSON.stringify({
       user_id: userId,
       thumbnail: thumbnailCopy,
-    }
+    })
   );
 
   if (!apiResponse.success) {
@@ -131,10 +139,14 @@ export async function updateThumbnail(
 export async function processVideo(url: string): Promise<ApiResponse> {
   const userId = getOrSetUserId();
 
-  return await makeRequest(`${apiUrl}${VIDEO_PATH}`, "POST", {
-    user_id: userId,
-    url,
-  });
+  return await makeRequest(
+    `${apiUrl}${VIDEO_PATH}`,
+    "POST",
+    JSON.stringify({
+      user_id: userId,
+      url,
+    })
+  );
 }
 
 export async function fetchVideos(ids?: string[]): Promise<ApiResponse> {
@@ -146,4 +158,21 @@ export async function fetchVideos(ids?: string[]): Promise<ApiResponse> {
   }
 
   return await makeRequest(url);
+}
+
+export async function uploadImage(selectedFile: File) {
+  const userId = getOrSetUserId();
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+  return await makeRequest(
+    `${apiUrl}${IMAGE_PATH}?user_id=${userId}`,
+    "POST",
+    formData,
+    {}
+  );
+}
+
+export async function fetchImages() {
+  const userId = getOrSetUserId();
+  return await makeRequest(`${apiUrl}${IMAGE_PATH}/by-user/${userId}`);
 }

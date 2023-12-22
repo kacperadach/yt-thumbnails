@@ -1,8 +1,8 @@
 import { Spinner } from "react-bootstrap";
-import { Video } from "../lib/types";
+import { VideoResource } from "../lib/types";
 
 interface VideoPreviewProps {
-  video: Video;
+  video: VideoResource;
   onSelect?: () => void;
 }
 

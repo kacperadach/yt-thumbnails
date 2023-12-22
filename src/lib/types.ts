@@ -1,10 +1,12 @@
 export type ThumbnailAsset = {
   id: string;
   type: "image" | "text" | "shape";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+  // top?: number;
+  // bottom?: number;
+  // left?: number;
+  // right?: number;
+  x: number;
+  y: number;
   width: number;
   zIndex: number;
   rotation?: number;
@@ -14,6 +16,8 @@ export type ThumbnailAsset = {
 export type Image = ThumbnailAsset & {
   type: "image";
   src: string;
+  imageId?: string;
+  transparent?: boolean;
 };
 
 export type Border = {
@@ -76,6 +80,10 @@ export type Background = {
   color?: string;
   imageId?: string;
   imageSrc?: string;
+  transparent?: boolean;
+  zoom?: number;
+  x?: number;
+  y?: number;
   videoId?: string;
   videoSrc?: string;
   videoTime?: number;
@@ -87,11 +95,18 @@ export type Thumbnail = {
   background: Background;
 };
 
-export type Video = {
+export type VideoResource = {
   id: string;
   original_url: string;
   platform: "youtube" | "twitch";
   url?: string;
   thumbnail_url?: string;
+  created_at: number;
+};
+
+export type ImageResource = {
+  id: string;
+  url: string;
+  url_transparent: string;
   created_at: number;
 };

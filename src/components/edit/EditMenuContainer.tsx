@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Shape, ThumbnailAsset } from "../../lib/types";
+import { ImageResource, Shape, ThumbnailAsset } from "../../lib/types";
 import { capitalizeFirstLetter } from "../../lib/utils";
 import {
   DEFAULT_TEXT_OBJECT,
@@ -12,20 +12,12 @@ import { MdOutlineTextFields } from "react-icons/md";
 import { RxBorderAll, RxImage } from "react-icons/rx";
 import { BsCardImage, BsTrash } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
+import UploadedImageGallery from "../UploadedImageGallery";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
   type: "positioning",
-  fields: [
-    "top",
-    "bottom",
-    "left",
-    "right",
-    "width",
-    "height",
-    "zIndex",
-    "rotation",
-  ],
+  fields: ["x", "y", "width", "height", "zIndex", "rotation"],
 };
 
 const FIELDS_BY_TYPE = {
@@ -41,7 +33,7 @@ const FIELDS_BY_TYPE = {
     {
       icon: <BsCardImage size="2rem" />,
       type: "image",
-      fields: ["src"],
+      fields: ["src", "transparent"],
     },
     POSITIONING_GROUP,
   ],
@@ -169,16 +161,18 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
             }
             return null;
           })}
-          <div
-            className={`p-3 border mx-2 bg-red-200`}
-            onClick={() => {
-              if (handleDelete) {
-                handleDelete();
-              }
-            }}
-          >
-            <BsTrash size="2rem" />
-          </div>
+          {handleDelete && (
+            <div
+              className={`p-3 border mx-2 bg-red-200`}
+              onClick={() => {
+                if (handleDelete) {
+                  handleDelete();
+                }
+              }}
+            >
+              <BsTrash size="2rem" />
+            </div>
+          )}
         </div>
       </div>
       <EditMenu
@@ -187,6 +181,17 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
         asset={thumbnailAsset}
         filterFields={filterFields}
       />
+      {fieldFilter === "image" && (
+        <UploadedImageGallery
+          handleSelect={(image: ImageResource) => {
+            onUpdate({
+              src: image.url_transparent,
+              imageId: image.id,
+              transparent: true,
+            });
+          }}
+        />
+      )}
     </div>
   );
 }

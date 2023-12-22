@@ -24,8 +24,6 @@ import CreateTextAsset from "./CreateAsset";
 import CreateAsset from "./CreateAsset";
 
 export default function AssetsMenu() {
-  console.log(creatingAsset.value);
-
   return (
     <div>
       <div>
@@ -53,6 +51,7 @@ export default function AssetsMenu() {
                   (creatingAsset.value = {
                     ...DEFAULT_TEXT_OBJECT,
                     id: uuidv4(),
+                    zIndex: thumbnail.value?.assets.length || 0,
                   })
                 }
               >

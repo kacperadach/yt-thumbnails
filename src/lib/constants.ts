@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export const EDITOR_WIDTH = 1280;
 export const EDITOR_HEIGHT = 720;
-
 export const DEFAULT_IMAGE_SRC = `${staticFile("/images/headshot.png")}`;
 
 export const DEFAULT_TEXT_PROPERTIES = {
@@ -31,18 +30,16 @@ export const EMPTY_BORDER_OBJECT: Border = {
 };
 
 export const DEFAULT_LONG_SHADOW_OBJECT: LongShadow = {
-  width: 0,
-  color: "white",
+  width: 10,
+  color: "black",
 };
 
 export const DEFAULT_TEXT_OBJECT: Text = {
   id: "",
   type: "text",
-  top: 50,
-  bottom: 0,
-  left: 50,
-  right: 0,
-  width: EDITOR_WIDTH * 0.3,
+  x: 50,
+  y: 50,
+  width: EDITOR_WIDTH * 0.4,
   height: 0,
   zIndex: 0,
   rotation: 0,
@@ -59,30 +56,35 @@ export const DEFAULT_TEXT_OBJECT: Text = {
   fontFamily: "Arial",
   fontWeight: 400,
   fontSize: 72,
-  color: "black",
+  color: "white",
 };
 
 export const DEFAULT_IMAGE_OBJECT: Image = {
   id: "",
   type: "image",
-  top: 50,
-  bottom: 0,
-  left: 50,
-  right: 0,
+  x: 50,
+  y: 50,
+  // top: 50,
+  // bottom: 0,
+  // left: 50,
+  // right: 0,
   width: EDITOR_WIDTH * 0.2,
   zIndex: 0,
   rotation: 0,
   src: DEFAULT_IMAGE_SRC,
+  transparent: false,
 };
 
 export const DEFAULT_CIRCLE_OBJECT: Circle = {
   id: "",
   type: "shape",
   shapeType: "circle",
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
+  x: 50,
+  y: 50,
+  // top: 50,
+  // bottom: 0,
+  // left: 50,
+  // right: 0,
   width: 0,
   zIndex: 0,
   rotation: 0,
@@ -90,6 +92,19 @@ export const DEFAULT_CIRCLE_OBJECT: Circle = {
   outline: DEFAULT_BORDER_OBJECT,
   backgroundColor: "transparent",
 };
+
+export const AVAILABLE_DEFAULT_FONTS = [
+  "Arial",
+  "Comic Sans MS",
+  "Courier New",
+  "Georgia",
+  "Helvetica",
+  "Impact",
+  "Palatino",
+  "Times New Roman",
+  "Trebuchet MS",
+  "Verdana",
+];
 
 export const TEMPLATE_PREVIEW_WIDTH = 25;
 export const TEMPLATES: Thumbnail[] = [
@@ -103,8 +118,8 @@ export const TEMPLATES: Thumbnail[] = [
       {
         id: uuidv4(),
         type: "text",
-        top: 75,
-        left: 10,
+        x: 30,
+        y: 85,
         width: EDITOR_WIDTH * 0.5,
         height: EDITOR_HEIGHT * 0.2,
         zIndex: 3,
@@ -135,8 +150,9 @@ export const TEMPLATES: Thumbnail[] = [
       {
         id: uuidv4(),
         type: "text",
-        top: 5,
-        left: 20,
+        x: 35,
+        y: 15,
+
         width: EDITOR_WIDTH * 0.5,
         height: EDITOR_HEIGHT * 0.2,
         zIndex: 2,
@@ -168,7 +184,8 @@ export const TEMPLATES: Thumbnail[] = [
         id: uuidv4(),
         type: "shape",
         shapeType: "circle",
-        left: 0,
+        x: 25,
+        y: 50,
         width: EDITOR_WIDTH * 0.6,
         aspectRatio: "1/1",
         zIndex: 1,
@@ -187,8 +204,8 @@ export const TEMPLATES: Thumbnail[] = [
       {
         id: uuidv4(),
         type: "image",
-        left: 70,
-        top: 10,
+        x: 80,
+        y: 50,
         width: EDITOR_WIDTH * 0.3,
         zIndex: 4,
         src: DEFAULT_IMAGE_SRC,
@@ -197,8 +214,8 @@ export const TEMPLATES: Thumbnail[] = [
         id: uuidv4(),
         type: "shape",
         shapeType: "arrow",
-        top: 50,
-        left: 50,
+        x: 50,
+        y: 50,
         zIndex: 6,
         width: 0,
         rotation: 110,

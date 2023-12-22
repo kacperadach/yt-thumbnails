@@ -21,6 +21,8 @@ from PIL import Image as PILImage
 
 from s3 import upload_file_to_s3
 from db.models import get_db, get_db_context_manager, User, Image
+from worker import q
+from files import write_file
 
 
 router = APIRouter()
@@ -43,7 +45,9 @@ def make_background_transparent(image_path):
 async def process_image_and_upload(file_location: str, image_id: str):
     output_path = None
     try:
+        print(f"Processing image: {file_location}")
         output_path = make_background_transparent(file_location)
+        print(f"Finished processing image: {file_location}, output path: {output_path}")
 
         original_upload = upload_file_to_s3(
             file_location, object_name=f"images/{os.path.basename(file_location)}"
@@ -55,6 +59,8 @@ async def process_image_and_upload(file_location: str, image_id: str):
             original_upload, transparent_upload
         )
 
+        print("Finished uploading to S3: {file_location}/{image_id}")
+
         with get_db_context_manager() as db:
             image = db.query(Image).filter(Image.id == image_id).first()
             if not image:
@@ -64,6 +70,8 @@ async def process_image_and_upload(file_location: str, image_id: str):
             image.url = original_url
             image.url_transparent = processed_url
             db.commit()
+
+        print("Finished updating image: {file_location}/{image_id}")
 
     except Exception as e:
         print(e)
@@ -85,10 +93,13 @@ async def upload_image(
         raise HTTPException(status_code=400, detail="User ID is required")
 
     image_id = str(uuid4())
-    os.makedirs("tmp", exist_ok=True)
-    file_location = f"tmp/{image_id}.{file.filename.split('.')[-1]}"
-    with open(file_location, "wb+") as file_object:
-        shutil.copyfileobj(file.file, file_object)
+
+    file_path = write_file(f"{image_id}.{file.filename.split('.')[-1]}", file)
+
+    # os.makedirs("tmp", exist_ok=True)
+    # file_location = f"tmp/{image_id}.{file.filename.split('.')[-1]}"
+    # with open(file_location, "wb+") as file_object:
+    #     shutil.copyfileobj(file.file, file_object)
 
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -102,7 +113,9 @@ async def upload_image(
     db.commit()
     db.refresh(image)
 
-    background_tasks.add_task(process_image_and_upload, file_location, image_id)
+    # background_tasks.add_task(process_image_and_upload, file_location, image_id)
+    job = q.enqueue(process_image_and_upload, file_path, image_id)
+    print(f"Job enqueued with id: {job.id}")
 
     return image
 

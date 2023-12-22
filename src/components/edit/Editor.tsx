@@ -63,20 +63,6 @@ export default function Editor() {
       }
       return t;
     });
-
-    // thumbnail.value = {
-    //   ...thumbnail.value,
-    //   background: thumbnail.value.background,
-    //   assets: thumbnail.value.assets.map((asset) => {
-    //     if (asset.id === selectedAsset.value?.id) {
-    //       return {
-    //         ...asset,
-    //         ...newFields,
-    //       };
-    //     }
-    //     return asset;
-    //   }),
-    // };
   };
 
   if (!thumbnailWithCreatingAsset.value) {
@@ -89,7 +75,12 @@ export default function Editor() {
         <Col md={1}>
           <EditorSidebar />
         </Col>
-        <Col md={8} ref={previewRef} className="flex justify-center">
+        <Col
+          md={8}
+          ref={previewRef}
+          className="flex justify-center"
+          style={{ height: "fit-content" }}
+        >
           {previewWidth && (
             <div className=" rounded-xl shadow-lg p-3">
               <ThumbnailPreview

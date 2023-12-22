@@ -1,6 +1,7 @@
 import re
 import subprocess
 from yt_dlp import YoutubeDL
+from files import TMP_DIR
 
 
 DEFAULT_YT_DLP_ARGS = {
@@ -88,7 +89,7 @@ def download_twitch_vod(url, resolution=720, info=None):
     print(format_)
     twitch_download = DownloadHook()
     with YoutubeDL(
-        {"progress_hooks": [twitch_download.get_filename], "paths": {"home": "tmp"}}
+        {"progress_hooks": [twitch_download.get_filename], "paths": {"home": TMP_DIR}}
     ) as ydl:
         ydl.download(url)
 
@@ -121,7 +122,7 @@ def download_youtube_vod(url, resolution=720, info=None):
     print(format_)
     youtube_download = DownloadHook()
     with YoutubeDL(
-        {"progress_hooks": [youtube_download.get_filename], "paths": {"home": "tmp"}}
+        {"progress_hooks": [youtube_download.get_filename], "paths": {"home": TMP_DIR}}
     ) as ydl:
         ydl.download(url)
 
