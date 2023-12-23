@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { Arrow } from "../../lib/types";
 import { getBaseCssProperties, formatDropShadow } from "../../lib/utils";
 
@@ -8,22 +9,27 @@ interface ArrowProps {
 export default function ArrowComponent(props: ArrowProps) {
   const { arrow } = props;
 
-  const containerStyles = {
+  const containerStyles: CSSProperties = {
     // ...getBaseCssProperties(arrow),
-    dropShadow: arrow.dropShadow && formatDropShadow(arrow.dropShadow),
+    // dropShadow: arrow.dropShadow && formatDropShadow(arrow.dropShadow),
     // transform: "none",
     overflow: "visible",
+    position: "absolute",
+    display: "inline-block",
+    filter:
+      arrow.dropShadow && `drop-shadow(${formatDropShadow(arrow.dropShadow)})`,
   };
 
-  const headStyles = {
+  const headStyles: CSSProperties = {
     width: "5rem",
     height: "5rem",
     background: "linear-gradient(to left, red, rgb(255, 176, 176))",
     clipPath: "polygon(100% 0%, 0 0, 50% 100%)",
     overflow: "visible",
+    position: "relative",
   };
 
-  const tailStyles = {
+  const tailStyles: CSSProperties = {
     width: "1rem",
     height: "20rem",
     borderRadius: "50%/50% 50% 0 0",
@@ -34,12 +40,13 @@ export default function ArrowComponent(props: ArrowProps) {
     overflow: "visible",
     left: "2.5rem",
     top: 0,
+    position: "absolute",
   };
 
   return (
-    <div className="absolute inline-block" style={containerStyles}>
-      <div className="relative" style={headStyles}></div>
-      <div className="absolute" style={tailStyles} />
+    <div style={containerStyles}>
+      <div style={headStyles} />
+      <div style={tailStyles} />
     </div>
   );
 }

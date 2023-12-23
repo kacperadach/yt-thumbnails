@@ -1,5 +1,6 @@
 import { Spinner } from "react-bootstrap";
 import { VideoResource } from "../lib/types";
+import { BsX } from "react-icons/bs";
 
 interface VideoPreviewProps {
   video: VideoResource;
@@ -9,7 +10,7 @@ interface VideoPreviewProps {
 export default function VideoPreview(props: VideoPreviewProps) {
   const { video, onSelect } = props;
 
-  const isProcessing = !video.thumbnail_url || !video.url;
+  const isProcessing = video.status === "pending";
 
   return (
     <div
@@ -23,10 +24,23 @@ export default function VideoPreview(props: VideoPreviewProps) {
         onSelect();
       }}
     >
-      {video.thumbnail_url && <img src={video.thumbnail_url} />}
+      {video.thumbnail_url && (
+        <img
+          src={video.thumbnail_url}
+          style={{
+            opacity: isProcessing || video.status === "failed" ? 0.5 : 1,
+          }}
+        />
+      )}
       {isProcessing && (
         <div className="absolute">
           <Spinner color="black" />
+        </div>
+      )}
+      {video.status === "failed" && (
+        <div className="flex flex-column justify-center items-center absolute font-bold">
+          <BsX color="red" size="4rem" />
+          <span>Failed to Process</span>
         </div>
       )}
     </div>

@@ -14,9 +14,11 @@ export default function CircleComponent(props: CircleProps) {
     outline: circle.outline && formatBorder(circle.outline, 1),
     backgroundColor: circle.backgroundColor,
     aspectRatio: "1/1",
+    position: "absolute",
+    borderRadius: "50%",
+    width: "100%",
+    height: "100%",
   };
 
-  return (
-    <div className="absolute rounded-full w-full h-full" style={circleStyles} />
-  );
+  return <div style={circleStyles} />;
 }

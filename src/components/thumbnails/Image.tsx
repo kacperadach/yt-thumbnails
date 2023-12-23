@@ -1,20 +1,28 @@
 import { Image } from "../../lib/types";
 import { getBaseCssProperties } from "../../lib/utils";
+import { Img } from "remotion";
 
 interface ImageProps {
-  image: Image;
+  src: string | undefined;
 }
 
 export default function ImageComponent(props: ImageProps) {
-  const { image } = props;
+  const { src } = props;
 
-  if (!image.src) {
+  if (!src) {
     return null;
   }
 
   return (
     <div>
-      <img src={image.src} className="w-full h-full object-contain" />
+      <Img
+        src={src}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+        }}
+      />
     </div>
   );
 }

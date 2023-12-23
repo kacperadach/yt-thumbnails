@@ -2,9 +2,10 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { BsPlus, BsTrash } from "react-icons/bs";
 import {
-  creatingAsset,
   thumbnail,
   isCreatingAsset,
+  selectedAssetId,
+  selectedMenu,
 } from "../../../lib/signals";
 import { Container, Row, Col } from "react-bootstrap";
 import AssetRow from "./AssetRow";
@@ -44,39 +45,53 @@ export default function AssetsMenu() {
           {isCreatingAsset.value && (
             <>
               <div
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  creatingAsset.value?.type === "text" && "bg-gray-200"
-                }`}
-                onClick={() =>
-                  (creatingAsset.value = {
+                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+                onClick={() => {
+                  const id = uuidv4();
+                  isCreatingAsset.value = false;
+                  thumbnail.value?.assets.push({
                     ...DEFAULT_TEXT_OBJECT,
-                    id: uuidv4(),
-                    zIndex: thumbnail.value?.assets.length || 0,
-                  })
-                }
+                    id,
+                    zIndex:
+                      thumbnail.value?.assets.reduce((max, obj) => {
+                        return Math.max(max, obj.zIndex);
+                      }, 0) + 1 || 0,
+                  });
+                  selectedMenu.value = null;
+                  selectedAssetId.value = id;
+
+                  // creatingAsset.value = {
+                  //   ...DEFAULT_TEXT_OBJECT,
+                  //   id: uuidv4(),
+                  //   zIndex: thumbnail.value?.assets.length || 0,
+                  // };
+                }}
               >
                 <MdOutlineTextFields size="2rem" />
                 <label className="font-bold mx-2 ">Text</label>
               </div>
               <div
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  creatingAsset.value?.type === "image" && "bg-gray-200"
-                }`}
-                onClick={() =>
-                  (creatingAsset.value = {
+                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer `}
+                onClick={() => {
+                  const id = uuidv4();
+                  isCreatingAsset.value = false;
+                  thumbnail.value?.assets.push({
                     ...DEFAULT_IMAGE_OBJECT,
-                    id: uuidv4(),
-                  })
-                }
+                    id,
+                    zIndex:
+                      thumbnail.value?.assets.reduce((max, obj) => {
+                        return Math.max(max, obj.zIndex);
+                      }, 0) + 1 || 0,
+                  });
+                  selectedMenu.value = null;
+                  selectedAssetId.value = id;
+                }}
               >
                 <BsCardImage size="2rem" />
                 <label className="font-bold mx-2 ">Image</label>
               </div>
               <div
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  creatingAsset.value?.type === "shape" && "bg-gray-200"
-                }`}
-                onClick={() => (creatingAsset.value = null)}
+                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer `}
               >
                 <FaShapes size="2rem" />
                 <label className="font-bold mx-2 ">Shape</label>
@@ -84,7 +99,7 @@ export default function AssetsMenu() {
             </>
           )}
         </div>
-        {creatingAsset.value && <CreateAsset />}
+        {/* {creatingAsset.value && <CreateAsset />} */}
 
         {!isCreatingAsset.value && (
           <Container>

@@ -61,6 +61,7 @@ class Image(Base, BaseTable):
     user_id: String = Column(String, index=True)
     url: String = Column(String, index=False)
     url_transparent: String = Column(String, index=False)
+    status: String = Column(String, index=False)
 
 
 class Video(Base, BaseTable):
@@ -71,12 +72,14 @@ class Video(Base, BaseTable):
     original_url: String = Column(String, index=False)
     platform: String = Column(String, index=True)
     thumbnail_url: String = Column(String, index=False)
+    status: String = Column(String, index=False)
 
 
-# class Item(Base, BaseTable):
-#     __tablename__ = "items"
+class Render(Base, BaseTable):
+    __tablename__ = "renders"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String, index=True)
-#     description = Column(String, index=True)
-#     price = Column(Integer)
+    user_id: String = Column(String, index=True)
+    thumbnail_id: String = Column(String, index=True)
+    url: String = Column(String, index=False)
+    status: String = Column(String, index=False)
+    error_message: String = Column(String, index=False)

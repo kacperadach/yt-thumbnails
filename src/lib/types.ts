@@ -102,6 +102,7 @@ export type VideoResource = {
   url?: string;
   thumbnail_url?: string;
   created_at: number;
+  status: "pending" | "ready" | "failed";
 };
 
 export type ImageResource = {
@@ -109,4 +110,5 @@ export type ImageResource = {
   url: string;
   url_transparent: string;
   created_at: number;
+  status: "pending" | "ready" | "failed";
 };

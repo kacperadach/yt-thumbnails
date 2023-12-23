@@ -45,3 +45,6 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+## Remotion deploy
+
+npx remotion lambda sites create src/remotion/index.ts --site-name=thumbnail

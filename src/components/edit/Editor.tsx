@@ -1,15 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import {
-  DEFAULT_TEXT_OBJECT,
-  EDITOR_HEIGHT,
-  EDITOR_WIDTH,
-} from "../../lib/constants";
-import {
   selectedAsset,
   selectedMenu,
   thumbnail,
-  thumbnailWithCreatingAsset,
   editingThumbnailId,
   thumbnails,
 } from "../../lib/signals";
@@ -20,7 +14,6 @@ import { remToPx } from "../../lib/utils";
 import EditorSidebar from "./EditorSidebar";
 import BackgroundMenu from "./BackgroundMenu";
 import AssetsMenu from "./asset/AssetsMenu";
-import { useSignalEffect, signal, computed } from "@preact/signals-react";
 
 export default function Editor() {
   const [previewWidth, setPreviewWidth] = useState<number | null>(null);
@@ -65,7 +58,7 @@ export default function Editor() {
     });
   };
 
-  if (!thumbnailWithCreatingAsset.value) {
+  if (!thumbnail.value) {
     return null;
   }
 
@@ -78,13 +71,13 @@ export default function Editor() {
         <Col
           md={8}
           ref={previewRef}
-          className="flex justify-center"
+          className="flex justify-center flex-column"
           style={{ height: "fit-content" }}
         >
           {previewWidth && (
             <div className=" rounded-xl shadow-lg p-3">
               <ThumbnailPreview
-                thumbnail={thumbnailWithCreatingAsset.value}
+                thumbnail={thumbnail.value}
                 editable={true}
                 width={previewWidth}
                 height={previewWidth * (9 / 16)}

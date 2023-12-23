@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from routers.thumbnails import router as thumbnail_router
 from routers.images import router as image_router
 from routers.videos import router as video_router
+from routers.render import router as render_router
 
 load_dotenv()
 
@@ -41,3 +42,4 @@ async def read_root(db: Session = Depends(get_db)):
 app.include_router(thumbnail_router, prefix="/api")
 app.include_router(image_router, prefix="/api")
 app.include_router(video_router, prefix="/api")
+app.include_router(render_router, prefix="/api")

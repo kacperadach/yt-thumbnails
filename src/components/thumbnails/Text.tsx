@@ -18,7 +18,7 @@ export default function TextAsset(props: TextAssetProps) {
   };
 
   const containerStyles: CSSProperties = {
-    height: "fit-content",
+    height: `${textProperties.height}px`,
     minWidth: "fit-content",
     // height: `${textProperties.height * pixelScaleFactor}px`,
     backgroundColor: textProperties.backgroundColor,
@@ -31,6 +31,9 @@ export default function TextAsset(props: TextAssetProps) {
       )}`,
     borderRadius: `${textProperties.borderRadius}px`,
     border: textProperties.border && formatBorder(textProperties.border, 1),
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   if (!textProperties.border) {

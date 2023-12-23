@@ -46,30 +46,7 @@ export function getBaseCssProperties(
 
   baseCssProperties.top = `${asset.y}%`;
   baseCssProperties.left = `${asset.x}%`;
-
-  let transformOrigin = "top left";
-
-  // if (asset.top !== undefined) {
-  //   transformOrigin += "top ";
-  //   baseCssProperties.top = `${asset.top}%`;
-  // } else if (asset.bottom !== undefined) {
-  //   transformOrigin += "bottom ";
-  //   baseCssProperties.bottom = `${asset.bottom}%`;
-  // } else {
-  //   transformOrigin += "top ";
-  // }
-
-  // if (asset.left !== undefined) {
-  //   transformOrigin += "left";
-  //   baseCssProperties.left = `${asset.left}%`;
-  // } else if (asset.right !== undefined) {
-  //   transformOrigin += "right";
-  //   baseCssProperties.right = `${asset.right}%`;
-  // } else {
-  //   transformOrigin += "left";
-  // }
-
-  baseCssProperties.transformOrigin = transformOrigin;
+  baseCssProperties.transformOrigin = "top left";
 
   return baseCssProperties;
 }
@@ -83,3 +60,13 @@ export function addSpaceBeforeCaps(str: string) {
   // except for the first character.
   return str.replace(/(.)([A-Z])/g, "$1 $2");
 }
+
+export const downloadFile = (url: string, filename: string) => {
+  const anchor = document.createElement("a");
+  anchor.href = url.replaceAll("?", "%3F");
+  anchor.download = filename;
+  anchor.style.display = "none";
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+};

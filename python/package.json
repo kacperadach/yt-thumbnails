@@ -1,0 +1,9 @@
+{
+  "name": "yt-thumbnails",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@remotion/lambda": "^4.0.81",
+    "remotion": "^4.0.81"
+  }
+}

@@ -5,7 +5,7 @@ FROM python:3.10
 WORKDIR /usr/src/app
 
 # Install OpenGL libraries needed for OpenCV
-RUN apt-get update && apt-get install -y libgl1-mesa-glx ffmpeg
+RUN apt-get update && apt-get install -y libgl1-mesa-glx ffmpeg nodejs npm
 
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .

@@ -155,10 +155,10 @@ def extract_clip(path, start, end):
 
 if __name__ == "__main__":
     # 1:17:08 - 1:17:49
-    # extract_clip("pron.mp4", 60, 180)
+    extract_clip("shot.mp4", 18, 33)
     # download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")
-    print(
-        download_youtube_info("https://www.youtube.com/watch?v=LPDTuHcua0o").get(
-            "thumbnail"
-        )
-    )
+    # print(
+    #     download_youtube_info("https://www.youtube.com/watch?v=LPDTuHcua0o").get(
+    #         "thumbnail"
+    #     )
+    # )

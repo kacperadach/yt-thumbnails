@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   thumbnail,
   thumbnails,
@@ -8,38 +7,19 @@ import {
   images,
 } from "../../lib/signals";
 import { IoColorPaletteSharp } from "react-icons/io5";
-import { FaFileImage, FaFileVideo } from "react-icons/fa";
 import { RiVideoAddFill } from "react-icons/ri";
 import { BsCardImage } from "react-icons/bs";
 import EditField from "./EditField";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
-import {
-  Arrow,
-  Circle,
-  Image,
-  ImageResource,
-  ThumbnailAsset,
-  VideoResource,
-} from "../../lib/types";
+import { Col, Container, Row } from "react-bootstrap";
+import { ImageResource, VideoResource } from "../../lib/types";
 import { FaTwitch, FaYoutube } from "react-icons/fa6";
 import { processVideo } from "../../lib/api";
 import VideoPreview from "../VideoPreview";
 import UploadedImageGallery from "../UploadedImageGallery";
 import TimeField from "./TimeField";
+import VideoGallery from "../VideoGallery";
 
 export default function BackgroundMenu() {
-  const [url, setUrl] = useState("");
-
-  const onVideoProcess = async () => {
-    setUrl("");
-    const response = await processVideo(url);
-    if (response.success) {
-      const video = response.data as VideoResource;
-      processingVideoId.value = video.id;
-      videos.value = [...videos.value, video];
-    }
-  };
-
   const onUpdate = (newFields: Object) => {
     if (!thumbnail.value || !editingThumbnailId.value) {
       return;
@@ -288,98 +268,7 @@ export default function BackgroundMenu() {
                   </Row>
                 </>
               )}
-
-              {!processingVideoId.value && (
-                <>
-                  <Row className="border-t-2 mt-4">
-                    <Col>
-                      <div className="p-4">
-                        <h4>
-                          Use a YouTube or Twitch frame as your background!
-                        </h4>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row className="flex my-1 items-center">
-                    <Col md={2}>
-                      <div className="flex">
-                        <div className="mx-1">
-                          <FaYoutube size="1.5rem" color="#FF0000" />
-                        </div>
-                        <div className="mx-1">
-                          <FaTwitch size="1.5rem" color="#6441A5" />
-                        </div>
-                      </div>
-                    </Col>
-                    <Col>
-                      <input
-                        className="border-2 border-gray-200 rounded-md p-1 w-full text-sm"
-                        placeholder="Enter a YouTube/Twitch URL"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                      />
-                    </Col>
-                    <Col md={2}>
-                      <button
-                        className="p-2 border bg-green-200 rounded font-bold"
-                        onClick={onVideoProcess}
-                      >
-                        Process
-                      </button>
-                    </Col>
-                  </Row>
-                </>
-              )}
-              {processingVideoId.value && (
-                <div className="my-4">
-                  <Row>
-                    <Col className="flex justify-center">
-                      <h4 className="mx-2">Processing video</h4>
-                      <Spinner />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <span>This may take a bit.</span>
-                    </Col>
-                  </Row>
-                </div>
-              )}
-              {videos.value.length > 0 && (
-                <>
-                  <Row>
-                    <Col>
-                      <h4>All Videos</h4>
-                    </Col>
-                  </Row>
-                  <Row>
-                    {videos.value
-                      .slice() // Creates a shallow copy of the array
-                      .sort((a, b) => {
-                        const timestampA = new Date(a.created_at).getTime();
-                        const timestampB = new Date(b.created_at).getTime();
-                        return timestampB - timestampA;
-                      })
-                      .map((video: VideoResource, index) => (
-                        <Col md={4} key={index}>
-                          <VideoPreview
-                            video={video}
-                            onSelect={() => {
-                              onUpdate({
-                                videoId: video.id,
-                                videoSrc: video.url,
-                                videoTime: 0,
-                                zoom: 1,
-                                x: 50,
-                                y: 50,
-                              });
-                            }}
-                          />
-                        </Col>
-                      ))}
-                  </Row>
-                </>
-              )}
+              <VideoGallery onUpdate={onUpdate} />
             </>
           )}
         </Container>

@@ -92,8 +92,15 @@ async def download_video_and_upload(video_id: str, url: str):
 
             video.updated_at = time()
             video.url = s3_url
+            video.status = "success"
             db.commit()
     except Exception as exc:
+        with get_db_context_manager() as db:
+            video = db.query(Video).filter(Video.id == video_id).first()
+            if video:
+                video.updated_at = time()
+                video.status = "failed"
+                db.commit()
         print(exc)
     finally:
         os.remove(filepath)
@@ -132,7 +139,10 @@ async def process_video(
         db.refresh(user)
 
     video = Video(
-        platform=platform, original_url=video_request.url, user_id=video_request.user_id
+        platform=platform,
+        original_url=video_request.url,
+        user_id=video_request.user_id,
+        status="pending",
     )
     db.add(video)
     db.commit()

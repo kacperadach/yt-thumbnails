@@ -11,11 +11,13 @@ import { Video } from "remotion";
 import { Background, Thumbnail, ThumbnailAsset } from "../../lib/types";
 import { getPixelScaleFactor } from "../../lib/utils";
 import BaseAsset from "./BaseAsset";
+import { Img } from "remotion";
+import ImageComponent from "./Image";
 
 const FPS = 30;
 const MAX_ERROR_COUNT = 50;
 
-function ThumbnailComposition(props: Record<string, unknown>) {
+export function ThumbnailComposition(props: Record<string, unknown>) {
   const { thumbnail, width, editable, selectedAssetId } = props;
 
   const { background, assets } = thumbnail as Thumbnail;
@@ -53,26 +55,30 @@ function ThumbnailComposition(props: Record<string, unknown>) {
 
   return (
     <AbsoluteFill
-      className="relative overflow-visible border"
+      className="overflow-visible border"
       style={{
         backgroundColor: background.color,
+        position: "relative",
       }}
     >
       {background.type === "video" && videoSrc && (
         <div
-          className="absolute w-full h-full"
           style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
             backgroundColor: background.color,
             transform: `scale(${background.zoom || 1})  translate(-50%, -50%)`,
             top: `${background.y || 0}%`,
             left: `${background.x || 0}%`,
             transformOrigin: "top left",
+            zIndex: 0,
           }}
         >
           <RemotionThumbnail
             component={videoComponent}
-            compositionWidth={width as number}
-            compositionHeight={(width as number) * (9 / 16)}
+            compositionWidth={Math.round(width as number)}
+            compositionHeight={Math.round((width as number) * (9 / 16))}
             frameToDisplay={FPS * (background.videoTime || 0)}
             durationInFrames={1000000}
             fps={FPS}
@@ -82,21 +88,25 @@ function ThumbnailComposition(props: Record<string, unknown>) {
 
       {background.type === "image" && (
         <div
-          className="w-full h-full"
           style={{
-            backgroundImage: `url('${background.imageSrc}')`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
             backgroundColor: background.color,
+            width: "100%",
+            height: "100%",
+            zIndex: 0,
           }}
-        />
+        >
+          <ImageComponent src={background.imageSrc} />
+        </div>
       )}
 
       {background.type === "color" && (
         <div
-          className="absolute w-full h-full"
           style={{
             backgroundColor: background.color,
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 0,
           }}
         />
       )}
@@ -132,11 +142,11 @@ export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
     <RemotionThumbnail
       component={ThumbnailComposition}
       inputProps={{ thumbnail, width, editable, selectedAssetId }}
-      compositionWidth={width || 1280}
-      compositionHeight={height || 720}
+      compositionWidth={Math.round(width || 1280)}
+      compositionHeight={Math.round(height || 720)}
       frameToDisplay={0}
-      durationInFrames={0}
-      fps={0}
+      durationInFrames={1}
+      fps={30}
     />
   );
 }

@@ -11,6 +11,7 @@ const USER_ID = "user_id";
 const THUMBNAIL_PATH = "/v1/thumbnail";
 const IMAGE_PATH = "/v1/image";
 const VIDEO_PATH = "/v1/video";
+const RENDER_PATH = "/v1/render";
 
 export const getOrSetUserId = () => {
   let userId = localStorage.getItem(USER_ID);
@@ -175,4 +176,20 @@ export async function uploadImage(selectedFile: File) {
 export async function fetchImages() {
   const userId = getOrSetUserId();
   return await makeRequest(`${apiUrl}${IMAGE_PATH}/by-user/${userId}`);
+}
+
+export async function initiateRender(thumbnailId: string) {
+  const userId = getOrSetUserId();
+  return await makeRequest(
+    `${apiUrl}${RENDER_PATH}/initiate`,
+    "POST",
+    JSON.stringify({
+      user_id: userId,
+      thumbnail_id: thumbnailId,
+    })
+  );
+}
+
+export async function fetchRender(renderId: string) {
+  return await makeRequest(`${apiUrl}${RENDER_PATH}/${renderId}`);
 }

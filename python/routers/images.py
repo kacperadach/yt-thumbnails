@@ -69,11 +69,18 @@ async def process_image_and_upload(file_location: str, image_id: str):
             image.updated_at = time()
             image.url = original_url
             image.url_transparent = processed_url
+            image.status = "success"
             db.commit()
 
         print("Finished updating image: {file_location}/{image_id}")
 
     except Exception as e:
+        with get_db_context_manager() as db:
+            image = db.query(Image).filter(Image.id == image_id).first()
+            if image:
+                image.updated_at = time()
+                image.status = "failed"
+                db.commit()
         print(e)
     finally:
         if os.path.exists(file_location):
@@ -108,7 +115,7 @@ async def upload_image(
         db.commit()
         db.refresh(user)
 
-    image = Image(id=image_id, user_id=user_id)
+    image = Image(id=image_id, user_id=user_id, status="pending")
     db.add(image)
     db.commit()
     db.refresh(image)

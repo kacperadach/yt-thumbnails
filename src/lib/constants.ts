@@ -40,7 +40,7 @@ export const DEFAULT_TEXT_OBJECT: Text = {
   x: 50,
   y: 50,
   width: EDITOR_WIDTH * 0.4,
-  height: 0,
+  height: EDITOR_HEIGHT * 0.2,
   zIndex: 0,
   rotation: 0,
   text: "Placeholder",

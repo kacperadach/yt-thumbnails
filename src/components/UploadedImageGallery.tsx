@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Spinner } from "react-bootstrap";
 import { fetchImages, uploadImage } from "../lib/api";
-import { images } from "../lib/signals";
+import { images, isPollingImages } from "../lib/signals";
 import { ImageResource } from "../lib/types";
 import { useSignalEffect } from "@preact/signals-react";
+import { BsX } from "react-icons/bs";
 
 interface UploadedImageGalleryProps {
   handleSelect: (image: ImageResource) => void;
@@ -17,29 +18,46 @@ export default function UploadedImageGallery(props: UploadedImageGalleryProps) {
     null
   );
 
-  useSignalEffect(() => {
-    const getImages = async () => {
-      const response = await fetchImages();
-      if (response.success) {
-        images.value = [
-          ...images.value.map((i: ImageResource) => {
-            const updatedImage = response.data.find(
-              (i2: ImageResource) => i2.id === i.id
-            );
-            if (updatedImage) {
-              return updatedImage;
-            }
-            return i;
-          }),
-          ...response.data.filter((i: ImageResource) => {
-            return !images.value.find((i2) => i2.id === i.id);
-          }),
-        ];
-      }
-    };
+  const fetchImagesAndPoll = async () => {
+    const response = await fetchImages();
+    if (!response.success) {
+      isPollingImages.value = false;
+      return;
+    }
 
-    getImages();
-  });
+    images.value = [
+      ...images.value.map((i: ImageResource) => {
+        const updatedImage = response.data.find(
+          (i2: ImageResource) => i2.id === i.id
+        );
+        if (updatedImage) {
+          return updatedImage;
+        }
+        return i;
+      }),
+      ...response.data.filter((i: ImageResource) => {
+        return !images.value.find((i2) => i2.id === i.id);
+      }),
+    ];
+
+    const processingImageIds = images.value
+      .filter((i: ImageResource) => i.status === "pending")
+      .map((i: ImageResource) => i.id);
+
+    if (processingImageIds.length === 0) {
+      isPollingImages.value = false;
+      return;
+    }
+
+    setTimeout(() => fetchImagesAndPoll(), 3000);
+  };
+
+  useEffect(() => {
+    if (!isPollingImages.value) {
+      isPollingImages.value = true;
+      fetchImagesAndPoll();
+    }
+  }, []);
 
   const handleImageProcess = async () => {
     if (!selectedFile) {
@@ -51,6 +69,11 @@ export default function UploadedImageGallery(props: UploadedImageGalleryProps) {
     }
     setSelectedFile(null);
     setPreviewUrl(null);
+
+    if (!isPollingImages.value) {
+      isPollingImages.value = true;
+      fetchImagesAndPoll();
+    }
   };
 
   const handleFileChange = (event: any) => {
@@ -115,7 +138,7 @@ export default function UploadedImageGallery(props: UploadedImageGalleryProps) {
                 return timestampB - timestampA;
               })
               .map((image: ImageResource, index: number) => {
-                const processing = !image.url_transparent;
+                const processing = image.status === "pending";
 
                 return (
                   <Col md={4} key={index}>
@@ -128,10 +151,16 @@ export default function UploadedImageGallery(props: UploadedImageGalleryProps) {
                         handleSelect(image);
                       }}
                     >
-                      {!processing && <img src={image.url} />}
+                      {image.url && <img src={image.url} />}
                       {processing && (
                         <div className="absolute">
                           <Spinner color="black" />
+                        </div>
+                      )}
+                      {image.status === "failed" && (
+                        <div className="flex flex-column justify-center items-center">
+                          <BsX color="red" size="4rem" />
+                          <span>Failed to Process</span>
                         </div>
                       )}
                     </div>
