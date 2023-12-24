@@ -44,6 +44,10 @@ export function getBaseCssProperties(
     }deg) scale(${pixelScaleFactor}) translate(-50%, -50%)`,
   };
 
+  if (asset.height) {
+    baseCssProperties.height = `${asset.height}px`;
+  }
+
   baseCssProperties.top = `${asset.y}%`;
   baseCssProperties.left = `${asset.x}%`;
   baseCssProperties.transformOrigin = "top left";

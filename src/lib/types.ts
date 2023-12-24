@@ -1,13 +1,10 @@
 export type ThumbnailAsset = {
   id: string;
   type: "image" | "text" | "shape";
-  // top?: number;
-  // bottom?: number;
-  // left?: number;
-  // right?: number;
   x: number;
   y: number;
   width: number;
+  height?: number;
   zIndex: number;
   rotation?: number;
   aspectRatio?: string;
@@ -72,6 +69,9 @@ export type Circle = Shape & {
 export type Arrow = Shape & {
   shapeType: "arrow";
   dropShadow?: DropShadow;
+  headLength?: number;
+  // headHeight?: number;
+  // height?: number;
   // tail: {};
 };
 

@@ -13,20 +13,21 @@ export default function ArrowComponent(props: ArrowProps) {
     // ...getBaseCssProperties(arrow),
     // dropShadow: arrow.dropShadow && formatDropShadow(arrow.dropShadow),
     // transform: "none",
+    width: "100%",
+    height: "100%",
     overflow: "visible",
-    position: "absolute",
     display: "inline-block",
     filter:
       arrow.dropShadow && `drop-shadow(${formatDropShadow(arrow.dropShadow)})`,
+    position: "relative",
   };
 
   const headStyles: CSSProperties = {
-    width: "5rem",
-    height: "5rem",
+    width: `${arrow.headLength}%`,
+    // height: `${arrow.headHeight}px`,
+    height: "100%",
     background: "linear-gradient(to left, red, rgb(255, 176, 176))",
-    clipPath: "polygon(100% 0%, 0 0, 50% 100%)",
-    overflow: "visible",
-    position: "relative",
+    clipPath: "polygon(100% 0%, 0% 50%, 100% 100%)",
   };
 
   const tailStyles: CSSProperties = {
@@ -34,12 +35,8 @@ export default function ArrowComponent(props: ArrowProps) {
     height: "20rem",
     borderRadius: "50%/50% 50% 0 0",
     background: "linear-gradient(to left, red, rgb(255, 176, 176))",
-
-    transform: "translate(-50%, -100%)",
+    transform: "rotate(90deg)",
     zIndex: 1000,
-    overflow: "visible",
-    left: "2.5rem",
-    top: 0,
     position: "absolute",
   };
 

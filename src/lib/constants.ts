@@ -152,7 +152,6 @@ export const TEMPLATES: Thumbnail[] = [
         type: "text",
         x: 35,
         y: 15,
-
         width: EDITOR_WIDTH * 0.5,
         height: EDITOR_HEIGHT * 0.2,
         zIndex: 2,
@@ -217,7 +216,10 @@ export const TEMPLATES: Thumbnail[] = [
         x: 50,
         y: 50,
         zIndex: 6,
-        width: 0,
+        width: EDITOR_WIDTH * 0.3,
+        height: EDITOR_HEIGHT * 0.3,
+        headLength: 30,
+
         rotation: 110,
         dropShadow: {
           x: 0,
