@@ -14,11 +14,38 @@ import { remToPx } from "../../lib/utils";
 import EditorSidebar from "./EditorSidebar";
 import BackgroundMenu from "./BackgroundMenu";
 import AssetsMenu from "./asset/AssetsMenu";
+import { useLocation } from "react-router-dom";
+import { fetchThumbnails } from "../../lib/api";
 
 export default function Editor() {
+  const location = useLocation();
+
   const [previewWidth, setPreviewWidth] = useState<number | null>(null);
 
   const previewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const getThumbnails = async () => {
+      if (thumbnails.value.length > 0) {
+        return;
+      }
+
+      const response = await fetchThumbnails();
+      if (!response.success) {
+        return;
+      }
+
+      thumbnails.value = response.data;
+
+      if (!editingThumbnailId.value) {
+        editingThumbnailId.value = location.pathname
+          .replace("edit", "")
+          .replaceAll("/", "");
+      }
+    };
+
+    getThumbnails();
+  }, []);
 
   useEffect(() => {
     const setWidth = () => {
@@ -27,7 +54,7 @@ export default function Editor() {
         return;
       }
       const previewWidth = previewRef.current?.clientWidth;
-      setPreviewWidth(previewWidth - remToPx(2));
+      setPreviewWidth(previewWidth - remToPx(3));
     };
 
     setWidth();
@@ -59,6 +86,7 @@ export default function Editor() {
   };
 
   if (!thumbnail.value) {
+    console.log("no thumbnail");
     return null;
   }
 
@@ -75,7 +103,7 @@ export default function Editor() {
           style={{ height: "fit-content" }}
         >
           {previewWidth && (
-            <div className=" rounded-xl shadow-lg p-3">
+            <div className=" rounded-xl shadow-lg p-2 flex justify-center items-center">
               <ThumbnailPreview
                 thumbnail={thumbnail.value}
                 editable={true}

@@ -1,7 +1,12 @@
-import React from "react";
+import { useState, useEffect, useRef } from "react";
 import { Image, Shape, Text, ThumbnailAsset } from "../../lib/types";
 import { getBaseCssProperties } from "../../lib/utils";
-import { selectedAssetId, selectedMenu } from "../../lib/signals";
+import {
+  selectedAssetId,
+  selectedMenu,
+  thumbnail,
+  thumbnails,
+} from "../../lib/signals";
 import TextAsset from "./Text";
 import ImageComponent from "./Image";
 import ShapeComponent from "./Shape";
@@ -11,10 +16,25 @@ interface BaseAssetProps {
   asset: ThumbnailAsset;
   editable: boolean;
   pixelScaleFactor: number;
+  containerRef?: React.RefObject<HTMLDivElement>;
 }
 
 export default function BaseAsset(props: BaseAssetProps) {
-  const { asset, editable, pixelScaleFactor } = props;
+  const { asset, editable, pixelScaleFactor, containerRef } = props;
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragPosition, setDragPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const dragPositionRef = useRef<{
+    x: number;
+    y: number;
+  } | null>(null);
+
+  useEffect(() => {
+    dragPositionRef.current = dragPosition;
+  }, [dragPosition]);
 
   let child;
   if (asset.type === "text") {
@@ -25,15 +45,83 @@ export default function BaseAsset(props: BaseAssetProps) {
     child = <ShapeComponent shape={asset as Shape} />;
   }
 
+  useEffect(() => {
+    if (!containerRef?.current || !isDragging) {
+      return;
+    }
+
+    const onMouseUp = () => {
+      if (selectedAssetId.value !== asset.id) {
+        return;
+      }
+      setIsDragging(false);
+      thumbnails.value = thumbnails.value.map((t) => {
+        if (t.id !== thumbnail.value?.id) {
+          return t;
+        }
+
+        const newVal = {
+          ...thumbnail.value,
+          assets: thumbnail.value.assets.map((a) => {
+            if (a.id === asset.id) {
+              return {
+                ...a,
+                x: dragPositionRef.current?.x ?? a.x,
+                y: dragPositionRef.current?.y ?? a.y,
+              };
+            }
+            return a;
+          }),
+        };
+        return newVal;
+      });
+
+      setDragPosition(null);
+    };
+
+    const onMouseMove = (e: any) => {
+      const boundingBox =
+        containerRef.current?.parentElement?.getBoundingClientRect();
+
+      if (!boundingBox) {
+        return;
+      }
+
+      const relativeX = (e.clientX - boundingBox.left) / boundingBox.width;
+      const relativeY = (e.clientY - boundingBox.top) / boundingBox.height;
+
+      setDragPosition({
+        x: relativeX * 100,
+        y: relativeY * 100,
+      });
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [isDragging]);
+
+  const assetWithDragPosition = {
+    ...asset,
+  };
+
+  if (dragPosition) {
+    assetWithDragPosition.x = dragPosition.x;
+    assetWithDragPosition.y = dragPosition.y;
+  }
+
   return (
     <div
-      className={`cursor-pointer ${
+      className={`cursor-pointer select-none ${
         editable &&
         selectedAssetId.value !== asset.id &&
         "hover:outline-dashed hover:outline-offset-2 hover:outline-white "
       }`}
       style={{
-        ...getBaseCssProperties(asset, pixelScaleFactor),
+        ...getBaseCssProperties(assetWithDragPosition, pixelScaleFactor),
         position: "absolute",
       }}
       onClick={() => {
@@ -42,6 +130,12 @@ export default function BaseAsset(props: BaseAssetProps) {
         }
         selectedAssetId.value = asset.id;
         selectedMenu.value = null;
+      }}
+      onMouseDown={() => {
+        if (!editable || selectedAssetId.value !== asset.id) {
+          return;
+        }
+        setIsDragging(true);
       }}
     >
       {selectedAssetId.value === asset.id && (

@@ -5,6 +5,7 @@ import { FaTwitch, FaYoutube } from "react-icons/fa6";
 import { VideoResource } from "../lib/types";
 import { fetchVideos, processVideo } from "../lib/api";
 import VideoPreview from "./VideoPreview";
+import { isVideoProcessing } from "../lib/utils";
 
 interface VideoGalleryProps {
   onUpdate: (newFields: Object) => void;
@@ -48,14 +49,14 @@ export default function VideoGallery(props: VideoGalleryProps) {
 
     if (
       videos.value.find(
-        (v) => v.status !== "pending" && v.id === processingVideoId.value
+        (v) => !isVideoProcessing(v) && v.id === processingVideoId.value
       )
     ) {
       processingVideoId.value = null;
     }
 
     const processingVideoIds = videos.value
-      .filter((v: VideoResource) => !v.url)
+      .filter((v: VideoResource) => isVideoProcessing(v))
       .map((v: VideoResource) => v.id);
     if (processingVideoIds.length === 0) {
       isPollingVideos.value = false;

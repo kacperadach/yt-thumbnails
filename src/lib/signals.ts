@@ -10,6 +10,7 @@ import {
   ImageResource,
 } from "./types";
 import { fetchVideos, updateThumbnail } from "./api";
+import debounce from "lodash/debounce";
 
 export const thumbnails = signal<Thumbnail[]>([]);
 export const editingThumbnailId = signal<string | null>(null);
@@ -43,8 +44,10 @@ effect(() => {
   }
 });
 
+const debouncedUpdateThumbnail = debounce(updateThumbnail, 500);
+
 effect(() => {
   if (thumbnail.value) {
-    updateThumbnail(thumbnail.value);
+    debouncedUpdateThumbnail(thumbnail.value);
   }
 });

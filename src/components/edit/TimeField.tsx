@@ -14,6 +14,7 @@ export default function TimeField(props: TimeFieldProps) {
   const [seconds, setSeconds] = useState("");
   const [milliseconds, setMilliseconds] = useState("");
 
+  const hoursRef = useRef<HTMLInputElement>(null);
   const minutesRef = useRef<HTMLInputElement>(null);
   const secondsRef = useRef<HTMLInputElement>(null);
   const millisecondsRef = useRef<HTMLInputElement>(null);
@@ -25,10 +26,28 @@ export default function TimeField(props: TimeFieldProps) {
     const seconds = Math.floor((totalMilliseconds % 60000) / 1000);
     const milliseconds = totalMilliseconds % 1000;
 
-    setHours(String(hours).padStart(2, "0"));
-    setMinutes(String(minutes).padStart(2, "0"));
-    setSeconds(String(seconds).padStart(2, "0"));
-    setMilliseconds(String(milliseconds).padStart(3, "0"));
+    if (!hoursRef.current || document.activeElement !== hoursRef.current) {
+      console.log("setting hours");
+      setHours(String(hours).padStart(2, "0"));
+    }
+
+    if (!minutesRef.current || document.activeElement !== minutesRef.current) {
+      console.log("setting minutes");
+      setMinutes(String(minutes).padStart(2, "0"));
+    }
+
+    if (!secondsRef.current || document.activeElement !== secondsRef.current) {
+      console.log("setting seconds");
+      setSeconds(String(seconds).padStart(2, "0"));
+    }
+
+    if (
+      !millisecondsRef.current ||
+      document.activeElement !== millisecondsRef.current
+    ) {
+      console.log("setting milliseconds");
+      setMilliseconds(String(milliseconds).padStart(3, "0"));
+    }
   }, [time]);
 
   const updateTime = (
@@ -58,6 +77,7 @@ export default function TimeField(props: TimeFieldProps) {
       parseInt(milliseconds)
     );
     if (newString.length >= 2 && minutesRef.current) {
+      setMinutes("");
       minutesRef.current.focus();
     }
   };
@@ -79,6 +99,7 @@ export default function TimeField(props: TimeFieldProps) {
       parseInt(milliseconds)
     );
     if (newString.length >= 2 && secondsRef.current) {
+      setSeconds("");
       secondsRef.current.focus();
     }
   };
@@ -101,6 +122,7 @@ export default function TimeField(props: TimeFieldProps) {
     );
 
     if (newString.length >= 2 && millisecondsRef.current) {
+      setMilliseconds("");
       millisecondsRef.current.focus();
     }
   };
@@ -133,6 +155,7 @@ export default function TimeField(props: TimeFieldProps) {
     <>
       <div className="flex">
         <input
+          ref={hoursRef}
           className="no-spinners w-8 border rounded text-lg text-center"
           type="number"
           value={hours}
@@ -177,7 +200,10 @@ export default function TimeField(props: TimeFieldProps) {
           onChange={handleSecondsChange}
           placeholder="SS"
           maxLength={2}
-          onFocus={() => setSeconds("")}
+          onFocus={() => {
+            console.log("focus seconds");
+            setSeconds("");
+          }}
           onBlur={() => {
             const totalMilliseconds = time * 1000;
             const seconds = Math.floor((totalMilliseconds % 60000) / 1000);

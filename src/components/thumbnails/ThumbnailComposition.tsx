@@ -4,6 +4,7 @@ import {
   useCallback,
   createContext,
   useContext,
+  useRef,
 } from "react";
 import { Thumbnail as RemotionThumbnail } from "@remotion/player";
 import { AbsoluteFill } from "remotion";
@@ -26,6 +27,8 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
 
   const [videoSrc, setVideoSrc] = useState(background.videoSrc || "");
   const [errorCount, setErrorCount] = useState(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setVideoSrc(background.videoSrc || "");
@@ -60,6 +63,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
         backgroundColor: background.color,
         position: "relative",
       }}
+      ref={containerRef}
     >
       {background.type === "video" && videoSrc && (
         <div
@@ -89,10 +93,14 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
       {background.type === "image" && (
         <div
           style={{
+            position: "absolute",
             backgroundColor: background.color,
             width: "100%",
             height: "100%",
             zIndex: 0,
+            transform: `scale(${background.zoom || 1})  translate(-50%, -50%)`,
+            top: `${background.y || 0}%`,
+            left: `${background.x || 0}%`,
           }}
         >
           <ImageComponent src={background.imageSrc} />
@@ -119,6 +127,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
               asset={asset}
               editable={!!editable}
               pixelScaleFactor={pixelScaleFactor}
+              containerRef={containerRef}
             />
           );
         })}

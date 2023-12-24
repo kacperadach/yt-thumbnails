@@ -123,12 +123,17 @@ export default function BackgroundMenu() {
                           (image) =>
                             image.id === thumbnail.value?.background.imageId
                         );
-                        console.log(imageResource, newFields["transparent"]);
+
                         if (imageResource) {
                           fields["imageSrc"] = newFields["transparent"]
                             ? imageResource.url_transparent
                             : imageResource.url;
                         }
+                        console.log(
+                          imageResource,
+                          newFields["transparent"],
+                          fields
+                        );
 
                         onUpdate(fields);
                       }}
@@ -182,6 +187,9 @@ export default function BackgroundMenu() {
                     imageSrc: image.url_transparent,
                     imageId: image.id,
                     transparent: true,
+                    zoom: 1,
+                    x: 50,
+                    y: 50,
                   });
                 }}
               />

@@ -28,7 +28,6 @@ export default function EditMenu(props: EditMenuProps) {
     filterFields = Object.keys(defaultObject),
   } = props;
 
-  console.log(asset);
 
   return (
     <Container fluid>

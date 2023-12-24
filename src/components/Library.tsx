@@ -5,8 +5,11 @@ import { editingThumbnailId, thumbnails } from "../lib/signals";
 import ThumbnailPreview from "./thumbnails/ThumbnailComposition";
 import { remToPx } from "../lib/utils";
 import { TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
+import { useNavigate } from "react-router-dom";
 
 export default function Library() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getThumbnails = async () => {
       const response = await fetchThumbnails();
@@ -21,7 +24,7 @@ export default function Library() {
   return (
     <Container fluid>
       <div>
-        <div className="text-xl font-medium text-black">Library</div>
+        {/* <div className="text-xl font-medium text-black">Library</div> */}
         <Row className="flex">
           {thumbnails.value &&
             thumbnails.value.map((thumbnail, index) => {
@@ -29,9 +32,10 @@ export default function Library() {
                 <Col
                   key={index}
                   md={2}
-                  className="px-6 max-w-sm mx-10 my-2 rounded-xl shadow-lg flex items-center hover:bg-blue-300 transition duration-300 ease-in-out cursor-pointer"
+                  className="px-6 max-w-sm mx-8 my-2 rounded-xl shadow-lg flex items-center hover:bg-blue-300 transition duration-300 ease-in-out cursor-pointer"
                   onClick={() => {
                     editingThumbnailId.value = thumbnail.id;
+                    navigate(`/edit/${thumbnail.id}`);
                   }}
                 >
                   <ThumbnailPreview

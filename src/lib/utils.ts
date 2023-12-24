@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { EDITOR_WIDTH } from "./constants";
-import { Border, DropShadow, ThumbnailAsset } from "./types";
+import { Border, DropShadow, ThumbnailAsset, VideoResource } from "./types";
 
 export function remToPx(rem: number) {
   // Get the font-size of the root element (html)
@@ -70,3 +70,17 @@ export const downloadFile = (url: string, filename: string) => {
   anchor.click();
   document.body.removeChild(anchor);
 };
+
+export function isVideoProcessing(video: VideoResource) {
+  return (
+    video.status === "pending" && Date.now() - video.created_at * 1000 < 3600000
+  );
+}
+
+export function isVideoFailed(video: VideoResource) {
+  return (
+    video.status === "failed" ||
+    (video.status === "pending" &&
+      Date.now() - video.created_at * 1000 >= 3600000)
+  );
+}

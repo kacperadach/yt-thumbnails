@@ -89,7 +89,10 @@ def download_twitch_vod(url, resolution=720, info=None):
     print(format_)
     twitch_download = DownloadHook()
     with YoutubeDL(
-        {"progress_hooks": [twitch_download.get_filename], "paths": {"home": TMP_DIR}}
+        {
+            "progress_hooks": [twitch_download.get_filename],
+            "paths": {"home": TMP_DIR},
+        }
     ) as ydl:
         ydl.download(url)
 
@@ -155,7 +158,7 @@ def extract_clip(path, start, end):
 
 if __name__ == "__main__":
     # 1:17:08 - 1:17:49
-    extract_clip("shot.mp4", 18, 33)
+    extract_clip("tan.mp4", 9700, 9781)
     # download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")
     # print(
     #     download_youtube_info("https://www.youtube.com/watch?v=LPDTuHcua0o").get(
