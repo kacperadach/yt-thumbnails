@@ -2,10 +2,17 @@ import { useState } from "react";
 import { SketchPicker } from "react-color";
 import { BsCheck, BsPlus } from "react-icons/bs";
 import BorderStyleField from "./BorderStyleField";
-import { Image, ThumbnailAsset } from "../../lib/types";
-import { images } from "../../lib/signals";
+import { Image, Text, ThumbnailAsset } from "../../lib/types";
+import { images, thumbnail } from "../../lib/signals";
 import { Dropdown } from "react-bootstrap";
 import { AVAILABLE_DEFAULT_FONTS } from "../../lib/constants";
+import tinycolor from "tinycolor2";
+import { PresetColor } from "react-color/lib/components/sketch/Sketch";
+import { getAllColorsFromThumbnail } from "../../lib/utils";
+
+const STEP_SIZE_MAP = {
+  fontWeight: 100,
+};
 
 interface EditFieldProps {
   asset?: ThumbnailAsset;
@@ -21,16 +28,14 @@ interface EditFieldProps {
 export default function EditField(props: EditFieldProps) {
   const [editingColor, setEditingColor] = useState(false);
 
-  const {
-    asset,
-    fieldName,
-    onUpdate,
-    value,
-    defaultValue,
-    type,
-    disabled,
-    step = 1,
-  } = props;
+  const { asset, fieldName, onUpdate, value, defaultValue, type, disabled } =
+    props;
+
+  let { step } = props;
+
+  if (STEP_SIZE_MAP[fieldName as keyof typeof STEP_SIZE_MAP]) {
+    step = STEP_SIZE_MAP[fieldName as keyof typeof STEP_SIZE_MAP];
+  }
 
   const inputType = typeof defaultValue;
 
@@ -99,11 +104,20 @@ export default function EditField(props: EditFieldProps) {
       );
     }
 
+    let presetColors: PresetColor[] = [];
+    if (thumbnail.value) {
+      presetColors = getAllColorsFromThumbnail(thumbnail.value);
+    }
+
     return (
       <div className="flex items-center">
         <SketchPicker
           color={value}
-          onChange={(color) => onUpdate({ [fieldName]: color.hex })}
+          onChange={(color) => {
+            const colorString = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
+            onUpdate({ [fieldName]: colorString });
+          }}
+          presetColors={presetColors}
         />
         <button
           className="w-md border-2 border-gray-200 hover:bg-green-300 mx-2"

@@ -1,6 +1,31 @@
 import { CSSProperties } from "react";
 import { EDITOR_WIDTH } from "./constants";
-import { Border, DropShadow, ThumbnailAsset, VideoResource } from "./types";
+import {
+  Border,
+  DropShadow,
+  Thumbnail,
+  ThumbnailAsset,
+  VideoResource,
+} from "./types";
+import tinycolor from "tinycolor2";
+
+const DEFAULT_PRESET_COLORS = [
+  "#D0021B",
+  "#F5A623",
+  "#F8E71C",
+  "#8B572A",
+  "#7ED321",
+  "#417505",
+  "#BD10E0",
+  "#9013FE",
+  "#4A90E2",
+  "#50E3C2",
+  "#B8E986",
+  "#000000",
+  "#4A4A4A",
+  "#9B9B9B",
+  "#FFFFFF",
+];
 
 export function remToPx(rem: number) {
   // Get the font-size of the root element (html)
@@ -42,6 +67,7 @@ export function getBaseCssProperties(
     transform: `rotate(${
       asset.rotation || 0
     }deg) scale(${pixelScaleFactor}) translate(-50%, -50%)`,
+    transformOrigin: "top left",
   };
 
   if (asset.height) {
@@ -87,4 +113,103 @@ export function isVideoFailed(video: VideoResource) {
     (video.status === "pending" &&
       Date.now() - video.created_at * 1000 >= 3600000)
   );
+}
+
+export function getAllColorsFromThumbnail(thumbnail: Thumbnail) {
+  let colorPresets = [];
+
+  if (thumbnail) {
+    if (thumbnail.background.color) {
+      colorPresets.push(thumbnail.background.color);
+    }
+
+    thumbnail.assets.forEach((a) => {
+      if (a.type === "text") {
+        if (a.color) {
+          colorPresets.push(a.color);
+        }
+
+        if (a.backgroundColor) {
+          colorPresets.push(a.backgroundColor);
+        }
+
+        if (a.border?.color) {
+          colorPresets.push(a.border.color);
+        }
+
+        if (a.borderTop?.color) {
+          colorPresets.push(a.borderTop.color);
+        }
+
+        if (a.borderBottom?.color) {
+          colorPresets.push(a.borderBottom.color);
+        }
+
+        if (a.borderLeft?.color) {
+          colorPresets.push(a.borderLeft.color);
+        }
+
+        if (a.borderRight?.color) {
+          colorPresets.push(a.borderRight.color);
+        }
+      } else if (a.type === "shape") {
+        if (a.shapeType === "circle") {
+          if (a.border?.color) {
+            colorPresets.push(a.border.color);
+          }
+
+          if (a.outline?.color) {
+            colorPresets.push(a.outline.color);
+          }
+        } else if (a.shapeType === "arrow") {
+          if (a.dropShadow?.color) {
+            colorPresets.push(a.dropShadow.color);
+          }
+
+          if (a.backgroundColor) {
+            colorPresets.push(a.backgroundColor);
+          }
+        } else if (a.shapeType === "rectangle" || a.shapeType === "triangle") {
+          if (a.backgroundColor) {
+            colorPresets.push(a.backgroundColor);
+          }
+
+          if (a.border?.color) {
+            colorPresets.push(a.border.color);
+          }
+
+          if (a.borderTop?.color) {
+            colorPresets.push(a.borderTop.color);
+          }
+
+          if (a.borderBottom?.color) {
+            colorPresets.push(a.borderBottom.color);
+          }
+
+          if (a.borderLeft?.color) {
+            colorPresets.push(a.borderLeft.color);
+          }
+
+          if (a.borderRight?.color) {
+            colorPresets.push(a.borderRight.color);
+          }
+
+          if (a.dropShadow?.color) {
+            colorPresets.push(a.dropShadow.color);
+          }
+        }
+      }
+    });
+  }
+
+  colorPresets.push(...DEFAULT_PRESET_COLORS);
+
+  console.log(colorPresets);
+
+  colorPresets = [
+    ...new Set(colorPresets.map((c) => tinycolor(c).toRgbString())),
+  ];
+  console.log(colorPresets);
+
+  return colorPresets;
 }

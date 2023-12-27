@@ -1,5 +1,16 @@
 import { staticFile } from "remotion";
-import { Thumbnail, Text, Border, Image, Circle, LongShadow } from "./types";
+import {
+  Thumbnail,
+  Text,
+  Border,
+  Image,
+  Circle,
+  LongShadow,
+  Arrow,
+  DropShadow,
+  Rectangle,
+  Triangle,
+} from "./types";
 import { v4 as uuidv4 } from "uuid";
 
 export const EDITOR_WIDTH = 1280;
@@ -23,6 +34,12 @@ export const DEFAULT_BORDER_OBJECT: Border = {
   color: "black",
 };
 
+export const DEFAULT_OUTLINE_OBJECT: Border = {
+  width: 16,
+  style: "solid",
+  color: "white",
+};
+
 export const EMPTY_BORDER_OBJECT: Border = {
   width: 0,
   style: "solid",
@@ -31,6 +48,13 @@ export const EMPTY_BORDER_OBJECT: Border = {
 
 export const DEFAULT_LONG_SHADOW_OBJECT: LongShadow = {
   width: 10,
+  color: "black",
+};
+
+export const DEFAULT_DROP_SHADOW_OBJECT: DropShadow = {
+  x: 0,
+  y: 8,
+  blur: 8,
   color: "black",
 };
 
@@ -64,10 +88,6 @@ export const DEFAULT_IMAGE_OBJECT: Image = {
   type: "image",
   x: 50,
   y: 50,
-  // top: 50,
-  // bottom: 0,
-  // left: 50,
-  // right: 0,
   width: EDITOR_WIDTH * 0.2,
   zIndex: 0,
   rotation: 0,
@@ -81,16 +101,69 @@ export const DEFAULT_CIRCLE_OBJECT: Circle = {
   shapeType: "circle",
   x: 50,
   y: 50,
-  // top: 50,
-  // bottom: 0,
-  // left: 50,
-  // right: 0,
-  width: 0,
+  width: EDITOR_WIDTH * 0.2,
+  aspectRatio: "1/1",
   zIndex: 0,
   rotation: 0,
   border: DEFAULT_BORDER_OBJECT,
-  outline: DEFAULT_BORDER_OBJECT,
+  outline: DEFAULT_OUTLINE_OBJECT,
   backgroundColor: "transparent",
+};
+
+export const DEFAULT_ARROW_OBJECT: Arrow = {
+  id: "",
+  type: "shape",
+  shapeType: "arrow",
+  x: 50,
+  y: 50,
+  width: EDITOR_WIDTH * 0.3,
+  height: EDITOR_HEIGHT * 0.15,
+  zIndex: 0,
+  rotation: 25,
+  headWidth: 20,
+  tailWidth: 10,
+  dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
+  backgroundColor: "red",
+};
+
+export const DEFAULT_RECTANGLE_OBJECT: Rectangle = {
+  id: "",
+  type: "shape",
+  shapeType: "rectangle",
+  x: 50,
+  y: 50,
+  width: EDITOR_WIDTH * 0.2,
+  height: EDITOR_HEIGHT * 0.2,
+  zIndex: 0,
+  rotation: 0,
+  borderRadius: 15,
+  border: DEFAULT_BORDER_OBJECT,
+  borderTop: EMPTY_BORDER_OBJECT,
+  borderRight: EMPTY_BORDER_OBJECT,
+  borderBottom: EMPTY_BORDER_OBJECT,
+  borderLeft: EMPTY_BORDER_OBJECT,
+  dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
+  backgroundColor: "green",
+};
+
+export const DEFAULT_TRIANGLE_OBJECT: Triangle = {
+  id: "",
+  type: "shape",
+  shapeType: "triangle",
+  x: 50,
+  y: 50,
+  width: EDITOR_WIDTH * 0.2,
+  height: EDITOR_WIDTH * 0.2,
+  zIndex: 0,
+  rotation: 0,
+  borderRadius: 15,
+  border: DEFAULT_BORDER_OBJECT,
+  borderTop: EMPTY_BORDER_OBJECT,
+  borderRight: EMPTY_BORDER_OBJECT,
+  borderBottom: EMPTY_BORDER_OBJECT,
+  borderLeft: EMPTY_BORDER_OBJECT,
+  dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
+  backgroundColor: "yellow",
 };
 
 export const AVAILABLE_DEFAULT_FONTS = [
@@ -213,20 +286,16 @@ export const TEMPLATES: Thumbnail[] = [
         id: uuidv4(),
         type: "shape",
         shapeType: "arrow",
-        x: 50,
-        y: 50,
+        x: 60,
+        y: 60,
         zIndex: 6,
         width: EDITOR_WIDTH * 0.3,
-        height: EDITOR_HEIGHT * 0.3,
-        headLength: 30,
-
-        rotation: 110,
-        dropShadow: {
-          x: 0,
-          y: 8,
-          blur: 8,
-          color: "black",
-        },
+        height: EDITOR_HEIGHT * 0.15,
+        headWidth: 20,
+        tailWidth: 10,
+        rotation: 25,
+        dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
+        backgroundColor: "red",
       },
     ],
   },

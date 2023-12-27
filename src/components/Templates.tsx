@@ -31,7 +31,7 @@ export default function Templates() {
               <Col
                 key={index}
                 md={2}
-                className="px-6 max-w-sm mx-8 my-2 rounded-xl shadow-lg flex items-center hover:bg-blue-300 transition duration-300 ease-in-out cursor-pointer"
+                className="px-6 max-w-sm mx-8 my-2 rounded-xl shadow-lg flex items-center hover:bg-brand-green transition duration-300 ease-in-out cursor-pointer"
                 onClick={() => {
                   onTemplateSelect(template);
                 }}

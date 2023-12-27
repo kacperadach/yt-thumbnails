@@ -32,10 +32,6 @@ export default function BaseAsset(props: BaseAssetProps) {
     y: number;
   } | null>(null);
 
-  useEffect(() => {
-    dragPositionRef.current = dragPosition;
-  }, [dragPosition]);
-
   let child;
   if (asset.type === "text") {
     child = <TextAsset text={asset as Text} />;
@@ -44,6 +40,10 @@ export default function BaseAsset(props: BaseAssetProps) {
   } else if (asset.type === "shape") {
     child = <ShapeComponent shape={asset as Shape} />;
   }
+
+  useEffect(() => {
+    dragPositionRef.current = dragPosition;
+  }, [dragPosition]);
 
   useEffect(() => {
     if (!containerRef?.current || !isDragging) {

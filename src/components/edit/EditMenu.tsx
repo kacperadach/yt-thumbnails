@@ -3,6 +3,7 @@ import EditField from "./EditField";
 import { ThumbnailAsset } from "../../lib/types";
 import {
   DEFAULT_BORDER_OBJECT,
+  DEFAULT_DROP_SHADOW_OBJECT,
   DEFAULT_LONG_SHADOW_OBJECT,
 } from "../../lib/constants";
 import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
@@ -27,7 +28,6 @@ export default function EditMenu(props: EditMenuProps) {
     onUpdate,
     filterFields = Object.keys(defaultObject),
   } = props;
-
 
   return (
     <Container fluid>
@@ -85,6 +85,17 @@ export default function EditMenu(props: EditMenuProps) {
             <EditMenu
               asset={obj}
               defaultObject={DEFAULT_LONG_SHADOW_OBJECT}
+              onUpdate={(newFields: Object) => {
+                onUpdate({ [key]: { ...obj, ...newFields } });
+              }}
+            />
+          );
+        } else if (key === "dropShadow") {
+          const obj = (asset[key] as any) || {};
+          fieldComponent = (
+            <EditMenu
+              asset={obj}
+              defaultObject={DEFAULT_DROP_SHADOW_OBJECT}
               onUpdate={(newFields: Object) => {
                 onUpdate({ [key]: { ...obj, ...newFields } });
               }}

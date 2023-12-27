@@ -26,6 +26,7 @@
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "remotion": "^4.0.81",
+    "tinycolor2": "^1.6.0",
     "typescript": "^4.9.5",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
@@ -59,6 +60,7 @@
     "@babel/plugin-transform-private-property-in-object": "^7.23.4",
     "@types/lodash": "^4.14.202",
     "@types/react-color": "^3.0.10",
+    "@types/tinycolor2": "^1.4.6",
     "@types/uuid": "^9.0.7",
     "tailwindcss": "^3.3.6"
   }

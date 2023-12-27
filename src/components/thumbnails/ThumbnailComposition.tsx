@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import {
   useState,
   useEffect,
@@ -9,17 +10,32 @@ import {
 import { Thumbnail as RemotionThumbnail } from "@remotion/player";
 import { AbsoluteFill } from "remotion";
 import { Video } from "remotion";
-import { Background, Thumbnail, ThumbnailAsset } from "../../lib/types";
+import {
+  Arrow,
+  Background,
+  Circle,
+  Image,
+  Rectangle,
+  Thumbnail,
+  ThumbnailAsset,
+  Triangle,
+} from "../../lib/types";
 import { getPixelScaleFactor } from "../../lib/utils";
 import BaseAsset from "./BaseAsset";
 import { Img } from "remotion";
 import ImageComponent from "./Image";
+import {
+  selectedAsset,
+  thumbnails,
+  selectedAssetId,
+  copiedAssetId,
+} from "../../lib/signals";
 
 const FPS = 30;
 const MAX_ERROR_COUNT = 50;
 
 export function ThumbnailComposition(props: Record<string, unknown>) {
-  const { thumbnail, width, editable, selectedAssetId } = props;
+  const { thumbnail, width, editable } = props;
 
   const { background, assets } = thumbnail as Thumbnail;
 
@@ -51,6 +67,114 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
     ),
     [videoSrc, width, background.videoSrc]
   );
+
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "c") {
+        // Control + C or Command + C
+        copiedAssetId.value = selectedAsset.value?.id || null;
+      }
+      if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+        // Control + V or Command + V
+        if (!copiedAssetId.value) {
+          return;
+        }
+
+        thumbnails.value = thumbnails.value.map((t) => {
+          if (t.id !== (thumbnail as Thumbnail).id) {
+            return t;
+          }
+
+          const copiedAsset = t.assets.find(
+            (a) => a.id === copiedAssetId.value
+          );
+
+          const newAsset = {
+            ...copiedAsset,
+            id: uuidv4(),
+            x: (copiedAsset?.x || 0) + 1,
+            y: (copiedAsset?.y || 0) + 1,
+          };
+
+          copiedAssetId.value = newAsset.id;
+          selectedAssetId.value = newAsset.id;
+
+          return {
+            ...t,
+            assets: [...t.assets, newAsset],
+          } as Thumbnail;
+        });
+      }
+
+      if (event.key === "Delete") {
+        // for Delete key
+        if (!selectedAssetId.value) {
+          return;
+        }
+        thumbnails.value = thumbnails.value.map((t) => {
+          if (t.id !== (thumbnail as Thumbnail).id) {
+            return t;
+          }
+
+          return {
+            ...t,
+            assets: t.assets.filter((a) => {
+              return a.id !== selectedAssetId.value;
+            }),
+          };
+        });
+      }
+
+      if (event.key === "Escape") {
+        // for the Escape key
+        selectedAssetId.value = null;
+      }
+    };
+
+    const handleWheel = (event: any) => {
+      console.log(`Mouse wheel event: deltaY = ${event.deltaY}`);
+      // Add your logic here for the mouse wheel event
+      // event.deltaY gives the amount of scroll
+      // Positive values indicate a scroll down, negative values scroll up
+
+      if (!selectedAssetId.value) {
+        return;
+      }
+      event.stopPropagation();
+
+      const delta = event.deltaY;
+
+      thumbnails.value = thumbnails.value.map((t) => {
+        if (t.id !== (thumbnail as Thumbnail).id) {
+          return t;
+        }
+
+        return {
+          ...t,
+          assets: t.assets.map((a) => {
+            if (a.id !== selectedAssetId.value) {
+              return a;
+            }
+
+            return {
+              ...a,
+              rotation: (a.rotation || 0) + delta / 20,
+            };
+          }),
+        };
+      });
+    };
+
+    // Add event listener
+    window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("wheel", handleWheel);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+      window.addEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   if (!thumbnail) {
     return null;
@@ -145,12 +269,12 @@ interface ThumbnailPreviewProps {
 }
 
 export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
-  const { thumbnail, width, height, editable, selectedAssetId } = props;
+  const { thumbnail, width, height, editable } = props;
 
   return (
     <RemotionThumbnail
       component={ThumbnailComposition}
-      inputProps={{ thumbnail, width, editable, selectedAssetId }}
+      inputProps={{ thumbnail, width, editable }}
       compositionWidth={Math.round(width || 1280)}
       compositionHeight={Math.round(height || 720)}
       frameToDisplay={0}

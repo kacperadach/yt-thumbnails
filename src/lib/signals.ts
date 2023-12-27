@@ -20,9 +20,10 @@ export const isCreatingAsset = signal<boolean>(false);
 export const videos = signal<VideoResource[]>([]);
 export const processingVideoId = signal<string | null>(null);
 export const images = signal<ImageResource[]>([]);
-
 export const isPollingVideos = signal<boolean>(false);
 export const isPollingImages = signal<boolean>(false);
+
+export const copiedAssetId = signal<string | null>(null);
 
 export const thumbnail = computed<Thumbnail | null>(() => {
   const thumbnail = thumbnails.value.find(

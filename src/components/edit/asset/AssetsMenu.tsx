@@ -6,6 +6,7 @@ import {
   isCreatingAsset,
   selectedAssetId,
   selectedMenu,
+  thumbnails,
 } from "../../../lib/signals";
 import { Container, Row, Col } from "react-bootstrap";
 import AssetRow from "./AssetRow";
@@ -20,15 +21,51 @@ import {
   DEFAULT_TEXT_OBJECT,
   DEFAULT_IMAGE_OBJECT,
   DEFAULT_CIRCLE_OBJECT,
+  DEFAULT_ARROW_OBJECT,
+  DEFAULT_RECTANGLE_OBJECT,
+  DEFAULT_TRIANGLE_OBJECT,
 } from "../../../lib/constants";
-import CreateTextAsset from "./CreateAsset";
-import CreateAsset from "./CreateAsset";
+import { FiCircle } from "react-icons/fi";
+import { RiArrowLeftUpFill } from "react-icons/ri";
+import { PiRectangleLight } from "react-icons/pi";
+import { FiTriangle } from "react-icons/fi";
 
 export default function AssetsMenu() {
+  const [showShapeChoices, setShowShapeChoices] = useState(false);
+
+  const addAsset = (defaultObject: any) => {
+    const id = uuidv4();
+    isCreatingAsset.value = false;
+
+    thumbnails.value = thumbnails.value.map((t) => {
+      if (t.id !== thumbnail.value?.id) {
+        return t;
+      }
+
+      return {
+        ...t,
+        assets: [
+          ...t.assets,
+          {
+            ...defaultObject,
+            id,
+            zIndex:
+              thumbnail.value?.assets.reduce((max, obj) => {
+                return Math.max(max, obj.zIndex);
+              }, 0) + 1 || 0,
+          },
+        ],
+      };
+    });
+
+    selectedMenu.value = null;
+    selectedAssetId.value = id;
+  };
+
   return (
     <div>
       <div>
-        <h4 className="text-4xl font-bold my-1">
+        <h4 className="text-4xl font-bold my-1 justify-center text-center">
           {isCreatingAsset.value ? "Add New Asset" : "Assets"}
         </h4>
       </div>
@@ -43,63 +80,85 @@ export default function AssetsMenu() {
             </div>
           )}
           {isCreatingAsset.value && (
-            <>
-              <div
+            <Row className="flex w-full justify-center">
+              <Col
+                md={3}
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
                 onClick={() => {
-                  const id = uuidv4();
-                  isCreatingAsset.value = false;
-                  thumbnail.value?.assets.push({
-                    ...DEFAULT_TEXT_OBJECT,
-                    id,
-                    zIndex:
-                      thumbnail.value?.assets.reduce((max, obj) => {
-                        return Math.max(max, obj.zIndex);
-                      }, 0) + 1 || 0,
-                  });
-                  selectedMenu.value = null;
-                  selectedAssetId.value = id;
-
-                  // creatingAsset.value = {
-                  //   ...DEFAULT_TEXT_OBJECT,
-                  //   id: uuidv4(),
-                  //   zIndex: thumbnail.value?.assets.length || 0,
-                  // };
+                  addAsset(DEFAULT_TEXT_OBJECT);
                 }}
               >
                 <MdOutlineTextFields size="2rem" />
                 <label className="font-bold mx-2 ">Text</label>
-              </div>
-              <div
+              </Col>
+              <Col
+                md={3}
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer `}
                 onClick={() => {
-                  const id = uuidv4();
-                  isCreatingAsset.value = false;
-                  thumbnail.value?.assets.push({
-                    ...DEFAULT_IMAGE_OBJECT,
-                    id,
-                    zIndex:
-                      thumbnail.value?.assets.reduce((max, obj) => {
-                        return Math.max(max, obj.zIndex);
-                      }, 0) + 1 || 0,
-                  });
-                  selectedMenu.value = null;
-                  selectedAssetId.value = id;
+                  addAsset(DEFAULT_IMAGE_OBJECT);
                 }}
               >
                 <BsCardImage size="2rem" />
                 <label className="font-bold mx-2 ">Image</label>
-              </div>
-              <div
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer `}
+              </Col>
+              <Col
+                md={3}
+                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
+                  showShapeChoices && "bg-gray-200"
+                }`}
+                onClick={() => setShowShapeChoices(true)}
               >
                 <FaShapes size="2rem" />
                 <label className="font-bold mx-2 ">Shape</label>
-              </div>
-            </>
+              </Col>
+            </Row>
           )}
         </div>
-        {/* {creatingAsset.value && <CreateAsset />} */}
+
+        {showShapeChoices && (
+          <Row className="flex justify-center w-full">
+            <Col
+              md={3}
+              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+              onClick={() => {
+                addAsset(DEFAULT_CIRCLE_OBJECT);
+              }}
+            >
+              <FiCircle size="2rem" />
+              <label className="font-bold mx-2 ">Circle</label>
+            </Col>
+            <Col
+              md={3}
+              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+              onClick={() => {
+                addAsset(DEFAULT_ARROW_OBJECT);
+              }}
+            >
+              <RiArrowLeftUpFill size="2rem" />
+              <label className="font-bold mx-2 ">Arrow</label>
+            </Col>
+            <Col
+              md={3}
+              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+              onClick={() => {
+                addAsset(DEFAULT_RECTANGLE_OBJECT);
+              }}
+            >
+              <PiRectangleLight size="2rem" />
+              <label className="font-bold mx-2 ">Rectangle</label>
+            </Col>
+            <Col
+              md={3}
+              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+              onClick={() => {
+                addAsset(DEFAULT_TRIANGLE_OBJECT);
+              }}
+            >
+              <FiTriangle size="2rem" />
+              <label className="font-bold mx-2 ">Triangle</label>
+            </Col>
+          </Row>
+        )}
 
         {!isCreatingAsset.value && (
           <Container>

@@ -5,6 +5,9 @@ import {
   DEFAULT_TEXT_OBJECT,
   DEFAULT_IMAGE_OBJECT,
   DEFAULT_CIRCLE_OBJECT,
+  DEFAULT_ARROW_OBJECT,
+  DEFAULT_RECTANGLE_OBJECT,
+  DEFAULT_TRIANGLE_OBJECT,
 } from "../../lib/constants";
 import EditMenu from "./EditMenu";
 import { FaArrowsUpDownLeftRight } from "react-icons/fa6";
@@ -13,6 +16,9 @@ import { RxBorderAll, RxImage } from "react-icons/rx";
 import { BsCardImage, BsTrash } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
 import UploadedImageGallery from "../UploadedImageGallery";
+import { RiArrowLeftUpFill } from "react-icons/ri";
+import { PiRectangleLight } from "react-icons/pi";
+import { FiTriangle } from "react-icons/fi";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
@@ -21,11 +27,48 @@ const POSITIONING_GROUP = {
 };
 
 const FIELDS_BY_TYPE = {
+  triangle: [
+    {
+      icon: <FiTriangle size="2rem" />,
+      type: "triangle",
+      fields: ["width", "height", "backgroundColor"],
+    },
+    POSITIONING_GROUP,
+  ],
+  rectangle: [
+    {
+      icon: <PiRectangleLight size="2rem" />,
+      type: "rectangle",
+      fields: ["width", "height", "backgroundColor"],
+    },
+    POSITIONING_GROUP,
+    {
+      icon: <RxBorderAll size="2rem" />,
+      type: "border",
+      fields: [
+        "borderRadius",
+        "border",
+        "borderLeft",
+        "borderRight",
+        "borderTop",
+        "borderBottom",
+        "dropShadow",
+      ],
+    },
+  ],
+  arrow: [
+    {
+      icon: <RiArrowLeftUpFill size="2rem" />,
+      type: "arrow",
+      fields: ["dropShadow", "headWidth", "tailWidth", "backgroundColor"],
+    },
+    POSITIONING_GROUP,
+  ],
   circle: [
     {
       icon: <FiCircle size="2rem" />,
       type: "circle",
-      fields: ["border", "outline", "backgroundColor"],
+      fields: ["width", "border", "outline", "backgroundColor"],
     },
     POSITIONING_GROUP,
   ],
@@ -105,8 +148,16 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
   } else if (thumbnailAsset.type === "image") {
     defaultObject = DEFAULT_IMAGE_OBJECT;
   } else if (thumbnailAsset.type === "shape") {
-    if ((thumbnailAsset as Shape).shapeType === "circle") {
+    const shape = thumbnailAsset as Shape;
+
+    if (shape.shapeType === "circle") {
       defaultObject = DEFAULT_CIRCLE_OBJECT;
+    } else if (shape.shapeType === "arrow") {
+      defaultObject = DEFAULT_ARROW_OBJECT;
+    } else if (shape.shapeType === "rectangle") {
+      defaultObject = DEFAULT_RECTANGLE_OBJECT;
+    } else if (shape.shapeType === "triangle") {
+      defaultObject = DEFAULT_TRIANGLE_OBJECT;
     }
   }
 

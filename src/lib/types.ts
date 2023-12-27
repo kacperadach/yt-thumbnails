@@ -56,11 +56,12 @@ export type Text = ThumbnailAsset & {
 
 export type Shape = ThumbnailAsset & {
   type: "shape";
-  shapeType: "circle" | "arrow";
+  shapeType: "circle" | "arrow" | "rectangle" | "triangle";
 };
 
 export type Circle = Shape & {
   shapeType: "circle";
+  aspectRatio: "1/1";
   border: Border;
   outline?: Border;
   backgroundColor?: string;
@@ -69,10 +70,33 @@ export type Circle = Shape & {
 export type Arrow = Shape & {
   shapeType: "arrow";
   dropShadow?: DropShadow;
-  headLength?: number;
-  // headHeight?: number;
-  // height?: number;
-  // tail: {};
+  headWidth: number;
+  tailWidth: number;
+  backgroundColor: string;
+};
+
+export type Rectangle = Shape & {
+  shapeType: "rectangle";
+  backgroundColor: string;
+  borderRadius?: number;
+  border?: Border;
+  borderTop?: Border;
+  borderRight?: Border;
+  borderBottom?: Border;
+  borderLeft?: Border;
+  dropShadow?: DropShadow;
+};
+
+export type Triangle = Shape & {
+  shapeType: "triangle";
+  backgroundColor: string;
+  borderRadius?: number;
+  border?: Border;
+  borderTop?: Border;
+  borderRight?: Border;
+  borderBottom?: Border;
+  borderLeft?: Border;
+  dropShadow?: DropShadow;
 };
 
 export type Background = {
@@ -91,7 +115,7 @@ export type Background = {
 
 export type Thumbnail = {
   id: string;
-  assets: Array<Image | Text | Circle | Arrow>;
+  assets: Array<Image | Text | Circle | Arrow | Rectangle | Triangle>;
   background: Background;
 };
 
