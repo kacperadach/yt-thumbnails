@@ -40,7 +40,7 @@ env/
 .DS_Store
 Thumbs.db
 
-build/
+
 dist/
 *.egg-info/
 *.egg
