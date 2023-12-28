@@ -17,10 +17,11 @@ interface BaseAssetProps {
   editable: boolean;
   pixelScaleFactor: number;
   containerRef?: React.RefObject<HTMLDivElement>;
+  marketing?: boolean;
 }
 
 export default function BaseAsset(props: BaseAssetProps) {
-  const { asset, editable, pixelScaleFactor, containerRef } = props;
+  const { asset, editable, pixelScaleFactor, containerRef, marketing } = props;
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragPosition, setDragPosition] = useState<{
@@ -116,6 +117,8 @@ export default function BaseAsset(props: BaseAssetProps) {
   return (
     <div
       className={`cursor-pointer select-none ${
+        marketing && "marketing-fade-in"
+      } ${
         editable &&
         selectedAssetId.value !== asset.id &&
         "hover:outline-dashed hover:outline-offset-2 hover:outline-white "

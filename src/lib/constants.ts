@@ -17,6 +17,8 @@ export const EDITOR_WIDTH = 1280;
 export const EDITOR_HEIGHT = 720;
 export const DEFAULT_IMAGE_SRC = `${staticFile("/images/headshot.png")}`;
 
+export const DEFAULT_TEXT_PLACEHOLDER = "Sample Text";
+
 export const DEFAULT_TEXT_PROPERTIES = {
   padding: 10,
   borderRadius: 10,
@@ -67,7 +69,7 @@ export const DEFAULT_TEXT_OBJECT: Text = {
   height: EDITOR_HEIGHT * 0.2,
   zIndex: 0,
   rotation: 0,
-  text: "Placeholder",
+  text: DEFAULT_TEXT_PLACEHOLDER,
   padding: 20,
   backgroundColor: "white",
   borderRadius: 15,
@@ -198,7 +200,7 @@ export const TEMPLATES: Thumbnail[] = [
         zIndex: 3,
         rotation: -6,
         padding: 20,
-        text: "Is He Scripting?",
+        text: DEFAULT_TEXT_PLACEHOLDER,
         color: "white",
         backgroundColor: "red",
         longShadow: {
@@ -230,7 +232,7 @@ export const TEMPLATES: Thumbnail[] = [
         zIndex: 2,
         rotation: 3,
         padding: 20,
-        text: "She Said YES!!!",
+        text: DEFAULT_TEXT_PLACEHOLDER,
         color: "white",
         backgroundColor: "rgb(70, 70, 221)",
         longShadow: {
@@ -278,7 +280,7 @@ export const TEMPLATES: Thumbnail[] = [
         type: "image",
         x: 80,
         y: 50,
-        width: EDITOR_WIDTH * 0.3,
+        width: EDITOR_WIDTH * 0.5,
         zIndex: 4,
         src: DEFAULT_IMAGE_SRC,
       },
@@ -304,6 +306,22 @@ export const TEMPLATES: Thumbnail[] = [
     background: {
       type: "color",
       color: "blue",
+    },
+    assets: [],
+  },
+  {
+    id: uuidv4(),
+    background: {
+      type: "color",
+      color: "red",
+    },
+    assets: [],
+  },
+  {
+    id: uuidv4(),
+    background: {
+      type: "color",
+      color: "green",
     },
     assets: [],
   },

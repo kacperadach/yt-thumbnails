@@ -45,5 +45,14 @@ code {
 }
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-    background: #FF0000;
+    background: transparent;
 }
+
+  /* hide scrollbar when not scrolling */
+  ::-webkit-scrollbar-thumb:vertical {
+	visibility: hidden;
+  }
+  
+  ::-webkit-scrollbar-thumb:horizontal {
+	visibility: hidden;
+  }

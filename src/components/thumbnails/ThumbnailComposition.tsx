@@ -22,7 +22,6 @@ import {
 } from "../../lib/types";
 import { getPixelScaleFactor } from "../../lib/utils";
 import BaseAsset from "./BaseAsset";
-import { Img } from "remotion";
 import ImageComponent from "./Image";
 import {
   selectedAsset,
@@ -35,7 +34,7 @@ const FPS = 30;
 const MAX_ERROR_COUNT = 50;
 
 export function ThumbnailComposition(props: Record<string, unknown>) {
-  const { thumbnail, width, editable } = props;
+  const { thumbnail, width, editable, marketing = false } = props;
 
   const { background, assets } = thumbnail as Thumbnail;
 
@@ -69,6 +68,9 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
   );
 
   useEffect(() => {
+    if (!editable) {
+      return;
+    }
     const handleKeyPress = (event: any) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "c") {
         // Control + C or Command + C
@@ -129,6 +131,49 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
         // for the Escape key
         selectedAssetId.value = null;
       }
+
+      if (
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown" ||
+        event.key === "ArrowLeft" ||
+        event.key === "ArrowRight"
+      ) {
+        if (!selectedAssetId.value) {
+          return;
+        }
+        let xDiff = 0;
+        let yDiff = 0;
+        if (event.key === "ArrowUp") {
+          yDiff = -1;
+        } else if (event.key === "ArrowDown") {
+          yDiff = 1;
+        } else if (event.key === "ArrowLeft") {
+          xDiff = -1;
+        } else if (event.key === "ArrowRight") {
+          xDiff = 1;
+        }
+
+        thumbnails.value = thumbnails.value.map((t) => {
+          if (t.id !== (thumbnail as Thumbnail).id) {
+            return t;
+          }
+
+          return {
+            ...t,
+            assets: t.assets.map((a) => {
+              if (a.id !== selectedAssetId.value) {
+                return a;
+              }
+
+              return {
+                ...a,
+                y: (a.y || 0) + yDiff,
+                x: (a.x || 0) + xDiff,
+              };
+            }),
+          };
+        });
+      }
     };
 
     const handleWheel = (event: any) => {
@@ -174,7 +219,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
       window.removeEventListener("keydown", handleKeyPress);
       window.addEventListener("wheel", handleWheel);
     };
-  }, []);
+  }, [editable]);
 
   if (!thumbnail) {
     return null;
@@ -191,6 +236,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
     >
       {background.type === "video" && videoSrc && (
         <div
+          className={`${marketing && "marketing-fade-in"}`}
           style={{
             position: "absolute",
             width: "100%",
@@ -247,11 +293,12 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
         {assets.map((asset, index) => {
           return (
             <BaseAsset
-              key={index}
+              key={asset.id}
               asset={asset}
               editable={!!editable}
               pixelScaleFactor={pixelScaleFactor}
               containerRef={containerRef}
+              marketing={marketing as boolean}
             />
           );
         })}
@@ -266,15 +313,16 @@ interface ThumbnailPreviewProps {
   width?: number;
   height?: number;
   selectedAssetId?: string;
+  marketing?: boolean;
 }
 
 export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
-  const { thumbnail, width, height, editable } = props;
+  const { thumbnail, width, height, editable, marketing } = props;
 
   return (
     <RemotionThumbnail
       component={ThumbnailComposition}
-      inputProps={{ thumbnail, width, editable }}
+      inputProps={{ thumbnail, width, editable, marketing }}
       compositionWidth={Math.round(width || 1280)}
       compositionHeight={Math.round(height || 720)}
       frameToDisplay={0}

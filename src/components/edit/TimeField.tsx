@@ -27,17 +27,14 @@ export default function TimeField(props: TimeFieldProps) {
     const milliseconds = totalMilliseconds % 1000;
 
     if (!hoursRef.current || document.activeElement !== hoursRef.current) {
-      console.log("setting hours");
       setHours(String(hours).padStart(2, "0"));
     }
 
     if (!minutesRef.current || document.activeElement !== minutesRef.current) {
-      console.log("setting minutes");
       setMinutes(String(minutes).padStart(2, "0"));
     }
 
     if (!secondsRef.current || document.activeElement !== secondsRef.current) {
-      console.log("setting seconds");
       setSeconds(String(seconds).padStart(2, "0"));
     }
 
@@ -45,7 +42,6 @@ export default function TimeField(props: TimeFieldProps) {
       !millisecondsRef.current ||
       document.activeElement !== millisecondsRef.current
     ) {
-      console.log("setting milliseconds");
       setMilliseconds(String(milliseconds).padStart(3, "0"));
     }
   }, [time]);
@@ -201,7 +197,6 @@ export default function TimeField(props: TimeFieldProps) {
           placeholder="SS"
           maxLength={2}
           onFocus={() => {
-            console.log("focus seconds");
             setSeconds("");
           }}
           onBlur={() => {

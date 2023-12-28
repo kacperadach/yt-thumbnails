@@ -1,3 +1,4 @@
+import { PiMaskSadLight } from "react-icons/pi";
 import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { fetchThumbnails } from "../lib/api";
@@ -24,7 +25,6 @@ export default function Library() {
   return (
     <Container fluid>
       <div>
-        {/* <div className="text-xl font-medium text-black">Library</div> */}
         <Row className="flex">
           {thumbnails.value &&
             thumbnails.value.map((thumbnail, index) => {
@@ -46,6 +46,17 @@ export default function Library() {
                 </Col>
               );
             })}
+
+          {thumbnails.value.length === 0 && (
+            <Col>
+              <div className="flex flex-column justify-center items-center">
+                <PiMaskSadLight size="5rem" />
+                <h1 className="text-2xl font-bold text-center">
+                  No thumbnails found
+                </h1>
+              </div>
+            </Col>
+          )}
         </Row>
       </div>
     </Container>

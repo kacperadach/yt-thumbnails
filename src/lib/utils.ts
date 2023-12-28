@@ -213,3 +213,19 @@ export function getAllColorsFromThumbnail(thumbnail: Thumbnail) {
 
   return colorPresets;
 }
+
+export function typeString(
+  str: string,
+  totalTime: number,
+  setter: (str: string) => void
+) {
+  let length = str.length;
+  let timeInterval = totalTime / length;
+
+  for (let i = 0; i < length; i++) {
+    setTimeout(() => {
+      // Update the text with the current substring
+      setter(str.substring(0, i + 1));
+    }, timeInterval * i);
+  }
+}

@@ -3,6 +3,7 @@ import HomeSidebar from "./HomeSiderbar";
 import Library from "./Library";
 import Templates from "./Templates";
 import { Container, Row, Col } from "react-bootstrap";
+import Navbar from "./Navbar";
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState<"templates" | "library">(

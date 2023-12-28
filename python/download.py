@@ -1,3 +1,4 @@
+import os
 import re
 import subprocess
 from yt_dlp import YoutubeDL
@@ -133,32 +134,51 @@ def download_youtube_vod(url, resolution=720, info=None):
 
 
 def extract_clip(path, start, end):
-    output_path = path.rsplit(".", 1)[0] + "_trimmed.mp4"
+    file_extension = os.path.splitext(path)[1]
+    output_path = path.rsplit(".", 1)[0] + "_trimmed" + file_extension
     try:
-        # Constructing the FFMPEG command
-        command = [
-            "ffmpeg",
-            "-i",
-            path,  # Input file
-            "-ss",
-            str(start),  # Start time
-            "-to",
-            str(end),  # End time
-            "-c",
-            "copy",  # Copy the stream directly, no re-encoding
-            output_path,  # Output file
-        ]
+        if file_extension == ".mp4":
+            command = [
+                "ffmpeg",
+                "-i",
+                path,  # Input file
+                "-ss",
+                str(start),  # Start time
+                "-to",
+                str(end),  # End time
+                "-c",
+                "copy",  # Copy the stream directly, no re-encoding
+                output_path,  # Output file
+            ]
+        elif file_extension == ".webm":
+            command = [
+                "ffmpeg",
+                "-i",
+                path,  # Input file
+                "-ss",
+                str(start),  # Start time
+                "-to",
+                str(end),  # End time
+                "-c:v",
+                "libvpx",  # Video codec for WebM
+                "-c:a",
+                "libvorbis",  # Audio codec for WebM
+                output_path,  # Output file
+            ]
+        else:
+            raise ValueError("Unsupported file format")
 
         # Execute the command
         subprocess.run(command, check=True)
         print(f"Clip extracted successfully to {output_path}")
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
+    except ValueError as e:
+        print(e)
 
 
 if __name__ == "__main__":
-    # 1:17:08 - 1:17:49
-    extract_clip("tan.mp4", 9700, 9781)
+    extract_clip("nicki.webm", 401, 402)
     # download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")
     # print(
     #     download_youtube_info("https://www.youtube.com/watch?v=LPDTuHcua0o").get(
