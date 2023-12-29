@@ -18,6 +18,8 @@ import TemplateSelect from "./TemplateSelect";
 import { useNavigate } from "react-router-dom";
 import EditAndRender from "./EditAndRender";
 
+const redirect = process.env.REACT_APP_MARKETING_URL_REDIRECT || "/";
+
 const VIDEO_URL = "/videos/sample.webm";
 
 export default function MarketingPage() {
@@ -87,7 +89,7 @@ export default function MarketingPage() {
                 <button
                   className="ctaButton px-6 py-2"
                   onClick={() => {
-                    navigate("/");
+                    window.location.href = redirect;
                   }}
                 >
                   Get Started
