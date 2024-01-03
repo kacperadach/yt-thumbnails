@@ -1,3 +1,4 @@
+import os
 from contextlib import contextmanager
 
 from time import time
@@ -7,12 +8,9 @@ from sqlalchemy import create_engine, Column, Integer, String, Float, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./yt-thumbnails.db"
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./yt-thumbnails.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(os.environ.get("POSTGRES_CONNECTION_STRING"))
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

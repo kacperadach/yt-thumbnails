@@ -14,7 +14,7 @@ export default function EditAndRender(props: EditAndRenderProps) {
   const { thumbnail, setThumbnail, onFinish } = props;
 
   const firstText = thumbnail.assets.find((a: any) => a.type === "text");
-  const secondText = thumbnail.assets
+  const secondText = [...thumbnail.assets]
     .reverse()
     .find((a: any) => a.type === "text");
 
