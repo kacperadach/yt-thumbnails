@@ -1,0 +1,5 @@
+dispatch:
+  - url: "api.simplethumbnail.com/*"
+    service: backend
+  - url: "app.simplethumbnail.com/*"
+    service: frontend
