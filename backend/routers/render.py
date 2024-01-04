@@ -89,11 +89,7 @@ async def initiate_render(render_request: RenderRequest, db: Session = Depends(g
     if not thumbnail:
         raise HTTPException(status_code=400, detail="Invalid render")
 
-    # render_params = RenderParams(
-    #     composition="ThumbnailComposition",
-    #     # Note: In Python, you pass input props using `data`, not `input_props`
-    #     data={"thumbnail": json.dumps(thumbnail.thumbnail)},
-    # )
+   
 
     render = Render(
         user_id=render_request.user_id,
@@ -105,36 +101,6 @@ async def initiate_render(render_request: RenderRequest, db: Session = Depends(g
     db.commit()
     db.refresh(render)
 
-    # script_dir = os.path.dirname(os.path.realpath(__file__))
-    # js_file_path = os.path.join(script_dir, "render.js")
-    # # Define arguments to pass
-
-    # arguments = [
-    #     os.getenv("REMOTION_AWS_ACCESS_KEY_ID"),
-    #     os.getenv("REMOTION_AWS_SECRET_ACCESS_KEY"),
-    #     json.dumps(thumbnail.thumbnail),
-    # ]
-
-    # # Run the JavaScript file with Node.js and pass arguments
-    # result = subprocess.run(
-    #     ["node", js_file_path] + arguments, capture_output=True, text=True
-    # )
-
-    # if result.stdout:
-    #     render.status = "success"
-    #     render.url = result.stdout.replace("\n", "")
-    #     db.add(render)
-    #     db.commit()
-    #     db.refresh(render)
-    # else:
-    #     print(result.stderr)
-    #     render.status = "failed"
-    #     render.error_message = result.stderr
-    #     db.add(render)
-    #     db.commit()
-    #     db.refresh(render)
-
-    # q.enqueue(render_thumbnail, thumbnail.thumbnail, render.id)
     enqueue_task(
         "api/v1/tasks/thumbnail/render",
         {"render_id": render.id, "thumbnail": thumbnail.thumbnail},

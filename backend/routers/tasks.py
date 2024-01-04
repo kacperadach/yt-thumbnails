@@ -15,8 +15,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from remotion_lambda import (
-    RenderMediaParams,
-    RenderProgressParams,
+    RenderStillParams,
     Privacy,
     ValidStillImageFormats,
 )
@@ -34,48 +33,6 @@ router = APIRouter()
 
 class RemoveBackgroundRequest(BaseModel):
     image_id: str
-
-
-# @router.post("/v1/tasks/image/remove-background")
-# async def remove_background_from_image(
-#     request: RemoveBackgroundRequest, db: Session = Depends(get_db)
-# ):
-#     image: Image = db.query(Image).filter(Image.id == request.image_id).first()
-#     if not image:
-#         raise HTTPException(status_code=404, detail="Image not found")
-
-#     if not image.url:
-#         image.status = "failed"
-#         db.commit()
-#         raise HTTPException(status_code=400, detail="Image URL not found")
-
-#     response = requests.get(image.url)
-#     if response.status_code != 200:
-#         image.status = "failed"
-#         db.commit()
-#         raise HTTPException(status_code=400, detail="Image URL not found")
-
-#     image_buffer = BytesIO(response.content)
-#     img = PILImage.open(image_buffer).convert("RGB")
-
-#     if not remover:
-#     from transparent_background import Remover
-
-#     remover = Remover()
-
-#     out = remover.process(img)
-
-#     output_buffer = BytesIO()
-#     out.save(output_buffer, format="PNG")
-#     output_buffer.seek(0)  # Ensure the buffer's start is at the beginning
-#     s3_url = await upload_file_obj_to_s3(
-#         output_buffer, f"images/{image.id}_transparent.png"
-#     )
-
-#     image.url_transparent = s3_url
-#     image.updated_at = time()
-#     image.status = "success"
-#     db.commit()
 
 
 class RenderThumbnailRequest(BaseModel):
@@ -109,11 +66,12 @@ async def render_thumbnail(
         function_name=REMOTION_APP_FUNCTION_NAME,
     )
 
-    render_params = RenderMediaParams(
+    render_params = RenderStillParams(
         composition="ThumbnailComposition",
         privacy=Privacy.PUBLIC,
         image_format=ValidStillImageFormats.JPEG,
         input_props={"thumbnail": request.thumbnail},
+        download_behavior={"type": "download", "fileName": "thumbnail.jpeg"},
     )
 
     render_response = client.render_still_on_lambda(render_params)
