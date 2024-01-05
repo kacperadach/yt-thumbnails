@@ -60,7 +60,15 @@ const FIELDS_BY_TYPE = {
     {
       icon: <RiArrowLeftUpFill size="2rem" />,
       type: "arrow",
-      fields: ["headWidth", "tailWidth", "backgroundColor", "dropShadow"],
+      fields: [
+        "headWidth",
+        "headHeight",
+        "tailWidth",
+        "color",
+        "headColor",
+        "tailColor",
+        "dropShadow",
+      ],
     },
     POSITIONING_GROUP,
   ],

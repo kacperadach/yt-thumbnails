@@ -93,11 +93,11 @@ export default function Editor() {
   return (
     <Container fluid className="flex">
       <Row className="w-full">
-        <Col md={1}>
+        <Col md={1} style={{ minWidth: "12rem" }}>
           <EditorSidebar />
         </Col>
         <Col
-          md={8}
+          md={7}
           ref={previewRef}
           className="flex justify-center flex-column"
           style={{ height: "fit-content" }}
@@ -113,9 +113,9 @@ export default function Editor() {
             </div>
           )}
         </Col>
-        <Col md={3} className="w-full my-2">
+        <Col className="w-full my-2" style={{ minWidth: "15rem" }}>
           {selectedAsset.value && (
-            <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+            <div className="p-6 bg-white rounded-xl shadow-lg items-center">
               <EditMenuContainer
                 thumbnailAsset={selectedAsset.value as ThumbnailAsset}
                 onUpdate={onUpdate}

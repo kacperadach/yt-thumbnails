@@ -87,9 +87,24 @@ export type Circle = Shape & {
 
 export type Arrow = Shape & {
   shapeType: "arrow";
+  color: string;
+  headColor: string;
+  tailColor: string;
   headWidth: number;
+  headHeight: number;
   tailWidth: number;
-  backgroundColor: string;
+  start: {
+    x: number;
+    y: number;
+  };
+  middle: {
+    x: number;
+    y: number;
+  };
+  end: {
+    x: number;
+    y: number;
+  };
 };
 
 export type Rectangle = Shape & {

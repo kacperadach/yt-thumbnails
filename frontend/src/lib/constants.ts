@@ -15,7 +15,6 @@ import {
 } from "./types";
 import { v4 as uuidv4 } from "uuid";
 
-
 export const EDITOR_WIDTH = 1280;
 export const EDITOR_HEIGHT = 720;
 export const DEFAULT_IMAGE_SRC = `${staticFile("/images/headshot.png")}`;
@@ -144,9 +143,24 @@ export const DEFAULT_ARROW_OBJECT: Arrow = {
   zIndex: 0,
   rotation: 25,
   headWidth: 20,
+  headHeight: 20,
   tailWidth: 10,
   dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
-  backgroundColor: "red",
+  color: "red",
+  headColor: "red",
+  tailColor: "red",
+  start: {
+    x: 0,
+    y: 0,
+  },
+  middle: {
+    x: 50,
+    y: 50,
+  },
+  end: {
+    x: 100,
+    y: 100,
+  },
 };
 
 export const DEFAULT_RECTANGLE_OBJECT: Rectangle = {

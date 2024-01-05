@@ -1,9 +1,11 @@
 import { CSSProperties } from "react";
 import { EDITOR_WIDTH } from "./constants";
 import {
+  Arrow,
   Border,
   BoxShadow,
   DropShadow,
+  Shape,
   TextShadow,
   Thumbnail,
   ThumbnailAsset,
@@ -70,18 +72,23 @@ export function getBaseCssProperties(
   asset: ThumbnailAsset,
   pixelScaleFactor: number
 ) {
+  let rotation = asset.rotation || 0;
+  let width = asset.width;
+  let height = asset.height;
+  if (asset.type === "shape" && (asset as Shape).shapeType === "arrow") {
+    rotation = 0;
+  }
+
   let baseCssProperties: CSSProperties = {
     zIndex: asset.zIndex,
-    width: `${asset.width}px`,
+    width: `${width}px`,
     aspectRatio: asset.aspectRatio,
-    transform: `rotate(${
-      asset.rotation || 0
-    }deg) scale(${pixelScaleFactor}) translate(-50%, -50%)`,
+    transform: `rotate(${rotation}deg) scale(${pixelScaleFactor}) translate(-50%, -50%)`,
     transformOrigin: "top left",
   };
 
-  if (asset.height) {
-    baseCssProperties.height = `${asset.height}px`;
+  if (height) {
+    baseCssProperties.height = `${height}px`;
   }
 
   baseCssProperties.top = `${asset.y}%`;
@@ -176,8 +183,12 @@ export function getAllColorsFromThumbnail(thumbnail: Thumbnail) {
             colorPresets.push(a.dropShadow.color);
           }
 
-          if (a.backgroundColor) {
-            colorPresets.push(a.backgroundColor);
+          if (a.tailColor) {
+            colorPresets.push(a.tailColor);
+          }
+
+          if (a.headColor) {
+            colorPresets.push(a.headColor);
           }
         } else if (a.shapeType === "rectangle" || a.shapeType === "triangle") {
           if (a.backgroundColor) {

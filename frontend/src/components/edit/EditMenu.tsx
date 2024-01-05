@@ -1,6 +1,6 @@
 import { Container, Row, Col } from "react-bootstrap";
 import EditField from "./EditField";
-import { ThumbnailAsset } from "../../lib/types";
+import { Shape, ThumbnailAsset } from "../../lib/types";
 import {
   DEFAULT_BORDER_OBJECT,
   DEFAULT_BOX_SHADOW_OBJECT,
@@ -32,7 +32,7 @@ export default function EditMenu(props: EditMenuProps) {
   } = props;
 
   return (
-    <Container fluid>
+    <Container fluid className="shadow-sm my-2">
       {Object.keys(defaultObject).map((key, index) => {
         if (IGNORED_FIELDS.includes(key) || !filterFields.includes(key)) {
           return null;
@@ -109,6 +109,53 @@ export default function EditMenu(props: EditMenuProps) {
               }}
             />
           );
+        } else if (key === "start") {
+          const obj = (asset[key] as any) || {};
+          fieldComponent = (
+            <EditMenu
+              asset={obj}
+              defaultObject={{ x: 0, y: 0 }}
+              onUpdate={(newFields: Object) => {
+                onUpdate({ [key]: { ...obj, ...newFields } });
+              }}
+            />
+          );
+        } else if (key === "tailColor" || key === "headColor") {
+          fieldComponent = (
+            <EditField
+              key={index}
+              fieldName={key}
+              value={asset[key] as any}
+              onUpdate={(newFields: Object) => {
+                onUpdate({ ...newFields, color: undefined });
+              }}
+              defaultValue={defaultObject[key] as any}
+              disabled={disabled}
+              asset={asset}
+            />
+          );
+        } else if (
+          key === "color" &&
+          asset.type === "shape" &&
+          (asset as Shape).shapeType === "arrow"
+        ) {
+          fieldComponent = (
+            <EditField
+              key={index}
+              fieldName={key}
+              value={asset[key] as any}
+              onUpdate={(newFields: Object) => {
+                onUpdate({
+                  ...newFields,
+                  tailColor: undefined,
+                  headColor: undefined,
+                });
+              }}
+              defaultValue={defaultObject[key] as any}
+              disabled={disabled}
+              asset={asset}
+            />
+          );
         } else {
           fieldComponent = (
             <EditField
@@ -125,8 +172,8 @@ export default function EditMenu(props: EditMenuProps) {
 
         return (
           <Row className="flex my-1 items-center">
-            <Col md={3}>
-              <label className="font-bold mx-2 ">
+            <Col className="flex justify-between items-baseline">
+              <label className="font-bold mx-2 whitespace-nowrap">
                 {addSpaceBeforeCaps(
                   capitalizeFirstLetter(
                     FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] ||
@@ -134,8 +181,9 @@ export default function EditMenu(props: EditMenuProps) {
                   )
                 )}
               </label>
+
+              {fieldComponent}
             </Col>
-            <Col className="flex">{fieldComponent}</Col>
           </Row>
         );
       })}

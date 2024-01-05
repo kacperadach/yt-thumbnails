@@ -13,13 +13,13 @@ export default function Home() {
   return (
     <Container fluid>
       <Row>
-        <Col md={1}>
+        <Col md={1} style={{ minWidth: "12rem" }}>
           <HomeSidebar
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
           />
         </Col>
-        <Col md={11}>
+        <Col>
           {selectedTab === "templates" && <Templates />}
           {selectedTab === "library" && <Library />}
         </Col>
