@@ -1,11 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef, useEffect } from "react";
 import { Thumbnail } from "../lib/types";
-import {
-  EDITOR_WIDTH,
-  TEMPLATES,
-  TEMPLATE_PREVIEW_WIDTH,
-} from "../lib/constants";
+import { EDITOR_WIDTH, TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
 import "./marketingStyles.css";
 import { Container, Row, Col } from "react-bootstrap";
 import ThumbnailPreview, {
@@ -17,6 +13,7 @@ import ImageUpload from "./ImageUpload";
 import TemplateSelect from "./TemplateSelect";
 import { useNavigate } from "react-router-dom";
 import EditAndRender from "./EditAndRender";
+import { TEMPLATES } from "../lib/templates/templates";
 
 const redirect = process.env.REACT_APP_MARKETING_URL_REDIRECT || "/";
 

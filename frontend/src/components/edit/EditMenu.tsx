@@ -3,8 +3,10 @@ import EditField from "./EditField";
 import { ThumbnailAsset } from "../../lib/types";
 import {
   DEFAULT_BORDER_OBJECT,
+  DEFAULT_BOX_SHADOW_OBJECT,
   DEFAULT_DROP_SHADOW_OBJECT,
   DEFAULT_LONG_SHADOW_OBJECT,
+  DEFAULT_TEXT_SHADOW_OBJECT,
 } from "../../lib/constants";
 import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
 
@@ -79,23 +81,29 @@ export default function EditMenu(props: EditMenuProps) {
               }}
             />
           );
-        } else if (key === "longShadow") {
+        } else if (
+          key === "longShadow" ||
+          key === "textShadow" ||
+          key === "boxShadow" ||
+          key === "dropShadow"
+        ) {
           const obj = (asset[key] as any) || {};
+
+          let defaultObject = null;
+          if (key === "longShadow") {
+            defaultObject = DEFAULT_LONG_SHADOW_OBJECT;
+          } else if (key === "dropShadow") {
+            defaultObject = DEFAULT_DROP_SHADOW_OBJECT;
+          } else if (key === "boxShadow") {
+            defaultObject = DEFAULT_BOX_SHADOW_OBJECT;
+          } else if (key === "textShadow") {
+            defaultObject = DEFAULT_TEXT_SHADOW_OBJECT;
+          }
+
           fieldComponent = (
             <EditMenu
               asset={obj}
-              defaultObject={DEFAULT_LONG_SHADOW_OBJECT}
-              onUpdate={(newFields: Object) => {
-                onUpdate({ [key]: { ...obj, ...newFields } });
-              }}
-            />
-          );
-        } else if (key === "dropShadow") {
-          const obj = (asset[key] as any) || {};
-          fieldComponent = (
-            <EditMenu
-              asset={obj}
-              defaultObject={DEFAULT_DROP_SHADOW_OBJECT}
+              defaultObject={defaultObject}
               onUpdate={(newFields: Object) => {
                 onUpdate({ [key]: { ...obj, ...newFields } });
               }}

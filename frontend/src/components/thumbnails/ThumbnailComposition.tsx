@@ -177,37 +177,32 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
     };
 
     const handleWheel = (event: any) => {
-      console.log(`Mouse wheel event: deltaY = ${event.deltaY}`);
-      // Add your logic here for the mouse wheel event
-      // event.deltaY gives the amount of scroll
-      // Positive values indicate a scroll down, negative values scroll up
-
-      if (!selectedAssetId.value) {
-        return;
-      }
-      event.stopPropagation();
-
-      const delta = event.deltaY;
-
-      thumbnails.value = thumbnails.value.map((t) => {
-        if (t.id !== (thumbnail as Thumbnail).id) {
-          return t;
-        }
-
-        return {
-          ...t,
-          assets: t.assets.map((a) => {
-            if (a.id !== selectedAssetId.value) {
-              return a;
-            }
-
-            return {
-              ...a,
-              rotation: (a.rotation || 0) + delta / 20,
-            };
-          }),
-        };
-      });
+      // console.log(`Mouse wheel event: deltaY = ${event.deltaY}`);
+      // // Add your logic here for the mouse wheel event
+      // // event.deltaY gives the amount of scroll
+      // // Positive values indicate a scroll down, negative values scroll up
+      // if (!selectedAssetId.value) {
+      //   return;
+      // }
+      // event.stopPropagation();
+      // const delta = event.deltaY;
+      // thumbnails.value = thumbnails.value.map((t) => {
+      //   if (t.id !== (thumbnail as Thumbnail).id) {
+      //     return t;
+      //   }
+      //   return {
+      //     ...t,
+      //     assets: t.assets.map((a) => {
+      //       if (a.id !== selectedAssetId.value) {
+      //         return a;
+      //       }
+      //       return {
+      //         ...a,
+      //         rotation: (a.rotation || 0) + delta / 20,
+      //       };
+      //     }),
+      //   };
+      // });
     };
 
     // Add event listener
@@ -241,7 +236,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
             position: "absolute",
             width: "100%",
             height: "100%",
-            backgroundColor: background.color,
+            background: background.color,
             transform: `scale(${background.zoom || 1})  translate(-50%, -50%)`,
             top: `${background.y || 0}%`,
             left: `${background.x || 0}%`,
@@ -264,7 +259,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
         <div
           style={{
             position: "absolute",
-            backgroundColor: background.color,
+            background: background.color,
             width: "100%",
             height: "100%",
             zIndex: 0,
@@ -280,7 +275,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
       {background.type === "color" && (
         <div
           style={{
-            backgroundColor: background.color,
+            background: background.color,
             position: "absolute",
             width: "100%",
             height: "100%",
@@ -322,7 +317,7 @@ export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
   return (
     <RemotionThumbnail
       component={ThumbnailComposition}
-      inputProps={{ thumbnail, width, editable, marketing }}
+      inputProps={{ thumbnail, width, height, editable, marketing }}
       compositionWidth={Math.round(width || 1280)}
       compositionHeight={Math.round(height || 720)}
       frameToDisplay={0}

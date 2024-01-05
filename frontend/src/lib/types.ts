@@ -35,6 +35,21 @@ export type LongShadow = {
   color: string;
 };
 
+export type BoxShadow = {
+  x: number;
+  y: number;
+  blur: number;
+  spread: number;
+  color: string;
+};
+
+export type TextShadow = {
+  x: number;
+  y: number;
+  blur: number;
+  color: string;
+};
+
 export type Text = ThumbnailAsset & {
   type: "text";
   height: number;
@@ -47,16 +62,19 @@ export type Text = ThumbnailAsset & {
   borderRight?: Border;
   borderBottom?: Border;
   borderLeft?: Border;
-  longShadow?: LongShadow;
   fontFamily?: string;
   fontSize?: number;
   fontWeight?: number;
   color?: string;
+  longShadow?: LongShadow;
+  textShadow?: TextShadow;
 };
 
 export type Shape = ThumbnailAsset & {
   type: "shape";
   shapeType: "circle" | "arrow" | "rectangle" | "triangle";
+  dropShadow?: DropShadow;
+  boxShadow?: BoxShadow;
 };
 
 export type Circle = Shape & {
@@ -69,7 +87,6 @@ export type Circle = Shape & {
 
 export type Arrow = Shape & {
   shapeType: "arrow";
-  dropShadow?: DropShadow;
   headWidth: number;
   tailWidth: number;
   backgroundColor: string;

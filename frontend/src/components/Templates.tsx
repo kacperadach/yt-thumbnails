@@ -3,10 +3,11 @@ import { Thumbnail } from "../lib/types";
 import ThumbnailPreview from "./thumbnails/ThumbnailComposition";
 import { pxToRem, remToPx } from "../lib/utils";
 import { staticFile } from "remotion";
-import { TEMPLATES, TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
+import { TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
 import { thumbnails, editingThumbnailId } from "../lib/signals";
 import { createThumbnail } from "../lib/api";
 import { useNavigate } from "react-router-dom";
+import { TEMPLATES } from "../lib/templates/templates";
 
 export default function Templates() {
   const navigate = useNavigate();

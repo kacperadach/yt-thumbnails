@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SketchPicker } from "react-color";
+import ColorPicker from "react-best-gradient-color-picker";
 import { BsCheck, BsPlus } from "react-icons/bs";
 import BorderStyleField from "./BorderStyleField";
 import { Image, Text, ThumbnailAsset } from "../../lib/types";
@@ -111,13 +112,14 @@ export default function EditField(props: EditFieldProps) {
 
     return (
       <div className="flex items-center">
-        <SketchPicker
-          color={value}
-          onChange={(color) => {
-            const colorString = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
-            onUpdate({ [fieldName]: colorString });
+        <ColorPicker
+          className=""
+          value={value}
+          onChange={(color: { rgb: { r: any; g: any; b: any; a: any } }) => {
+            console.log(color);
+            onUpdate({ [fieldName]: color });
           }}
-          presetColors={presetColors}
+          presets={presetColors}
         />
         <button
           className="w-md border-2 border-gray-200 hover:bg-green-300 mx-2"

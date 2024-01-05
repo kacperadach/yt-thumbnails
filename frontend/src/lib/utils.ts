@@ -2,7 +2,9 @@ import { CSSProperties } from "react";
 import { EDITOR_WIDTH } from "./constants";
 import {
   Border,
+  BoxShadow,
   DropShadow,
+  TextShadow,
   Thumbnail,
   ThumbnailAsset,
   VideoResource,
@@ -54,6 +56,14 @@ export function formatBorder(border: Border, pixelScaleFactor: number) {
 
 export function formatDropShadow(dropShadow: DropShadow) {
   return `${dropShadow.x}px ${dropShadow.y}px ${dropShadow.blur}px ${dropShadow.color}`;
+}
+
+export function formatBoxShadow(boxShadow: BoxShadow) {
+  return `${boxShadow.x}px ${boxShadow.y}px ${boxShadow.blur}px ${boxShadow.spread}px ${boxShadow.color}`;
+}
+
+export function formatTextShadow(textShadow: TextShadow) {
+  return `${textShadow.x}px ${textShadow.y}px ${textShadow.blur}px ${textShadow.color}`;
 }
 
 export function getBaseCssProperties(

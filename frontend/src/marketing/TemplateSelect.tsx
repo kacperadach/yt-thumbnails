@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import ThumbnailPreview from "../components/thumbnails/ThumbnailComposition";
-import { TEMPLATES } from "../lib/constants";
+import { TEMPLATES } from "../lib/templates/templates";
 import { remToPx } from "../lib/utils";
 
 const TEMPLATE_WIDTH = 10;

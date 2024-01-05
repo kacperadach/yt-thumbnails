@@ -1,6 +1,10 @@
 import { CSSProperties } from "react";
 import { Circle } from "../../lib/types";
-import { formatBorder } from "../../lib/utils";
+import {
+  formatBorder,
+  formatBoxShadow,
+  formatDropShadow,
+} from "../../lib/utils";
 
 interface CircleProps {
   circle: Circle;
@@ -18,7 +22,13 @@ export default function CircleComponent(props: CircleProps) {
     borderRadius: "50%",
     width: "100%",
     height: "100%",
+    filter:
+      circle.dropShadow &&
+      `drop-shadow(${formatDropShadow(circle.dropShadow)})`,
+    boxShadow: circle.boxShadow && formatBoxShadow(circle.boxShadow),
   };
+
+  console.log(circle);
 
   return <div style={circleStyles} />;
 }

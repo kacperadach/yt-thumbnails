@@ -60,7 +60,7 @@ const FIELDS_BY_TYPE = {
     {
       icon: <RiArrowLeftUpFill size="2rem" />,
       type: "arrow",
-      fields: ["dropShadow", "headWidth", "tailWidth", "backgroundColor"],
+      fields: ["headWidth", "tailWidth", "backgroundColor", "dropShadow"],
     },
     POSITIONING_GROUP,
   ],
@@ -68,7 +68,14 @@ const FIELDS_BY_TYPE = {
     {
       icon: <FiCircle size="2rem" />,
       type: "circle",
-      fields: ["width", "border", "outline", "backgroundColor"],
+      fields: [
+        "width",
+        "border",
+        "outline",
+        "backgroundColor",
+        "dropShadow",
+        "boxShadow",
+      ],
     },
     POSITIONING_GROUP,
   ],
@@ -106,6 +113,7 @@ const FIELDS_BY_TYPE = {
         "borderTop",
         "borderBottom",
         "longShadow",
+        "textShadow",
       ],
     },
   ],

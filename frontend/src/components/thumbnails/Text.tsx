@@ -1,7 +1,11 @@
 import { CSSProperties } from "react";
 import { Text } from "../../lib/types";
 import { generateFullLongShadow } from "../../lib/textShadow";
-import { formatBorder, getBaseCssProperties } from "../../lib/utils";
+import {
+  formatBorder,
+  formatTextShadow,
+  getBaseCssProperties,
+} from "../../lib/utils";
 import { DEFAULT_TEXT_PROPERTIES } from "../../lib/constants";
 import BaseAsset from "./BaseAsset";
 
@@ -17,18 +21,24 @@ export default function TextAsset(props: TextAssetProps) {
     ...text,
   };
 
+  let textShadow = "";
+  if (textProperties.longShadow && textProperties.longShadow.width > 0) {
+    textShadow = `${generateFullLongShadow(
+      textProperties.longShadow.width,
+      textProperties.longShadow.color
+    )}`;
+  } else if (textProperties.textShadow) {
+    textShadow = formatTextShadow(textProperties.textShadow);
+  }
+
+
   const containerStyles: CSSProperties = {
     height: `${textProperties.height}px`,
     minWidth: "fit-content",
     // height: `${textProperties.height * pixelScaleFactor}px`,
     backgroundColor: textProperties.backgroundColor,
     padding: `${textProperties.padding}px`,
-    textShadow:
-      textProperties.longShadow &&
-      `${generateFullLongShadow(
-        textProperties.longShadow.width,
-        textProperties.longShadow.color
-      )}`,
+    textShadow: textShadow,
     borderRadius: `${textProperties.borderRadius}px`,
     border: textProperties.border && formatBorder(textProperties.border, 1),
     display: "flex",

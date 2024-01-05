@@ -9,7 +9,7 @@ node_modules
 /coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
@@ -52,3 +52,4 @@ dist/
 */tmp/
 
 env_variables.yaml
+/thumbnails
