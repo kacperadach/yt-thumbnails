@@ -1,12 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Thumbnail } from "../types";
-import {
-  DEFAULT_DROP_SHADOW_OBJECT,
-  DEFAULT_IMAGE_SRC,
-  DEFAULT_TEXT_PLACEHOLDER,
-  EDITOR_HEIGHT,
-  EDITOR_WIDTH,
-} from "../constants";
+import { DEFAULT_IMAGE_SRC } from "../constants";
 
 export default {
   id: uuidv4(),

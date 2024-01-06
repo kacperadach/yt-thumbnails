@@ -91,7 +91,7 @@ const FIELDS_BY_TYPE = {
     {
       icon: <BsCardImage size="2rem" />,
       type: "image",
-      fields: ["src", "transparent"],
+      fields: ["src", "transparent", "dropShadow"],
     },
     POSITIONING_GROUP,
   ],

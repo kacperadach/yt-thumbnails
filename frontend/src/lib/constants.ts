@@ -113,6 +113,7 @@ export const DEFAULT_IMAGE_OBJECT: Image = {
   rotation: 0,
   src: DEFAULT_IMAGE_SRC,
   transparent: false,
+  dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
 };
 
 export const DEFAULT_CIRCLE_OBJECT: Circle = {
@@ -142,9 +143,9 @@ export const DEFAULT_ARROW_OBJECT: Arrow = {
   height: EDITOR_HEIGHT * 0.15,
   zIndex: 0,
   rotation: 25,
-  headWidth: 20,
-  headHeight: 20,
-  tailWidth: 10,
+  headWidth: 80,
+  headHeight: 50,
+  tailWidth: 12,
   dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
   color: "red",
   headColor: "red",

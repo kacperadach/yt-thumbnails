@@ -15,6 +15,7 @@ export type Image = ThumbnailAsset & {
   src: string;
   imageId?: string;
   transparent?: boolean;
+  dropShadow?: DropShadow;
 };
 
 export type Border = {

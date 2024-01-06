@@ -101,7 +101,7 @@ export default function BaseAsset(props: BaseAssetProps) {
   if (asset.type === "text") {
     child = <TextAsset text={asset as Text} />;
   } else if (asset.type === "image") {
-    child = <ImageComponent src={(asset as Image).src} />;
+    child = <ImageComponent image={(asset as Image)} />;
   } else if (asset.type === "shape") {
     child = (
       <ShapeComponent shape={asset as Shape} containerRef={containerRef} />

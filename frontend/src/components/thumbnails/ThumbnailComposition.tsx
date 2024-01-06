@@ -308,7 +308,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
             left: `${background.x || 0}%`,
           }}
         >
-          <ImageComponent src={background.imageSrc} />
+          <ImageComponent image={{ src: background.imageSrc } as Image} />
         </div>
       )}
 
