@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { SketchPicker } from "react-color";
 import ColorPicker from "react-best-gradient-color-picker";
 import { BsCheck, BsPlus } from "react-icons/bs";
 import BorderStyleField from "./BorderStyleField";
 import { Image, Text, ThumbnailAsset } from "../../lib/types";
 import { images, thumbnail } from "../../lib/signals";
-import { Dropdown } from "react-bootstrap";
-import { AVAILABLE_DEFAULT_FONTS } from "../../lib/constants";
-import tinycolor from "tinycolor2";
 import { PresetColor } from "react-color/lib/components/sketch/Sketch";
 import { getAllColorsFromThumbnail } from "../../lib/utils";
+import FontSelect from "./FontSelect";
 
 const STEP_SIZE_MAP = {
   fontWeight: 100,
@@ -154,27 +151,33 @@ export default function EditField(props: EditFieldProps) {
     );
   } else if (fieldName === "fontFamily") {
     return (
-      <Dropdown className="bg-white text-black">
-        <Dropdown.Toggle className="bg-white text-black border border-2 rounded-md">
-          {value}
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          {AVAILABLE_DEFAULT_FONTS.map((font, index) => {
-            return (
-              <Dropdown.Item
-                key={index}
-                onClick={() => onUpdate({ [fieldName]: font })}
-                style={{
-                  fontFamily: font,
-                }}
-              >
-                {font}
-              </Dropdown.Item>
-            );
-          })}
-        </Dropdown.Menu>
-      </Dropdown>
+      <FontSelect
+        selectedFont={value}
+        onUpdate={(font: string) => onUpdate({ [fieldName]: font })}
+      />
     );
+    // return (
+    //   <Dropdown className="bg-white text-black">
+    //     <Dropdown.Toggle className="bg-white text-black border border-2 rounded-md">
+    //       {value}
+    //     </Dropdown.Toggle>
+    //     <Dropdown.Menu>
+    //       {AVAILABLE_DEFAULT_FONTS.map((font: string, index: number) => {
+    //         return (
+    //           <Dropdown.Item
+    //             key={index}
+    //             onClick={() => onUpdate({ [fieldName]: font })}
+    //             style={{
+    //               fontFamily: font,
+    //             }}
+    //           >
+    //             {font}
+    //           </Dropdown.Item>
+    //         );
+    //       })}
+    //     </Dropdown.Menu>
+    //   </Dropdown>
+    // );
   } else {
     return (
       <input

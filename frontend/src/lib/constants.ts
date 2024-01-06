@@ -203,17 +203,4 @@ export const DEFAULT_TRIANGLE_OBJECT: Triangle = {
   backgroundColor: "yellow",
 };
 
-export const AVAILABLE_DEFAULT_FONTS = [
-  "Arial",
-  "Comic Sans MS",
-  "Courier New",
-  "Georgia",
-  "Helvetica",
-  "Impact",
-  "Palatino",
-  "Times New Roman",
-  "Trebuchet MS",
-  "Verdana",
-];
-
 export const TEMPLATE_PREVIEW_WIDTH = 25;

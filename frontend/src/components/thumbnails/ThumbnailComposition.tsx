@@ -16,6 +16,7 @@ import {
   Circle,
   Image,
   Rectangle,
+  Text,
   Thumbnail,
   ThumbnailAsset,
   Triangle,
@@ -28,7 +29,14 @@ import {
   thumbnails,
   selectedAssetId,
   copiedAssetId,
+  loadedFonts,
 } from "../../lib/signals";
+import { useSignalEffect } from "@preact/signals-react";
+import {
+  AVAILABLE_DEFAULT_FONTS,
+  GOOGLE_FONTS,
+  loadGoogleFont,
+} from "../../lib/fonts";
 
 const FPS = 30;
 const MAX_ERROR_COUNT = 50;
@@ -44,6 +52,38 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
   const [errorCount, setErrorCount] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useSignalEffect(() => {
+    const unloadedGoogleFonts = assets
+      .filter((a) => a.type === "text")
+      .map((a) => (a as Text).fontFamily)
+      .filter(
+        (f) =>
+          f &&
+          !AVAILABLE_DEFAULT_FONTS.includes(f) &&
+          !loadedFonts.value.includes(f)
+      ) as string[];
+
+    if (unloadedGoogleFonts.length === 0) {
+      return;
+    }
+
+    loadedFonts.value = [...loadedFonts.value, ...unloadedGoogleFonts];
+
+    unloadedGoogleFonts.forEach((font) => {
+      const fontOption = GOOGLE_FONTS.find((f) => f.fontFamily === font);
+      if (!fontOption) {
+        return;
+      }
+      console.log("Loading font", font);
+      loadGoogleFont({
+        name: font,
+        fontFamily: fontOption.fontFamily,
+        import: fontOption.load,
+        type: "google",
+      });
+    });
+  });
 
   useEffect(() => {
     setVideoSrc(background.videoSrc || "");
