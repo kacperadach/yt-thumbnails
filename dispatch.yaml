@@ -3,3 +3,5 @@ dispatch:
     service: backend
   - url: "app.simplethumbnail.com/*"
     service: frontend
+  - url: "www.simplethumbnail.com/*"
+    service: marketing

@@ -1,0 +1,71 @@
+{
+  "name": "yt-thumbnails",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@preact/signals-react": "^1.3.8",
+    "@remotion/google-fonts": "^4.0.83",
+    "@remotion/lambda": "^4.0.83",
+    "@remotion/player": "^4.0.83",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.62",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "autoprefixer": "^10.4.16",
+    "bootstrap": "^5.3.2",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-best-gradient-color-picker": "^2.3.5",
+    "react-bootstrap": "^2.9.1",
+    "react-color": "^2.19.3",
+    "react-dom": "^18.2.0",
+    "react-flip-toolkit": "^7.1.0",
+    "react-ga4": "^2.1.0",
+    "react-icons": "^4.12.0",
+    "react-router": "^6.21.1",
+    "react-router-dom": "^6.21.1",
+    "react-scripts": "5.0.1",
+    "remotion": "^4.0.83",
+    "tinycolor2": "^1.6.0",
+    "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.23.4",
+    "@types/lodash": "^4.14.202",
+    "@types/react-color": "^3.0.10",
+    "@types/tinycolor2": "^1.4.6",
+    "@types/uuid": "^9.0.7",
+    "tailwindcss": "^3.3.6"
+  }
+}
