@@ -11,6 +11,7 @@ import {
 } from "./types";
 import { fetchVideos, updateThumbnail } from "./api";
 import debounce from "lodash/debounce";
+import { Session } from "@supabase/supabase-js";
 
 export const thumbnails = signal<Thumbnail[]>([]);
 export const editingThumbnailId = signal<string | null>(null);
@@ -24,6 +25,7 @@ export const isPollingVideos = signal<boolean>(false);
 export const isPollingImages = signal<boolean>(false);
 export const copiedAssetId = signal<string | null>(null);
 export const loadedFonts = signal<string[]>([]);
+export const userSession = signal<Session | null>(null);
 
 export const thumbnail = computed<Thumbnail | null>(() => {
   const thumbnail = thumbnails.value.find(

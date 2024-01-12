@@ -33,9 +33,7 @@ def get_db():
 
 
 class BaseTable:
-    id: String = Column(
-        String, primary_key=True, index=True, default=lambda: str(uuid4())
-    )
+    id: String = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
     created_at: float = Column(Float, default=time)
     updated_at: float = Column(Float, default=time)
     deleted_at: float = Column(Float, default=time)
@@ -43,6 +41,8 @@ class BaseTable:
 
 class User(Base, BaseTable):
     __tablename__ = "users"
+
+    email: str = Column(String, index=True)
 
 
 class Thumbnail(Base, BaseTable):

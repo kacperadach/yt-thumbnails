@@ -75,7 +75,6 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
       if (!fontOption) {
         return;
       }
-      console.log("Loading font", font);
       loadGoogleFont({
         name: font,
         fontFamily: fontOption.fontFamily,

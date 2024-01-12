@@ -48,11 +48,11 @@ code {
     background: transparent;
 }
 
-  /* hide scrollbar when not scrolling */
-  ::-webkit-scrollbar-thumb:vertical {
-	visibility: hidden;
-  }
-  
-  ::-webkit-scrollbar-thumb:horizontal {
-	visibility: hidden;
-  }
+/* hide scrollbar when not scrolling */
+::-webkit-scrollbar-thumb:vertical {
+visibility: hidden;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+visibility: hidden;
+}
