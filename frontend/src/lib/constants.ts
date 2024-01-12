@@ -13,7 +13,8 @@ import {
   BoxShadow,
   TextShadow,
 } from "./types";
-import { v4 as uuidv4 } from "uuid";
+
+export const APP_NAME = "Simple Thumbnail";
 
 export const EDITOR_WIDTH = 1280;
 export const EDITOR_HEIGHT = 720;

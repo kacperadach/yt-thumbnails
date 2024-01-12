@@ -11,6 +11,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Heebo', sans-serif !important;
+  min-height: 100vh;
 }
 
 code {

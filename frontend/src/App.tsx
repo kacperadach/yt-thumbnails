@@ -8,7 +8,6 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import MarketingPage from "./marketing/MarketingPage";
 import { initializeAnalytics } from "./lib/ga";
-
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa, ThemeMinimal } from "@supabase/auth-ui-shared";
 import { Spinner } from "react-bootstrap";
@@ -16,6 +15,8 @@ import { userSession } from "./lib/signals";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { supabase } from "./lib/supabase";
+import Login from "./components/auth/Login";
+import LoadingSpinner from "./components/auth/LoadingSpinner";
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -40,15 +41,11 @@ function App() {
   }, []);
 
   if (!authChecked) {
-    return (
-      <div>
-        <Spinner />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!userSession.value) {
-    return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />;
+    return <Login />;
   }
 
   return (
@@ -60,6 +57,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/edit/:id" element={<Editor />} />
           <Route path="/marketing" element={<MarketingPage />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Theme>
