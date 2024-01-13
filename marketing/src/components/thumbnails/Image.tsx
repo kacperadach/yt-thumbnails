@@ -13,8 +13,6 @@ export default function ImageComponent(props: ImageProps) {
     return null;
   }
 
-  console.log(image);
-
   return (
     <div>
       <Img

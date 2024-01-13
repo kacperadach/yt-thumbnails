@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useSignalEffect } from "@preact/signals-react";
 import { BsX } from "react-icons/bs";
-import { apiError } from "../lib/api";
+import { apiError } from "../../lib/api";
 
 export default function ApiErrorBanner() {
   const [dismissed, setDismissed] = useState(false);

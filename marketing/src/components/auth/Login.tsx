@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Link } from "@radix-ui/themes";
+import { Box, Container, Flex } from "@radix-ui/themes";
 import { supabase } from "../../lib/supabase";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa, ThemeMinimal } from "@supabase/auth-ui-shared";
@@ -27,22 +27,9 @@ export default function Login() {
             },
           }}
         />
-        <Flex justify="center">
-          <a
-            className="mx-2 text-brand-green cursor-pointer"
-            href={process.env.REACT_APP_TERMS_OF_SERVICE_URL}
-            target="_blank"
-          >
-            Terms of use
-          </a>
-          <span>{" | "}</span>
-          <a
-            className="mx-2 text-brand-green cursor-pointer"
-            href={process.env.REACT_APP_PRIVACY_POLICY_URL}
-            target="_blank"
-          >
-            Privacy Policy
-          </a>
+        <Flex>
+          <div>test</div>
+          <a>Privacy Policy</a>
         </Flex>
       </Box>
     </Flex>

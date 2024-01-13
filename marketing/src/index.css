@@ -11,6 +11,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Heebo', sans-serif !important;
+  min-height: 100vh;
 }
 
 code {
@@ -48,11 +49,11 @@ code {
     background: transparent;
 }
 
-  /* hide scrollbar when not scrolling */
-  ::-webkit-scrollbar-thumb:vertical {
-	visibility: hidden;
-  }
-  
-  ::-webkit-scrollbar-thumb:horizontal {
-	visibility: hidden;
-  }
+/* hide scrollbar when not scrolling */
+::-webkit-scrollbar-thumb:vertical {
+visibility: hidden;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+visibility: hidden;
+}

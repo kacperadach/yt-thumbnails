@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.6e70432d.css",
-    "main.js": "/static/js/main.645848f1.js",
+    "main.css": "/static/css/main.d623ba81.css",
+    "main.js": "/static/js/main.16f41843.js",
     "static/js/78994.2f116469.chunk.js": "/static/js/78994.2f116469.chunk.js",
     "static/js/41040.57b6182d.chunk.js": "/static/js/41040.57b6182d.chunk.js",
     "static/js/79629.d6e37179.chunk.js": "/static/js/79629.d6e37179.chunk.js",
@@ -1577,11 +1577,12 @@
     "static/js/36420.c3923ccf.chunk.js": "/static/js/36420.c3923ccf.chunk.js",
     "static/js/82930.90b9cab8.chunk.js": "/static/js/82930.90b9cab8.chunk.js",
     "static/js/19695.a1caf83a.chunk.js": "/static/js/19695.a1caf83a.chunk.js",
+    "static/js/53289.481554b4.chunk.js": "/static/js/53289.481554b4.chunk.js",
     "static/js/787.bb704a5c.chunk.js": "/static/js/787.bb704a5c.chunk.js",
     "static/media/logo.png": "/static/media/logo.286f78474f7d394273e8.png",
     "index.html": "/index.html",
-    "main.6e70432d.css.map": "/static/css/main.6e70432d.css.map",
-    "main.645848f1.js.map": "/static/js/main.645848f1.js.map",
+    "main.d623ba81.css.map": "/static/css/main.d623ba81.css.map",
+    "main.16f41843.js.map": "/static/js/main.16f41843.js.map",
     "78994.2f116469.chunk.js.map": "/static/js/78994.2f116469.chunk.js.map",
     "41040.57b6182d.chunk.js.map": "/static/js/41040.57b6182d.chunk.js.map",
     "79629.d6e37179.chunk.js.map": "/static/js/79629.d6e37179.chunk.js.map",
@@ -3157,10 +3158,11 @@
     "36420.c3923ccf.chunk.js.map": "/static/js/36420.c3923ccf.chunk.js.map",
     "82930.90b9cab8.chunk.js.map": "/static/js/82930.90b9cab8.chunk.js.map",
     "19695.a1caf83a.chunk.js.map": "/static/js/19695.a1caf83a.chunk.js.map",
+    "53289.481554b4.chunk.js.map": "/static/js/53289.481554b4.chunk.js.map",
     "787.bb704a5c.chunk.js.map": "/static/js/787.bb704a5c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6e70432d.css",
-    "static/js/main.645848f1.js"
+    "static/css/main.d623ba81.css",
+    "static/js/main.16f41843.js"
   ]
 }

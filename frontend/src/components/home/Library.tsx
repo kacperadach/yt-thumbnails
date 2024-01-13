@@ -1,19 +1,24 @@
 import { PiMaskSadLight } from "react-icons/pi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { fetchThumbnails } from "../lib/api";
-import { editingThumbnailId, thumbnails } from "../lib/signals";
-import ThumbnailPreview from "./thumbnails/ThumbnailComposition";
-import { remToPx } from "../lib/utils";
-import { TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
+import { fetchThumbnails } from "../../lib/api";
+import { editingThumbnailId, homeLoading, thumbnails } from "../../lib/signals";
+import ThumbnailPreview from "../thumbnails/ThumbnailComposition";
+import { remToPx } from "../../lib/utils";
+import { TEMPLATE_PREVIEW_WIDTH } from "../../lib/constants";
 import { useNavigate } from "react-router-dom";
 
 export default function Library() {
   const navigate = useNavigate();
 
+  const [fetchedThumbnails, setFetchedThumbnails] = useState(false);
+
   useEffect(() => {
     const getThumbnails = async () => {
+      homeLoading.value = true;
       const response = await fetchThumbnails();
+      setFetchedThumbnails(true);
+      homeLoading.value = false;
       if (response.success) {
         thumbnails.value = response.data;
       }
@@ -47,7 +52,7 @@ export default function Library() {
               );
             })}
 
-          {thumbnails.value.length === 0 && (
+          {thumbnails.value.length === 0 && fetchedThumbnails && (
             <Col>
               <div className="flex flex-column justify-center items-center">
                 <PiMaskSadLight size="5rem" />

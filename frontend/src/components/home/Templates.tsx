@@ -1,26 +1,16 @@
 import { Container, Row, Col } from "react-bootstrap";
-import { Thumbnail } from "../lib/types";
-import ThumbnailPreview from "./thumbnails/ThumbnailComposition";
-import { pxToRem, remToPx } from "../lib/utils";
-import { staticFile } from "remotion";
-import { TEMPLATE_PREVIEW_WIDTH } from "../lib/constants";
-import { thumbnails, editingThumbnailId } from "../lib/signals";
-import { createThumbnail } from "../lib/api";
-import { useNavigate } from "react-router-dom";
-import { TEMPLATES } from "../lib/templates/templates";
+import { Thumbnail } from "../../lib/types";
+import ThumbnailPreview from "../thumbnails/ThumbnailComposition";
+import { remToPx } from "../../lib/utils";
+import { TEMPLATE_PREVIEW_WIDTH } from "../../lib/constants";
+import { TEMPLATES } from "../../lib/templates/templates";
 
-export default function Templates() {
-  const navigate = useNavigate();
+interface TemplatesProps {
+  onTemplateSelect: (template: Thumbnail) => void;
+}
 
-  const onTemplateSelect = async (template: Thumbnail) => {
-    const response = await createThumbnail(template);
-    if (response.success) {
-      const newThumbnail = response.data as Thumbnail;
-      thumbnails.value = [...thumbnails.value, newThumbnail];
-      editingThumbnailId.value = newThumbnail.id;
-      navigate(`/edit/${newThumbnail.id}`);
-    }
-  };
+export default function Templates(props: TemplatesProps) {
+  const { onTemplateSelect } = props;
 
   return (
     <Container fluid>

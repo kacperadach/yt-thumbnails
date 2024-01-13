@@ -1,26 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { Thumbnail, ThumbnailAsset } from "./types";
 import { signal } from "@preact/signals-react";
+import { userSession } from "./signals";
 
 export const apiError = signal<string | null>(null);
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-const USER_ID = "user_id";
-
 const THUMBNAIL_PATH = "/v1/thumbnail";
 const IMAGE_PATH = "/v1/image";
 const VIDEO_PATH = "/v1/video";
 const RENDER_PATH = "/v1/render";
-
-export const getOrSetUserId = () => {
-  let userId = localStorage.getItem(USER_ID);
-  if (!userId) {
-    userId = uuidv4();
-    localStorage.setItem(USER_ID, userId);
-  }
-  return userId;
-};
 
 export type ApiResponse = Promise<{
   success: boolean;
@@ -34,14 +24,19 @@ async function makeRequest(
   body?: any,
   headers?: any
 ): Promise<ApiResponse> {
-  const response = await fetch(url, {
+  const allHeaders =
+    headers !== undefined
+      ? headers
+      : {
+          "Content-Type": "application/json",
+        };
+  if (userSession.value) {
+    allHeaders["Authorization"] = `Bearer ${userSession.value.access_token}`;
+  }
+
+  let response = await fetch(url, {
     method,
-    headers:
-      headers !== undefined
-        ? headers
-        : {
-            "Content-Type": "application/json",
-          },
+    headers: allHeaders,
     body,
   });
   if (!response.ok) {
@@ -64,10 +59,7 @@ type ThumbnailResource = {
 };
 
 export async function fetchThumbnails(): Promise<ApiResponse> {
-  const userId = getOrSetUserId();
-  const apiResponse = await makeRequest(
-    `${apiUrl}${THUMBNAIL_PATH}/by-user/${userId}`
-  );
+  const apiResponse = await makeRequest(`${apiUrl}${THUMBNAIL_PATH}`);
 
   if (!apiResponse.success) {
     return apiResponse;
@@ -89,12 +81,10 @@ export async function createThumbnail(
     id: undefined,
   };
 
-  const userId = getOrSetUserId();
   const apiResponse = await makeRequest(
     `${apiUrl}${THUMBNAIL_PATH}`,
     "POST",
     JSON.stringify({
-      user_id: userId,
       thumbnail: thumbnailCopy,
     })
   );
@@ -117,12 +107,10 @@ export async function updateThumbnail(
     id: undefined,
   };
 
-  const userId = getOrSetUserId();
   const apiResponse = await makeRequest(
     `${apiUrl}${THUMBNAIL_PATH}/${thumbnail.id}`,
     "PUT",
     JSON.stringify({
-      user_id: userId,
       thumbnail: thumbnailCopy,
     })
   );
@@ -138,21 +126,17 @@ export async function updateThumbnail(
 }
 
 export async function processVideo(url: string): Promise<ApiResponse> {
-  const userId = getOrSetUserId();
-
   return await makeRequest(
     `${apiUrl}${VIDEO_PATH}`,
     "POST",
     JSON.stringify({
-      user_id: userId,
       url,
     })
   );
 }
 
 export async function fetchVideos(ids?: string[]): Promise<ApiResponse> {
-  const userId = getOrSetUserId();
-  let url = `${apiUrl}${VIDEO_PATH}/by-user/${userId}`;
+  let url = `${apiUrl}${VIDEO_PATH}`;
   if (ids) {
     url += "?";
     url += ids.map((id) => `video_id=${id}`).join("&");
@@ -162,29 +146,20 @@ export async function fetchVideos(ids?: string[]): Promise<ApiResponse> {
 }
 
 export async function uploadImage(selectedFile: File) {
-  const userId = getOrSetUserId();
   const formData = new FormData();
   formData.append("file", selectedFile);
-  return await makeRequest(
-    `${apiUrl}${IMAGE_PATH}?user_id=${userId}`,
-    "POST",
-    formData,
-    {}
-  );
+  return await makeRequest(`${apiUrl}${IMAGE_PATH}`, "POST", formData, {});
 }
 
 export async function fetchImages() {
-  const userId = getOrSetUserId();
-  return await makeRequest(`${apiUrl}${IMAGE_PATH}/by-user/${userId}`);
+  return await makeRequest(`${apiUrl}${IMAGE_PATH}`);
 }
 
 export async function initiateRender(thumbnailId: string) {
-  const userId = getOrSetUserId();
   return await makeRequest(
     `${apiUrl}${RENDER_PATH}/initiate`,
     "POST",
     JSON.stringify({
-      user_id: userId,
       thumbnail_id: thumbnailId,
     })
   );

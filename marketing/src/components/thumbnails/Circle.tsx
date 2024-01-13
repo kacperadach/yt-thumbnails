@@ -28,7 +28,5 @@ export default function CircleComponent(props: CircleProps) {
     boxShadow: circle.boxShadow && formatBoxShadow(circle.boxShadow),
   };
 
-  console.log(circle);
-
   return <div style={circleStyles} />;
 }

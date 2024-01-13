@@ -156,28 +156,6 @@ export default function EditField(props: EditFieldProps) {
         onUpdate={(font: string) => onUpdate({ [fieldName]: font })}
       />
     );
-    // return (
-    //   <Dropdown className="bg-white text-black">
-    //     <Dropdown.Toggle className="bg-white text-black border border-2 rounded-md">
-    //       {value}
-    //     </Dropdown.Toggle>
-    //     <Dropdown.Menu>
-    //       {AVAILABLE_DEFAULT_FONTS.map((font: string, index: number) => {
-    //         return (
-    //           <Dropdown.Item
-    //             key={index}
-    //             onClick={() => onUpdate({ [fieldName]: font })}
-    //             style={{
-    //               fontFamily: font,
-    //             }}
-    //           >
-    //             {font}
-    //           </Dropdown.Item>
-    //         );
-    //       })}
-    //     </Dropdown.Menu>
-    //   </Dropdown>
-    // );
   } else {
     return (
       <input

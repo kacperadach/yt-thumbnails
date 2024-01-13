@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ApiErrorBanner from "./components/ApiErrorBanner";
+import ApiErrorBanner from "./components/layout/ApiErrorBanner";
 import Editor from "./components/edit/Editor";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
-import Navbar from "./components/Navbar";
+import Home from "./components/home/Home";
+import Navbar from "./components/layout/Navbar";
 import MarketingPage from "./marketing/MarketingPage";
 import { initializeAnalytics } from "./lib/ga";
 import { Auth } from "@supabase/auth-ui-react";
@@ -14,9 +14,12 @@ import { Spinner } from "react-bootstrap";
 import { userSession } from "./lib/signals";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+// import "./radixThemes.css";
 import { supabase } from "./lib/supabase";
 import Login from "./components/auth/Login";
 import LoadingSpinner from "./components/auth/LoadingSpinner";
+import PrivacyPolicy from "./components/auth/PrivacyPolicy";
+import TermsOfService from "./components/auth/TermsOfService";
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -49,7 +52,11 @@ function App() {
   }
 
   return (
-    <Theme accentColor="jade">
+    <Theme
+      accentColor="jade"
+      style={{ height: "100vh" }}
+      className="flex flex-column"
+    >
       <BrowserRouter>
         <ApiErrorBanner />
         <Navbar />
@@ -57,7 +64,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/edit/:id" element={<Editor />} />
           <Route path="/marketing" element={<MarketingPage />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
         </Routes>
       </BrowserRouter>
     </Theme>

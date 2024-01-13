@@ -206,3 +206,12 @@ export const DEFAULT_TRIANGLE_OBJECT: Triangle = {
 };
 
 export const TEMPLATE_PREVIEW_WIDTH = 25;
+
+export const BLANK_TEMPLATE: Thumbnail = {
+  id: "",
+  assets: [],
+  background: {
+    type: "color",
+    color: "white",
+  },
+};
