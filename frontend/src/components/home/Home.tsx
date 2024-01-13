@@ -9,6 +9,7 @@ import { Flex } from "@radix-ui/themes";
 import { Thumbnail } from "../../lib/types";
 import { createThumbnail } from "../../lib/api";
 import { useNavigate } from "react-router-dom";
+import SubscriptionDialog from "../subscription/SubscriptionDialog";
 
 export default function Home() {
   const navigate = useNavigate();

@@ -8,6 +8,7 @@ from routers.images import router as image_router
 from routers.videos import router as video_router
 from routers.render import router as render_router
 from routers.tasks import router as task_router
+from routers.payment import router as payment_router
 
 
 @asynccontextmanager
@@ -38,6 +39,7 @@ app.include_router(image_router, prefix="/api")
 app.include_router(video_router, prefix="/api")
 app.include_router(render_router, prefix="/api")
 app.include_router(task_router, prefix="/api")
+app.include_router(payment_router, prefix="/api")
 
 # app.mount(
 #     "/",

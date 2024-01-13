@@ -1,0 +1,13 @@
+## Subscription Tiers
+
+### Starter/Pro/Premium
+
+| Limit (MO)       | Free       | Starter    | Pro        | Premium    |
+| ---------------- | ---------- | ---------- | ---------- | ---------- |
+| Price            | $0         | $4.99      | $9.99      | $14.99     |
+| Videos           | 1          | 5          | 15         | Unlimited  |
+| Images           | 5          | 30         | 100        | Unlimited  |
+| AI Images        | 0          | 10         | 50         | 100        |
+| AI LORA          | 0          | 1          | 1          | 5          |
+| Renders          | 1          | 10         | 100        | Unlimited  |
+| Custom Templates | 0          | 10         | 30         | Unlimited  |

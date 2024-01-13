@@ -51,6 +51,7 @@ sniffio==1.3.0
 soupsieve==2.5
 SQLAlchemy==1.4.50
 starlette==0.27.0
+stripe==6.1.0
 supabase==2.3.2
 sympy==1.12
 timm==0.9.12

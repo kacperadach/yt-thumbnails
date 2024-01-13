@@ -26,8 +26,8 @@ export const isPollingImages = signal<boolean>(false);
 export const copiedAssetId = signal<string | null>(null);
 export const loadedFonts = signal<string[]>([]);
 export const userSession = signal<Session | null>(null);
-
 export const homeLoading = signal<boolean>(false);
+export const showSubscriptionDialog = signal<boolean>(false);
 
 export const thumbnail = computed<Thumbnail | null>(() => {
   const thumbnail = thumbnails.value.find(

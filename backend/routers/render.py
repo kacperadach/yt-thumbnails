@@ -36,6 +36,12 @@ async def initiate_render(
     if not thumbnail:
         raise HTTPException(status_code=400, detail="Invalid render")
 
+    # renders = (
+    #     db.query(Render)
+    #     .filter(Render.created_at > user.subscription_payment_at)
+    #     .count()
+    # )
+
     render = Render(
         user_id=user.id,
         thumbnail_id=render_request.thumbnail_id,
@@ -60,7 +66,12 @@ async def get_render(
     db: Session = Depends(get_db),
     user: User = Depends(ValidUserFromJWT()),
 ):
-    render = db.query(Render).filter(Render.id == render_id).filter(User.id == user.id).first()
+    render = (
+        db.query(Render)
+        .filter(Render.id == render_id)
+        .filter(User.id == user.id)
+        .first()
+    )
     if not render:
         raise HTTPException(status_code=404, detail="Render not found")
     return render

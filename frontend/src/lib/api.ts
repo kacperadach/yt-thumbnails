@@ -11,6 +11,7 @@ const THUMBNAIL_PATH = "/v1/thumbnail";
 const IMAGE_PATH = "/v1/image";
 const VIDEO_PATH = "/v1/video";
 const RENDER_PATH = "/v1/render";
+const PAYMENT_PATH = "/v1/payment";
 
 export type ApiResponse = Promise<{
   success: boolean;
@@ -167,4 +168,11 @@ export async function initiateRender(thumbnailId: string) {
 
 export async function fetchRender(renderId: string) {
   return await makeRequest(`${apiUrl}${RENDER_PATH}/${renderId}`);
+}
+
+export async function createCheckoutSession(priceId: string) {
+  return await makeRequest(
+    `${apiUrl}${PAYMENT_PATH}/create-checkout-session/${priceId}`,
+    "POST"
+  );
 }

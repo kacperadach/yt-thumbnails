@@ -1,6 +1,6 @@
 import { Row, Col, Dropdown, Container } from "react-bootstrap";
-import { FaUser } from "react-icons/fa";
-import { userSession } from "../../lib/signals";
+import { FaRegListAlt, FaUser } from "react-icons/fa";
+import { showSubscriptionDialog, userSession } from "../../lib/signals";
 import {
   Avatar,
   Box,
@@ -8,9 +8,11 @@ import {
   Card,
   DropdownMenu,
   Flex,
+  IconButton,
   Text,
 } from "@radix-ui/themes";
 import { supabase } from "../../lib/supabase";
+import { MdLogout } from "react-icons/md";
 
 export default function ProfileHeader() {
   if (!userSession.value) {
@@ -37,8 +39,7 @@ export default function ProfileHeader() {
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          {/* <Card style={{ maxWidth: "15rem" }}> */}
-          <Flex gap="3" align="center">
+          <Flex gap="3" align="center" className="border-b-2 pb-2">
             <Avatar
               fallback={user.email ? user.email.substring(0, 1) : "A"}
               variant="solid"
@@ -50,19 +51,46 @@ export default function ProfileHeader() {
               </Text>
             </Box>
           </Flex>
-          <Flex gap="3" align="center" my={"2"}>
+          <Flex align="center" justify="center" py={"2"}>
             <Button
-              variant="classic"
-              size={"2"}
-              className="w-50"
+              variant="ghost"
+              className="w-full"
+              onClick={() => {
+                showSubscriptionDialog.value = true;
+              }}
+            >
+              <Flex align="center" justify="center" className="w-25">
+                <IconButton variant="surface" radius="full">
+                  <FaRegListAlt />
+                </IconButton>
+              </Flex>
+              <Flex align="center" justify="start" className="w-75">
+                <Text weight="medium" className="text-black">
+                  Manage Subscription
+                </Text>
+              </Flex>
+            </Button>
+          </Flex>
+          <Flex align="center" justify="center" py={"2"}>
+            <Button
+              variant="ghost"
+              className="w-full"
               onClick={async () => {
                 const { error } = await supabase.auth.signOut();
               }}
             >
-              Log Out
+              <Flex align="center" justify="center" className="w-25">
+                <IconButton variant="surface" radius="full">
+                  <MdLogout />
+                </IconButton>
+              </Flex>
+              <Flex align="center" justify="start" className="w-75">
+                <Text weight="medium" className="text-black">
+                  Log Out
+                </Text>
+              </Flex>
             </Button>
           </Flex>
-          {/* </Card> */}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </Flex>

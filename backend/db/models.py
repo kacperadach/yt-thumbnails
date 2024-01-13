@@ -1,9 +1,10 @@
 import os
 from contextlib import contextmanager
+import enum
 
 from time import time
 from uuid import uuid4
-from sqlalchemy import create_engine, Column, String, Float, JSON
+from sqlalchemy import create_engine, Column, String, Float, JSON, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -33,16 +34,39 @@ def get_db():
 
 
 class BaseTable:
-    id: String = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
+    id: String = Column(
+        String, primary_key=True, index=True, default=lambda: str(uuid4())
+    )
     created_at: float = Column(Float, default=time)
     updated_at: float = Column(Float, default=time)
     deleted_at: float = Column(Float, default=time)
+
+
+class SubscriptionTier(enum.Enum):
+    FREE = "free"
+    STARTER_MONTHLY = "starter_monthly"
+    STARTER_YEARLY = "starter_yearly"
+    PRO_MONTHLY = "pro_monthly"
+    PRO_YEARLY = "pro_yearly"
+    PREMIUM_MONTHLY = "premium_monthly"
+    PREMIUM_YEARLY = "premium_yearly"
+
+
+class SubscriptionStatus(enum.Enum):
+    ACTIVE = "active"
+    PAYMENT_FAILED = "payment_failed"
+    INACTIVE = "inactive"
 
 
 class User(Base, BaseTable):
     __tablename__ = "users"
 
     email: str = Column(String, index=True)
+    stripe_customer_id: str = Column(String)
+    subscription_tier: str = Column(String, default=SubscriptionTier.FREE.value)
+    subscription_status: str = Column(String, default=SubscriptionStatus.INACTIVE.value)
+    subscription_id: str = Column(String)
+    subscription_payment_at: float = Column(Float, default=0)
 
 
 class Thumbnail(Base, BaseTable):

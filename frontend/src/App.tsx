@@ -11,7 +11,7 @@ import { initializeAnalytics } from "./lib/ga";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa, ThemeMinimal } from "@supabase/auth-ui-shared";
 import { Spinner } from "react-bootstrap";
-import { userSession } from "./lib/signals";
+import { showSubscriptionDialog, userSession } from "./lib/signals";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 // import "./radixThemes.css";
@@ -20,6 +20,7 @@ import Login from "./components/auth/Login";
 import LoadingSpinner from "./components/auth/LoadingSpinner";
 import PrivacyPolicy from "./components/auth/PrivacyPolicy";
 import TermsOfService from "./components/auth/TermsOfService";
+import SubscriptionDialog from "./components/subscription/SubscriptionDialog";
 
 function App() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -59,6 +60,12 @@ function App() {
     >
       <BrowserRouter>
         <ApiErrorBanner />
+
+        <SubscriptionDialog
+          open={showSubscriptionDialog.value}
+          setOpen={(open: boolean) => (showSubscriptionDialog.value = open)}
+        />
+
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

@@ -11,10 +11,13 @@ from sqlalchemy.orm import Session
 
 from db.models import get_db, User
 
+
 JWT_SECRET = os.environ.get("JWT_SECRET")
 JWT_ALGORITHM = "HS256"
 
-supabase: Client = create_client(os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_KEY"))
+supabase: Client = create_client(
+    os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_KEY")
+)
 
 
 class ValidUserFromJWT:
@@ -25,9 +28,13 @@ class ValidUserFromJWT:
         credentials: HTTPAuthorizationCredentials = await HTTPBearer()(request)
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+                raise HTTPException(
+                    status_code=403, detail="Invalid authentication scheme."
+                )
             if not verify_jwt(credentials.credentials):
-                raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+                raise HTTPException(
+                    status_code=403, detail="Invalid token or expired token."
+                )
             user = get_user_from_JWT(credentials.credentials, db)
             if not user:
                 raise HTTPException(status_code=403, detail="Invalid token")
@@ -78,7 +85,11 @@ def get_user_from_JWT(token: str, db: Session) -> User | None:
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             print(f"User not found, creating: {user_id}")
-            user = User(id=user_id, email=data.user.email)
+
+            user = User(
+                id=user_id,
+                email=data.user.email,
+            )
             db.add(user)
             db.commit()
             db.refresh(user)
