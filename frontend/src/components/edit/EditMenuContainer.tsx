@@ -90,9 +90,10 @@ const FIELDS_BY_TYPE = {
       type: "circle",
       fields: [
         "width",
+        "height",
+        "backgroundColor",
         "border",
         "outline",
-        "backgroundColor",
         "dropShadow",
         "boxShadow",
       ],

@@ -126,6 +126,7 @@ export const DEFAULT_CIRCLE_OBJECT: Circle = {
   x: 50,
   y: 50,
   width: EDITOR_WIDTH * 0.2,
+  height: EDITOR_WIDTH * 0.2,
   aspectRatio: "1/1",
   zIndex: 0,
   rotation: 0,
@@ -217,6 +218,5 @@ export const BLANK_TEMPLATE: Thumbnail = {
   background: {
     type: "color",
     color: "white",
- 
   },
 };

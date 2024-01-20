@@ -86,7 +86,6 @@ export type Shape = ThumbnailAsset & {
 
 export type Circle = Shape & {
   shapeType: "circle";
-  aspectRatio: "1/1";
   border: Border;
   outline?: Border;
   backgroundColor?: string;
