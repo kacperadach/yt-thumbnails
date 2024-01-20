@@ -2,32 +2,18 @@ import {
   thumbnail,
   thumbnails,
   editingThumbnailId,
-  videos,
-  images,
 } from "../../../lib/signals";
 import { IoColorPaletteSharp } from "react-icons/io5";
 import { RiVideoAddFill } from "react-icons/ri";
 import { BsCardImage } from "react-icons/bs";
 import EditField from "../EditField";
-import { Col, Container, Row } from "react-bootstrap";
-import { Image, ImageResource, VideoResource } from "../../../lib/types";
-import { FaTwitch, FaYoutube } from "react-icons/fa6";
-import { processVideo } from "../../../lib/api";
-import VideoPreview from "../VideoPreview";
-import UploadedImageGallery from "../image/UploadedImageGallery";
-import TimeField from "../TimeField";
-import VideoGallery from "../VideoGallery";
+import { Container } from "react-bootstrap";
 import LabelAndField from "../LabelAndField";
-import SelectableImage from "../image/SelectableImage";
-import { useState } from "react";
-import { Button, Text } from "@radix-ui/themes";
-import { HiMiniSparkles } from "react-icons/hi2";
+import { Flex } from "@radix-ui/themes";
 import ImageMenu from "../image/ImageMenu";
+import VideoMenu from "../video/VideoMenu";
 
 export default function BackgroundMenu() {
-  const [showImageGallery, setShowImageGallery] = useState(false);
-  const [showImageGenerator, setShowImageGenerator] = useState(false);
-
   const onUpdate = (newFields: Object) => {
     if (!thumbnail.value || !editingThumbnailId.value) {
       return;
@@ -47,15 +33,11 @@ export default function BackgroundMenu() {
     });
   };
 
-  const backgroundVideo = videos.value.find(
-    (v) => v.id === thumbnail.value?.background.videoId
-  );
-
   return (
     <div>
-      <div>
+      <Flex justify="center">
         <h4 className="text-4xl font-bold my-1">Editing Background</h4>
-      </div>
+      </Flex>
       <div>
         <div className="flex justify-center w-full cursor-pointer my-2">
           <div
@@ -111,84 +93,7 @@ export default function BackgroundMenu() {
           )}
 
           {thumbnail.value?.background.type === "video" && (
-            <>
-              {backgroundVideo && (
-                <>
-                  <Row>
-                    <Col md={5}>
-                      <VideoPreview video={backgroundVideo} />
-                    </Col>
-                    <Col className="flex-column overflow-hidden items-bottom h-full">
-                      <div>
-                        {backgroundVideo.platform === "youtube" && (
-                          <FaYoutube size="2rem" color="#FF0000" />
-                        )}
-                        {backgroundVideo.platform === "twitch" && (
-                          <FaTwitch size="2rem" color="#6441A5" />
-                        )}
-                        <a
-                          href={backgroundVideo.original_url}
-                          target="_blank"
-                          className="text-sm text-nowrap"
-                        >
-                          {backgroundVideo.original_url}
-                        </a>
-                      </div>
-                    </Col>
-                  </Row>
-
-                  <LabelAndField
-                    label="Video Time"
-                    fieldComponent={
-                      <TimeField
-                        time={thumbnail.value?.background.videoTime || 0}
-                        onChange={(newTime: number) => {
-                          onUpdate({ videoTime: newTime });
-                        }}
-                      />
-                    }
-                  />
-
-                  <LabelAndField
-                    label="Zoom"
-                    fieldComponent={
-                      <EditField
-                        fieldName="zoom"
-                        value={thumbnail.value?.background.zoom}
-                        defaultValue={1}
-                        onUpdate={onUpdate}
-                        step={0.1}
-                      />
-                    }
-                  />
-
-                  <LabelAndField
-                    label="X"
-                    fieldComponent={
-                      <EditField
-                        fieldName="x"
-                        value={thumbnail.value?.background.x}
-                        defaultValue={50}
-                        onUpdate={onUpdate}
-                      />
-                    }
-                  />
-
-                  <LabelAndField
-                    label="Y"
-                    fieldComponent={
-                      <EditField
-                        fieldName="y"
-                        value={thumbnail.value?.background.y}
-                        defaultValue={50}
-                        onUpdate={onUpdate}
-                      />
-                    }
-                  />
-                </>
-              )}
-              <VideoGallery onUpdate={onUpdate} />
-            </>
+            <VideoMenu onUpdate={onUpdate} />
           )}
         </Container>
       </div>

@@ -112,7 +112,15 @@ export default function Draggable(props: DraggableProps) {
   return (
     <div
       ref={draggableContainerRef}
-      style={{ zIndex: zIndex || 0, width: "100%", height: "100%" }}
+      style={{
+        zIndex: zIndex || 0,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+      }}
       onMouseDown={(e) => {
         if (!dragEnabled) {
           return;

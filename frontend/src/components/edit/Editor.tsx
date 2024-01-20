@@ -90,9 +90,9 @@ export default function Editor() {
   }
 
   return (
-    <Container fluid className="flex">
-      <Row className="w-full">
-        <Col md={1} style={{ minWidth: "12rem" }}>
+    <Container fluid className="flex-1 max-h-full flex h-full w-full">
+      <Row className="max-h-full w-full">
+        <Col md={1} style={{ minWidth: "12rem" }} className="max-h-full">
           <EditorSidebar />
         </Col>
         <Col
@@ -112,36 +112,35 @@ export default function Editor() {
             </div>
           )}
         </Col>
-        <Col className="w-full my-2" style={{ minWidth: "15rem" }}>
-          {selectedAsset.value && (
-            <div className="p-6 bg-white rounded-xl shadow-lg items-center">
-              <EditMenuContainer
-                thumbnailAsset={selectedAsset.value as ThumbnailAsset}
-                onUpdate={onUpdate}
-                handleDelete={() => {
-                  thumbnails.value = thumbnails.value.map((t) => {
-                    if (t.id === editingThumbnailId.value) {
-                      return {
-                        ...t,
-                        assets: t.assets.filter(
-                          (asset) => asset.id !== selectedAsset.value?.id
-                        ),
-                      };
-                    }
-                    return t;
-                  });
-                }}
-              />
-            </div>
-          )}
-          {selectedMenu.value === "background" && (
-            <div className="p-6 bg-white rounded-xl shadow-lg items-center">
-              <BackgroundMenu />
-            </div>
-          )}
-          {selectedMenu.value === "assets" && (
-            <div className="p-6 bg-white rounded-xl shadow-lg items-center">
-              <AssetsMenu />
+        <Col
+          className="w-full max-h-full overflow-scroll"
+          style={{ minWidth: "15rem" }}
+        >
+          {(selectedMenu.value || selectedAsset.value) && (
+            <div className="rounded-xl shadow-lg bg-white p-6 items-center">
+              {selectedAsset.value && (
+                <EditMenuContainer
+                  thumbnailAsset={selectedAsset.value as ThumbnailAsset}
+                  onUpdate={onUpdate}
+                  handleDelete={() => {
+                    thumbnails.value = thumbnails.value.map((t) => {
+                      if (t.id === editingThumbnailId.value) {
+                        return {
+                          ...t,
+                          assets: t.assets.filter(
+                            (asset) => asset.id !== selectedAsset.value?.id
+                          ),
+                        };
+                      }
+                      return t;
+                    });
+
+                    selectedMenu.value = "assets";
+                  }}
+                />
+              )}
+              {selectedMenu.value === "background" && <BackgroundMenu />}
+              {selectedMenu.value === "assets" && <AssetsMenu />}
             </div>
           )}
         </Col>

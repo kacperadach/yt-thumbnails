@@ -1,15 +1,13 @@
-import { useState } from "react";
-import ColorPicker from "react-best-gradient-color-picker";
-import { BsCheck, BsPlus } from "react-icons/bs";
 import BorderStyleField from "./BorderStyleField";
-import { Image, Text, ThumbnailAsset } from "../../lib/types";
-import { images, thumbnail } from "../../lib/signals";
-import { PresetColor } from "react-color/lib/components/sketch/Sketch";
-import { getAllColorsFromThumbnail } from "../../lib/utils";
+import { Image, ThumbnailAsset } from "../../lib/types";
+import { images } from "../../lib/signals";
 import FontSelect from "./FontSelect";
+import ColorField from "./ColorField";
 
 const STEP_SIZE_MAP = {
   fontWeight: 100,
+  edgeRoundness: 0.01,
+  cornerRadius: 5,
 };
 
 interface EditFieldProps {
@@ -24,8 +22,6 @@ interface EditFieldProps {
 }
 
 export default function EditField(props: EditFieldProps) {
-  const [editingColor, setEditingColor] = useState(false);
-
   const { asset, fieldName, onUpdate, value, defaultValue, type, disabled } =
     props;
 
@@ -38,7 +34,9 @@ export default function EditField(props: EditFieldProps) {
   const inputType = typeof defaultValue;
 
   let emptyValue;
-  if (inputType === "number") {
+  if (fieldName === "edgeRoundness") {
+    emptyValue = 1; // Remotion Triangle is weird
+  } else if (inputType === "number") {
     emptyValue = 0;
   } else if (inputType === "string") {
     emptyValue = "";
@@ -73,68 +71,26 @@ export default function EditField(props: EditFieldProps) {
   };
 
   if (fieldName.toLowerCase().includes("color")) {
-    if (!value) {
-      return (
-        <button
-          className="w-md border-2 border-gray-200 hover:bg-gray-200"
-          onClick={() => {
-            setEditingColor(true);
-            onUpdate({ [fieldName]: defaultValue });
-          }}
-        >
-          <BsPlus size="1.5rem" />
-        </button>
-      );
-    } else if (!editingColor) {
-      return (
-        <button
-          className="w-md border-2 border-gray-200 hover:bg-gray-200"
-          onClick={() => setEditingColor(true)}
-        >
-          <div
-            style={{
-              backgroundColor: value,
-              backgroundImage: value,
-              width: "1.5rem",
-              height: "1.5rem",
-            }}
-          />
-        </button>
-      );
-    }
-
-    let presetColors: PresetColor[] = [];
-    if (thumbnail.value) {
-      presetColors = getAllColorsFromThumbnail(thumbnail.value);
-    }
-
     return (
-      <div className="flex items-center">
-        <ColorPicker
-          className=""
-          value={value}
-          onChange={(color: { rgb: { r: any; g: any; b: any; a: any } }) => {
-            console.log(color);
-            onUpdate({ [fieldName]: color });
-          }}
-          presets={presetColors}
-        />
-        <button
-          className="w-md border-2 border-gray-200 hover:bg-green-300 mx-2"
-          onClick={() => setEditingColor(false)}
-        >
-          <BsCheck size="1.5rem" />
-        </button>
-      </div>
+      <ColorField
+        fieldName={fieldName}
+        value={value}
+        onUpdate={onUpdate}
+        defaultValue={defaultValue}
+      />
     );
-  } else if (fieldName.toLowerCase() === "style") {
+  }
+
+  if (fieldName.toLowerCase() === "style") {
     return (
       <BorderStyleField
         style={value}
         onChange={(style: string) => onUpdate({ [fieldName]: style })}
       />
     );
-  } else if (inputType === "boolean") {
+  }
+
+  if (inputType === "boolean") {
     return (
       <input
         className={`border-2 border-gray-200 rounded-md p-1 ${
@@ -150,26 +106,28 @@ export default function EditField(props: EditFieldProps) {
         disabled={disabled}
       />
     );
-  } else if (fieldName === "fontFamily") {
+  }
+
+  if (fieldName === "fontFamily") {
     return (
       <FontSelect
         selectedFont={value}
         onUpdate={(font: string) => onUpdate({ [fieldName]: font })}
       />
     );
-  } else {
-    return (
-      <input
-        className={`w-full ml-2 border-2 border-gray-200 rounded-md p-1 ${
-          disabled && "bg-gray-200 opacity-60"
-        }`}
-        type={inputType}
-        name={fieldName}
-        value={value !== undefined ? value : emptyValue}
-        onChange={(e) => handleChange(e.target.value)}
-        disabled={disabled}
-        step={step}
-      />
-    );
   }
+
+  return (
+    <input
+      className={`w-full ml-2 border-2 border-gray-200 rounded-md p-1 ${
+        disabled && "bg-gray-200 opacity-60"
+      }`}
+      type={inputType}
+      name={fieldName}
+      value={value !== undefined ? value : emptyValue}
+      onChange={(e) => handleChange(e.target.value)}
+      disabled={disabled}
+      step={step}
+    />
+  );
 }

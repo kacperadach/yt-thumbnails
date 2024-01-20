@@ -20,6 +20,7 @@ import { BsCardImage } from "react-icons/bs";
 import { FaShapes } from "react-icons/fa";
 import { BsPlus, BsTrash } from "react-icons/bs";
 import AssetPreview from "./AssetPreview";
+import { Button, Text } from "@radix-ui/themes";
 
 const PREVIEW_WIDTH_REM = 3;
 
@@ -39,8 +40,8 @@ export default function AssetRow(props: AssetRowProps) {
   const previewDivRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Row className="flex my-8 items-center">
-      <Col md={3}>
+    <Row className="flex py-2 my-2 items-center hover:bg-gray-200">
+      <Col md={2}>
         <div className="flex flex-column justify-center items-center border-2 border-black p-2">
           {ICON_MAP[asset.type as keyof typeof ICON_MAP]}
           <label className="font-bold mx-2 ">
@@ -48,24 +49,25 @@ export default function AssetRow(props: AssetRowProps) {
           </label>
         </div>
       </Col>
-      <Col md={3}>
+      <Col md={4}>
         <AssetPreview asset={asset} />
       </Col>
-      <Col md={3}>
-        <button
-          className="flex bg-gray-200 rounded justify-center items-center p-2 font-bold"
+      <Col md={3} className="h-full">
+        <Button
+          className="flex rounded justify-center items-center p-12 font-bold"
           onClick={() => {
             selectedAssetId.value = asset.id;
             selectedMenu.value = null;
           }}
         >
-          <span>Edit</span>
+          <Text>Edit</Text>
           <BiSolidEditAlt size="2rem" />
-        </button>
+        </Button>
       </Col>
       <Col md={3}>
-        <button
-          className="flex bg-red-400 rounded justify-center items-center p-2 font-bold"
+        <Button
+          variant="outline"
+          className="flex rounded justify-center items-center p-12 font-bold"
           onClick={() => {
             if (!thumbnail.value || !editingThumbnailId.value) {
               return;
@@ -80,16 +82,11 @@ export default function AssetRow(props: AssetRowProps) {
               }
               return t;
             });
-
-            // thumbnail.value = {
-            //   ...thumbnail.value,
-            //   assets: thumbnail.value?.assets.filter((a) => a.id !== asset.id),
-            // };
           }}
         >
-          <span>Delete</span>
+          <Text>Delete</Text>
           <BsTrash size="2rem" />
-        </button>
+        </Button>
       </Col>
     </Row>
   );

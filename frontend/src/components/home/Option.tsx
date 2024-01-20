@@ -15,26 +15,31 @@ export default function Option(props: OptionProps) {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  console.log(containerRef.current?.clientWidth);
+
   return (
     <Col
       md={3}
-      className=" flex items-center"
+      className="flex items-center"
       onClick={() => {
         onSelect(thumbnailOption);
       }}
     >
       <div
+        style={{ minWidth: "100%" }}
         ref={containerRef}
-        className="w-full px-2 py-1 max-w-sm  rounded-xl shadow-lg flex items-center hover:bg-brand-green transition duration-300 ease-in-out cursor-pointer"
+        className="w-full px-2 py-1 max-w-sm rounded-xl shadow-lg flex items-center hover:bg-brand-green transition duration-300 ease-in-out cursor-pointer"
       >
-        <ThumbnailPreview
-          thumbnail={thumbnailOption}
-          width={containerRef.current?.clientWidth || TEMPLATE_PREVIEW_WIDTH}
-          height={
-            (containerRef.current?.clientWidth || TEMPLATE_PREVIEW_WIDTH) *
-            (9 / 16)
-          }
-        />
+        {containerRef.current && (
+          <ThumbnailPreview
+            thumbnail={thumbnailOption}
+            width={containerRef.current?.clientWidth || TEMPLATE_PREVIEW_WIDTH}
+            height={
+              (containerRef.current?.clientWidth || TEMPLATE_PREVIEW_WIDTH) *
+              (9 / 16)
+            }
+          />
+        )}
       </div>
     </Col>
   );

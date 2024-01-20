@@ -1,6 +1,5 @@
-import { CSSProperties } from "react";
 import { Triangle } from "../../lib/types";
-import { formatBorder } from "../../lib/utils";
+import { Triangle as RemotionTriangle } from "@remotion/shapes";
 
 interface TriangleProps {
   triangle: Triangle;
@@ -9,14 +8,24 @@ interface TriangleProps {
 export default function TriangleComponent(props: TriangleProps) {
   const { triangle } = props;
 
-  // Define the points of the triangle
-  const points = `0,${triangle.height} ${triangle.width / 2},0 ${
-    triangle.width
-  },${triangle.height}`;
+  let cornerRadius;
+  let edgeRoundness;
+
+  if (triangle.cornerRadius) {
+    cornerRadius = triangle.cornerRadius;
+  } else if (triangle.edgeRoundness !== 1) {
+    edgeRoundness = triangle.edgeRoundness;
+  }
 
   return (
-    <svg height={triangle.height} width={triangle.width}>
-      <polygon points={points} fill={triangle.backgroundColor} />
-    </svg>
+    <RemotionTriangle
+      length={Math.min(triangle.width, triangle.height || 0)}
+      direction="up"
+      fill={triangle.color}
+      stroke={triangle.triangleBorder?.color || "transparent"}
+      strokeWidth={triangle.triangleBorder?.width || 0}
+      cornerRadius={cornerRadius}
+      edgeRoundness={edgeRoundness}
+    />
   );
 }

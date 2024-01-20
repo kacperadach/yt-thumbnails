@@ -12,6 +12,7 @@ import {
   Triangle,
   BoxShadow,
   TextShadow,
+  BorderWithoutStyle,
 } from "./types";
 
 export const APP_NAME = "Simple Thumbnail";
@@ -186,6 +187,11 @@ export const DEFAULT_RECTANGLE_OBJECT: Rectangle = {
   backgroundColor: "green",
 };
 
+export const DEFAULT_BORDER_WITHOUT_STYLE_OBJECT: BorderWithoutStyle = {
+  width: 16,
+  color: "black",
+};
+
 export const DEFAULT_TRIANGLE_OBJECT: Triangle = {
   id: "",
   type: "shape",
@@ -196,14 +202,11 @@ export const DEFAULT_TRIANGLE_OBJECT: Triangle = {
   height: EDITOR_WIDTH * 0.2,
   zIndex: 0,
   rotation: 0,
-  borderRadius: 15,
-  border: DEFAULT_BORDER_OBJECT,
-  borderTop: EMPTY_BORDER_OBJECT,
-  borderRight: EMPTY_BORDER_OBJECT,
-  borderBottom: EMPTY_BORDER_OBJECT,
-  borderLeft: EMPTY_BORDER_OBJECT,
+  cornerRadius: 0,
+  edgeRoundness: 1,
   dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
-  backgroundColor: "yellow",
+  color: "yellow",
+  triangleBorder: DEFAULT_BORDER_WITHOUT_STYLE_OBJECT,
 };
 
 export const TEMPLATE_PREVIEW_WIDTH = 25;
@@ -214,5 +217,6 @@ export const BLANK_TEMPLATE: Thumbnail = {
   background: {
     type: "color",
     color: "white",
+ 
   },
 };

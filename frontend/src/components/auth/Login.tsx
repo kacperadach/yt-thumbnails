@@ -6,13 +6,26 @@ import SimpleThumbnail from "../../logo.png";
 
 export default function Login() {
   return (
-    <Flex align="center" justify="center" className="my-8">
-      <Box className="rounded-xl shadow-lg p-4">
+    <Flex
+      align="center"
+      justify="center"
+      style={{
+        height: "100vh",
+        background:
+          "linear-gradient(0deg, rgba(8,208,135,1) 0%, rgba(255,230,177,1) 100%)",
+      }}
+    >
+      <Box className="rounded-xl shadow-lg p-4 bg-white">
         <Flex align="center" justify="center">
           <img src={SimpleThumbnail} alt="SimpleThumbnail" className="w-32 " />
         </Flex>
         <Flex align="center" justify="center" className="my-2">
-          <h2>Sign in to SimpleThumbnail</h2>
+          <h2>
+            Sign in to{" "}
+            <span className="logoText" style={{ fontSize: "2rem" }}>
+              SimpleThumbnail
+            </span>
+          </h2>
         </Flex>
         <Auth
           supabaseClient={supabase}

@@ -1,8 +1,9 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import EditField from "./EditField";
-import { Shape, ThumbnailAsset } from "../../lib/types";
+import { Shape } from "../../lib/types";
 import {
   DEFAULT_BORDER_OBJECT,
+  DEFAULT_BORDER_WITHOUT_STYLE_OBJECT,
   DEFAULT_BOX_SHADOW_OBJECT,
   DEFAULT_DROP_SHADOW_OBJECT,
   DEFAULT_LONG_SHADOW_OBJECT,
@@ -10,7 +11,7 @@ import {
 } from "../../lib/constants";
 import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
 import LabelAndField from "./LabelAndField";
-import * as Accordion from "@radix-ui/react-accordion";
+import AccordionItem from "./AccordionItem";
 
 const IGNORED_FIELDS = ["id", "type", "aspectRatio"];
 
@@ -34,8 +35,13 @@ export default function EditMenu(props: EditMenuProps) {
   } = props;
 
   return (
-    <Container fluid className="shadow-sm my-2">
+    <Container fluid className="my-2">
       {filterFields.map((key, index) => {
+        const label = addSpaceBeforeCaps(
+          capitalizeFirstLetter(
+            FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] || key
+          )
+        );
         if (IGNORED_FIELDS.includes(key)) {
           return null;
         }
@@ -58,20 +64,15 @@ export default function EditMenu(props: EditMenuProps) {
 
           return (
             <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
-              <Accordion.Item value={key}>
-                <Accordion.Trigger className="w-full flex justify-start">
-                  <label className="font-bold mr-2 whitespace-nowrap cursor-pointer">
-                    {addSpaceBeforeCaps(
-                      capitalizeFirstLetter(
-                        FIELD_RENAME_MAP[
-                          key as keyof typeof FIELD_RENAME_MAP
-                        ] || key
-                      )
-                    )}
-                  </label>
-                </Accordion.Trigger>
-
-                <Accordion.Content>
+              <AccordionItem
+                value={key}
+                label={addSpaceBeforeCaps(
+                  capitalizeFirstLetter(
+                    FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] ||
+                      key
+                  )
+                )}
+                body={
                   <EditMenu
                     asset={obj}
                     defaultObject={DEFAULT_BORDER_OBJECT}
@@ -94,8 +95,8 @@ export default function EditMenu(props: EditMenuProps) {
                       onUpdate(updateFields);
                     }}
                   />
-                </Accordion.Content>
-              </Accordion.Item>
+                }
+              />
             </div>
           );
         } else if (
@@ -117,25 +118,61 @@ export default function EditMenu(props: EditMenuProps) {
             defaultObject = DEFAULT_TEXT_SHADOW_OBJECT;
           }
 
-          fieldComponent = (
-            <EditMenu
-              asset={obj}
-              defaultObject={defaultObject}
-              onUpdate={(newFields: Object) => {
-                onUpdate({ [key]: { ...obj, ...newFields } });
-              }}
-            />
+          return (
+            <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
+              <AccordionItem
+                value={key}
+                label={label}
+                body={
+                  <EditMenu
+                    asset={obj}
+                    defaultObject={defaultObject}
+                    onUpdate={(newFields: Object) => {
+                      onUpdate({ [key]: { ...obj, ...newFields } });
+                    }}
+                  />
+                }
+              />
+            </div>
           );
-        } else if (key === "start") {
+        } else if (key === "start" || key === "middle" || key === "end") {
           const obj = (asset[key] as any) || {};
-          fieldComponent = (
-            <EditMenu
-              asset={obj}
-              defaultObject={{ x: 0, y: 0 }}
-              onUpdate={(newFields: Object) => {
-                onUpdate({ [key]: { ...obj, ...newFields } });
-              }}
-            />
+
+          return (
+            <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
+              <AccordionItem
+                value={key}
+                label={label}
+                body={
+                  <EditMenu
+                    asset={obj}
+                    defaultObject={{ x: 0, y: 0 }}
+                    onUpdate={(newFields: Object) => {
+                      onUpdate({ [key]: { ...obj, ...newFields } });
+                    }}
+                  />
+                }
+              />
+            </div>
+          );
+        } else if (key === "triangleBorder") {
+          const obj = (asset[key] as any) || {};
+          return (
+            <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
+              <AccordionItem
+                value={key}
+                label={"Border"}
+                body={
+                  <EditMenu
+                    asset={obj}
+                    defaultObject={DEFAULT_BORDER_WITHOUT_STYLE_OBJECT}
+                    onUpdate={(newFields: Object) => {
+                      onUpdate({ [key]: { ...obj, ...newFields } });
+                    }}
+                  />
+                }
+              />
+            </div>
           );
         } else if (key === "tailColor" || key === "headColor") {
           fieldComponent = (
@@ -144,7 +181,7 @@ export default function EditMenu(props: EditMenuProps) {
               fieldName={key}
               value={asset[key] as any}
               onUpdate={(newFields: Object) => {
-                onUpdate({ ...newFields, color: undefined });
+                onUpdate({ ...newFields });
               }}
               defaultValue={defaultObject[key] as any}
               disabled={disabled}
@@ -173,6 +210,28 @@ export default function EditMenu(props: EditMenuProps) {
               asset={asset}
             />
           );
+        } else if (key === "edgeRoundness" || key === "cornerRadius") {
+          fieldComponent = (
+            <EditField
+              key={index}
+              fieldName={key}
+              value={asset[key] as any}
+              onUpdate={(newFields: Object) => {
+                if ("edgeRoundness" in newFields) {
+                  (newFields as any)["cornerRadius"] = undefined;
+                } else {
+                  (newFields as any)["edgeRoundness"] = undefined;
+                }
+
+                onUpdate({
+                  ...newFields,
+                });
+              }}
+              defaultValue={defaultObject[key] as any}
+              disabled={disabled}
+              asset={asset}
+            />
+          );
         } else {
           fieldComponent = (
             <EditField
@@ -189,12 +248,9 @@ export default function EditMenu(props: EditMenuProps) {
 
         return (
           <LabelAndField
-            label={addSpaceBeforeCaps(
-              capitalizeFirstLetter(
-                FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] || key
-              )
-            )}
+            label={label}
             fieldComponent={fieldComponent}
+            wrap={key.toLowerCase().includes("color")}
           />
         );
       })}

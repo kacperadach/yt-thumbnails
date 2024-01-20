@@ -138,7 +138,7 @@ export async function updateThumbnail(
   };
 }
 
-export async function processVideo(url: string): Promise<ApiResponse> {
+export async function processVideo(url: string) {
   return await makeRequest(
     `${apiUrl}${VIDEO_PATH}`,
     "POST",
@@ -148,7 +148,7 @@ export async function processVideo(url: string): Promise<ApiResponse> {
   );
 }
 
-export async function fetchVideos(ids?: string[]): Promise<ApiResponse> {
+export async function fetchVideos(ids?: string[]) {
   let url = `${apiUrl}${VIDEO_PATH}`;
   if (ids) {
     url += "?";

@@ -86,12 +86,20 @@ export default function BackgroundComponent(props: BackgroundProps) {
             width: "100%",
             height: "100%",
             zIndex: 0,
-            transform: `scale(${background.zoom || 1})  translate(-50%, -50%)`,
-            top: `${background.y || 0}%`,
-            left: `${background.x || 0}%`,
+            transform: `translate(-50%, -50%) scale(${background.zoom || 1})`,
+            top: `${background.y || 50}%`,
+            left: `${background.x || 50}%`,
+            transformOrigin: "50% 50%",
           }}
         >
-          <ImageComponent image={{ src: background.src } as Image} />
+          <ImageComponent
+            image={
+              {
+                src: background.src,
+                transparent: background.transparent,
+              } as Image
+            }
+          />
         </div>
       )}
     </>

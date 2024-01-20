@@ -101,6 +101,16 @@ def download_twitch_vod(url, resolution=720, info=None):
 
 
 def download_youtube_info(url):
+    # def download_ranges(info_dict, ydl):
+    #     print(download_ranges)
+    #     section = {
+    #         "start_time": 0,
+    #         "end_time": 10,
+    #         "title": "First 10 seconds",
+    #         "index": 1,  # if you want to number this section
+    #     }
+    #     return [section]
+
     ydl_opts = {
         **DEFAULT_YT_DLP_ARGS,
         **DEFAULT_YT_DLP_INFO_ARGS,
@@ -115,6 +125,16 @@ def download_youtube_info(url):
 
 
 def download_youtube_vod(url, resolution=720, info=None):
+    # def download_ranges(info_dict, ydl):
+    #     print("download_ranges")
+    #     section = {
+    #         "start_time": 100,
+    #         "end_time": 200,
+    #         "title": "First 10 seconds",
+    #         "index": 1,  # if you want to number this section
+    #     }
+    #     return [section]
+
     if not info:
         info = download_youtube_info(url)
     print([f.get("height") for f in info["formats"]])
@@ -125,9 +145,14 @@ def download_youtube_vod(url, resolution=720, info=None):
     )
     print(format_)
     youtube_download = DownloadHook()
-    with YoutubeDL(
-        {"progress_hooks": [youtube_download.get_filename], "paths": {"home": TMP_DIR}}
-    ) as ydl:
+
+    ydl_opts = {
+        "progress_hooks": [youtube_download.get_filename],
+        "paths": {"home": TMP_DIR},
+        # "download_ranges": download_ranges,
+    }
+
+    with YoutubeDL(ydl_opts) as ydl:
         ydl.download(url)
 
     return re.sub(r"\.f\d+", "", youtube_download.filename)
@@ -188,7 +213,9 @@ if __name__ == "__main__":
     # download_twitch_vod("https://www.twitch.tv/videos/2036419299")
     # extract_clip("pentakill.mp4", 7092, 7134)
     # extract_clip("clip.mp4", 7080, 7150)
-    extract_clip("clip.mp4", 13, 54)
+    # extract_clip("clip.mp4", 13, 54)
 
     #  1:58:13  3600 + 3480 + 13 = 7093
     #  1:58:54 3600 + 3480 + 54 = 7134
+
+    download_youtube_vod("https://www.youtube.com/watch?v=1RCMYG8RUSE")

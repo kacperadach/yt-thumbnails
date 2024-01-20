@@ -15,12 +15,12 @@ import { MdOutlineTextFields } from "react-icons/md";
 import { RxBorderAll, RxImage } from "react-icons/rx";
 import { BsCardImage, BsTrash } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
-import UploadedImageGallery from "./image/UploadedImageGallery";
 import { RiArrowLeftUpFill } from "react-icons/ri";
 import { PiRectangleLight } from "react-icons/pi";
 import { FiTriangle } from "react-icons/fi";
 import ImageMenu from "./image/ImageMenu";
 import * as Accordion from "@radix-ui/react-accordion";
+import { Flex } from "@radix-ui/themes";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
@@ -33,7 +33,14 @@ const FIELDS_BY_TYPE = {
     {
       icon: <FiTriangle size="2rem" />,
       type: "triangle",
-      fields: ["width", "height", "backgroundColor"],
+      fields: [
+        "width",
+        "height",
+        "backgroundColor",
+        "edgeRoundness",
+        "cornerRadius",
+        "triangleBorder",
+      ],
     },
     POSITIONING_GROUP,
   ],
@@ -69,6 +76,9 @@ const FIELDS_BY_TYPE = {
         "color",
         "headColor",
         "tailColor",
+        "start",
+        "middle",
+        "end",
         "dropShadow",
       ],
     },
@@ -196,9 +206,9 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
   return (
     <div>
       <div>
-        <h4 className="text-4xl font-bold my-1">
+        <Flex className="text-4xl font-bold my-1" justify="center">
           Editing {capitalizeFirstLetter(thumbnailAsset.type)}
-        </h4>
+        </Flex>
       </div>
       <div>
         <div className="flex justify-center w-full cursor-pointer my-2">
@@ -245,26 +255,27 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
         </div>
       </div>
 
-      {fieldFilter !== "image" && (
-        <Accordion.Root type="multiple">
+      <Accordion.Root type="multiple">
+        {fieldFilter !== "image" && (
           <EditMenu
             defaultObject={defaultObject}
             onUpdate={onUpdate}
             asset={thumbnailAsset}
             filterFields={filterFields}
           />
-        </Accordion.Root>
-      )}
+        )}
 
-      {fieldFilter === "image" && (
-        <ImageMenu
-          selectedImageId={(thumbnailAsset as Image)?.imageId || ""}
-          transparent={(thumbnailAsset as Image).transparent || false}
-          x={(thumbnailAsset as Image).x || 50}
-          y={(thumbnailAsset as Image).y || 50}
-          onUpdate={onUpdate}
-        />
-      )}
+        {fieldFilter === "image" && (
+          <ImageMenu
+            selectedImageId={(thumbnailAsset as Image)?.imageId || ""}
+            transparent={(thumbnailAsset as Image).transparent || false}
+            x={(thumbnailAsset as Image).x || 50}
+            y={(thumbnailAsset as Image).y || 50}
+            dropShadow={(thumbnailAsset as Image).dropShadow}
+            onUpdate={onUpdate}
+          />
+        )}
+      </Accordion.Root>
     </div>
   );
 }

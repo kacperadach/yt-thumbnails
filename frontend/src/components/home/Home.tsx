@@ -31,16 +31,16 @@ export default function Home() {
   };
 
   return (
-    <Container fluid className="flex-1">
-      <Row className="h-full">
-        <Col md={1} style={{ minWidth: "12rem" }}>
+    <Container fluid className="flex-1 max-h-full flex h-full w-full">
+      <Row className="max-h-full w-full">
+        <Col md={1} style={{ minWidth: "12rem" }} className="max-h-full">
           <HomeSidebar
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
             onTemplateSelect={onTemplateSelect}
           />
         </Col>
-        <Col className="relative flex-1">
+        <Col className="relative flex-1 overflow-scroll max-h-full">
           {homeLoading.value && (
             <Flex
               align="center"

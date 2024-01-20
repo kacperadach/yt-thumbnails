@@ -106,41 +106,6 @@ effect(() => {
   }
 });
 
-// effect(() => {
-//   if (!thumbnail.value) {
-//     return;
-//   }
-
-//   // find transparent images that dont have a valid transparent URL
-//   const missingTransparentImageIds = thumbnail.value.assets
-//     .filter(
-//       (a) => a.type === "image" && (a as Image).transparent && !(a as Image).src
-//     )
-//     .map((i) => i as Image)
-//     .filter((i) => !images.value.find((img) => img.id === i.imageId))
-//     .map((i) => i.imageId)
-//     .filter((i) => i);
-
-//   if (missingTransparentImageIds.length === 0) {
-//     return;
-//   }
-
-//   fetchImages(missingTransparentImageIds as string[]).then((response) => {
-//     if (!response.success) {
-//       return;
-//     }
-
-//     images.value = [
-//       ...images.value,
-//       ...response.data.map((image: ImageResource) => ({
-//         ...image,
-//         id: image.id,
-//         src: image.url,
-//       })),
-//     ];
-//   });
-// });
-
 const processingImagesIds = signal<string[]>([]);
 
 const makeBackgroundTransparent = (
@@ -198,13 +163,6 @@ const makeBackgroundTransparent = (
           if (!response.success) {
             return;
           }
-
-          // images.value = [
-          //   ...images.value.filter((i) => i.id !== image.id),
-          //   {
-          //     ...response.data,
-          //   },
-          // ];
 
           updateFunction(response.data);
 
@@ -361,4 +319,37 @@ effect(() => {
       })),
     ];
   });
+});
+
+const fetchedBackgroundVideo = signal(false);
+
+// fetch Videos that are in the thumbnail
+effect(() => {
+  if (
+    !thumbnail.value ||
+    thumbnail.value.background.type !== "video" ||
+    fetchedBackgroundVideo.value
+  ) {
+    return;
+  }
+
+  const video = videos.value.find(
+    (v) => v.id === thumbnail.value?.background.videoId
+  );
+
+  if (video) {
+    return;
+  }
+
+  fetchedBackgroundVideo.value = true;
+
+  fetchVideos([thumbnail.value.background.videoId as string]).then(
+    (response) => {
+      if (!response.success) {
+        return;
+      }
+
+      videos.value = [...videos.value, ...response.data];
+    }
+  );
 });

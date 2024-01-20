@@ -2,12 +2,16 @@ import { Text, Button, Flex } from "@radix-ui/themes";
 import { HiMiniSparkles } from "react-icons/hi2";
 import LabelAndField from "../LabelAndField";
 import SelectableImage from "./SelectableImage";
-import { AIImageResource, ImageResource } from "../../../lib/types";
+import { AIImageResource, DropShadow, ImageResource } from "../../../lib/types";
 import EditField from "../EditField";
 import UploadedImageGallery from "./UploadedImageGallery";
 import { useState } from "react";
 import { aiImages, images, thumbnail } from "../../../lib/signals";
 import AIImageGenerator from "./AIImageGenerator";
+import { Accordion } from "react-bootstrap";
+import AccordionItem from "../AccordionItem";
+import EditMenu from "../EditMenu";
+import { DEFAULT_DROP_SHADOW_OBJECT } from "../../../lib/constants";
 
 interface ImageMenuProps {
   selectedImageId: string;
@@ -15,6 +19,7 @@ interface ImageMenuProps {
   zoom?: number;
   x: number;
   y: number;
+  dropShadow?: DropShadow;
   onUpdate: (value: any) => void;
   aiImageWidth?: number;
   aiImageHeight?: number;
@@ -27,6 +32,7 @@ export default function ImageMenu(props: ImageMenuProps) {
     zoom,
     x,
     y,
+    dropShadow,
     onUpdate,
     aiImageWidth,
     aiImageHeight,
@@ -85,19 +91,22 @@ export default function ImageMenu(props: ImageMenuProps) {
             label="Image"
             fieldComponent={
               selectedImage ? (
-                <SelectableImage
-                  image={selectedImage}
-                  handleSelect={() => {
-                    setShowImageGallery(true);
-                  }}
-                  width="10rem"
-                />
+                <Flex className="w-full" justify="start">
+                  <SelectableImage
+                    image={selectedImage}
+                    handleSelect={() => {
+                      setShowImageGallery(true);
+                    }}
+                    width="10rem"
+                  />
+                </Flex>
               ) : (
                 <Button onClick={() => setShowImageGallery(true)}>
                   Select an Image
                 </Button>
               )
             }
+            wrap={!!selectedImage}
           />
 
           <LabelAndField
@@ -173,6 +182,23 @@ export default function ImageMenu(props: ImageMenuProps) {
           />
         </>
       )}
+      {dropShadow && (
+        <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
+          <AccordionItem
+            value={"dropShadow"}
+            label={"Drop Shadow"}
+            body={
+              <EditMenu
+                asset={dropShadow}
+                defaultObject={DEFAULT_DROP_SHADOW_OBJECT}
+                onUpdate={(newFields: Object) => {
+                  onUpdate({ dropShadow: { ...dropShadow, ...newFields } });
+                }}
+              />
+            }
+          />
+        </div>
+      )}
 
       {showImageGallery && (
         <UploadedImageGallery
@@ -185,8 +211,7 @@ export default function ImageMenu(props: ImageMenuProps) {
               imageId: image.id,
               transparent: false,
               zoom: 1,
-              // x: 50,
-              // y: 50,
+
               imageType,
             });
           }}

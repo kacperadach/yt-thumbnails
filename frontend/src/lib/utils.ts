@@ -192,29 +192,17 @@ export function getAllColorsFromThumbnail(thumbnail: Thumbnail) {
           if (a.headColor) {
             colorPresets.push(a.headColor);
           }
-        } else if (a.shapeType === "rectangle" || a.shapeType === "triangle") {
+        } else if (a.shapeType === "rectangle") {
           if (a.backgroundColor) {
             colorPresets.push(a.backgroundColor);
           }
 
-          if (a.border?.color) {
-            colorPresets.push(a.border.color);
+          if (a.dropShadow?.color) {
+            colorPresets.push(a.dropShadow.color);
           }
-
-          if (a.borderTop?.color) {
-            colorPresets.push(a.borderTop.color);
-          }
-
-          if (a.borderBottom?.color) {
-            colorPresets.push(a.borderBottom.color);
-          }
-
-          if (a.borderLeft?.color) {
-            colorPresets.push(a.borderLeft.color);
-          }
-
-          if (a.borderRight?.color) {
-            colorPresets.push(a.borderRight.color);
+        } else if (a.shapeType === "triangle") {
+          if (a.color) {
+            colorPresets.push(a.color);
           }
 
           if (a.dropShadow?.color) {

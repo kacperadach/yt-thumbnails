@@ -22,15 +22,18 @@
 
 Fixes:
 
-- defaults need to look a lot better + add text presets
+- DND resize when rotated
+- DND rotate 
 
-- borders/shadows very confusing to use in edit menu
-- order settings more logically, stuff like padding shouldnt be at the top
-- color picker should be in separate menu
-- edit menu needs to scroll, cant be scrolling page
+- defaults need to look a lot better + add text presets
 
 - fix arrow alignment on render
 - fix arrow hidden selection box
+- fix shapes, use Remotion package
+
+- fix video, see if it can be done w/o download
+
+- only allow gradient if valid
 
 Maybe:
 
@@ -42,12 +45,16 @@ New features:
 - add filter effects
 - need brand kits
 - DND z-index in assets menu
+- transform perspective
 
 Done:
 
 - DND resize
 - DND drag use anchor point (dont snap to middle)
-- DND rotation
+- rotation buttons
 - before creating new image, allow user to select image/upload
 - font should auto use what over texts use, also show all used fonts at top
-
+- borders/shadows very confusing to use in edit menu
+- order settings more logically, stuff like padding shouldnt be at the top
+- color picker should be in separate menu
+- edit menu needs to scroll, cant be scrolling page

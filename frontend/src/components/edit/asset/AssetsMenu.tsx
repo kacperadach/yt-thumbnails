@@ -40,18 +40,17 @@ import UploadedImageGallery from "../image/UploadedImageGallery";
 import { TEXT_STYLES } from "../../../lib/text/textStyles";
 import TextAsset from "../../thumbnails/Text";
 import AssetPreview from "./AssetPreview";
+import { Flex } from "@radix-ui/themes";
 
 export default function AssetsMenu() {
-  const [showShapeChoices, setShowShapeChoices] = useState(false);
-  const [showImageChoices, setShowImageChoices] = useState(false);
-  const [showTextChoices, setShowTextChoices] = useState(false);
+  const [choices, setChoices] = useState<"text" | "image" | "shape" | null>(
+    null
+  );
 
   const fontUsed = thumbnail.value?.assets
     .filter((a) => a.type === "text")
     .map((a) => (a as Text).fontFamily)
     .find((a) => a !== undefined);
-
-  console.log(fontUsed);
 
   const addAsset = (defaultObject: any) => {
     const id = uuidv4();
@@ -100,86 +99,112 @@ export default function AssetsMenu() {
             </div>
           )}
           {isCreatingAsset.value && (
-            <Row className="flex w-full justify-center">
-              <Col
-                md={3}
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+            <Row className="flex w-full justify-center flex">
+              <Flex
+                style={{ width: "fit-content", minWidth: "6rem" }}
+                className={`border p-3 m-2 hover:bg-gray-200 cursor-pointer ${
+                  choices === "text" && "bg-gray-200"
+                }`}
+                direction="column"
+                justify="center"
+                align="center"
                 onClick={() => {
-                  setShowTextChoices(true);
+                  setChoices("text");
                 }}
               >
                 <MdOutlineTextFields size="2rem" />
                 <label className="font-bold mx-2 ">Text</label>
-              </Col>
-              <Col
-                md={3}
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer `}
+              </Flex>
+              <Flex
+                style={{ width: "fit-content", minWidth: "6rem" }}
+                className={`border p-3 m-2 hover:bg-gray-200 cursor-pointer ${
+                  choices === "image" && "bg-gray-200"
+                }`}
+                direction="column"
+                justify="center"
+                align="center"
                 onClick={() => {
-                  setShowImageChoices(true);
+                  setChoices("image");
                 }}
               >
                 <BsCardImage size="2rem" />
                 <label className="font-bold mx-2 ">Image</label>
-              </Col>
-              <Col
-                md={3}
-                className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer ${
-                  showShapeChoices && "bg-gray-200"
+              </Flex>
+              <Flex
+                style={{ width: "fit-content", minWidth: "6rem" }}
+                className={`border p-3 m-2 hover:bg-gray-200 cursor-pointer ${
+                  choices === "shape" && "bg-gray-200"
                 }`}
-                onClick={() => setShowShapeChoices(true)}
+                direction="column"
+                justify="center"
+                align="center"
+                onClick={() => setChoices("shape")}
               >
                 <FaShapes size="2rem" />
                 <label className="font-bold mx-2 ">Shape</label>
-              </Col>
+              </Flex>
             </Row>
           )}
         </div>
 
-        {showShapeChoices && (
+        {choices === "shape" && (
           <Row className="flex justify-center w-full">
-            <Col
-              md={3}
-              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+            <Flex
+              style={{ width: "fit-content" }}
+              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
+              direction="column"
+              justify="center"
+              align="center"
               onClick={() => {
                 addAsset(DEFAULT_CIRCLE_OBJECT);
               }}
             >
               <FiCircle size="2rem" />
-              <label className="font-bold mx-2 ">Circle</label>
-            </Col>
-            <Col
-              md={3}
-              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+              <label className="font-bold mx-2">Circle</label>
+            </Flex>
+
+            <Flex
+              style={{ width: "fit-content" }}
+              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
+              direction="column"
+              justify="center"
+              align="center"
               onClick={() => {
                 addAsset(DEFAULT_ARROW_OBJECT);
               }}
             >
               <RiArrowLeftUpFill size="2rem" />
               <label className="font-bold mx-2 ">Arrow</label>
-            </Col>
-            <Col
-              md={3}
-              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+            </Flex>
+            <Flex
+              style={{ width: "fit-content" }}
+              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
+              direction="column"
+              justify="center"
+              align="center"
               onClick={() => {
                 addAsset(DEFAULT_RECTANGLE_OBJECT);
               }}
             >
               <PiRectangleLight size="2rem" />
               <label className="font-bold mx-2 ">Rectangle</label>
-            </Col>
-            <Col
-              md={3}
-              className={`p-3 m-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
+            </Flex>
+            <Flex
+              style={{ width: "fit-content" }}
+              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
+              direction="column"
+              justify="center"
+              align="center"
               onClick={() => {
                 addAsset(DEFAULT_TRIANGLE_OBJECT);
               }}
             >
               <FiTriangle size="2rem" />
               <label className="font-bold mx-2 ">Triangle</label>
-            </Col>
+            </Flex>
           </Row>
         )}
-        {showImageChoices && (
+        {choices === "image" && (
           <UploadedImageGallery
             handleSelect={(
               image: AIImageResource | ImageResource,
@@ -192,11 +217,11 @@ export default function AssetsMenu() {
                 imageType,
               });
             }}
-            onBackClick={() => setShowImageChoices(false)}
+            onBackClick={() => setChoices("image")}
           />
         )}
 
-        {showTextChoices && (
+        {choices === "text" && (
           <Row>
             {TEXT_STYLES.map((text, index) => {
               const textCopy = { ...text };

@@ -66,13 +66,15 @@ function App() {
           setOpen={(open: boolean) => (showSubscriptionDialog.value = open)}
         />
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/edit/:id" element={<Editor />} />
-          <Route path="/marketing" element={<MarketingPage />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-        </Routes>
+        <div className="flex-grow overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/edit/:id" element={<Editor />} />
+            <Route path="/marketing" element={<MarketingPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </Theme>
   );

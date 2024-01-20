@@ -26,11 +26,13 @@ export default function ImageComponent(props: ImageProps) {
   const imageRes = images.value.find((i) => i.id === image.imageId);
   const aiImageRes = aiImages.value.find((i) => i.id === image.imageId);
 
-  if (!imageRes?.url && !aiImageRes?.url && image.src !== DEFAULT_IMAGE_SRC) {
-    return null;
-  }
+  // if (!imageRes?.url && !aiImageRes?.url && image.src !== DEFAULT_IMAGE_SRC) {
+  //   return null;
+  // }
 
   const src = image.src || imageRes?.url || aiImageRes?.url;
+
+  console.log(src);
 
   return (
     <>
@@ -45,19 +47,21 @@ export default function ImageComponent(props: ImageProps) {
           />
         </Flex>
       )}
-      <Img
-        draggable={false}
-        src={src || ""}
-        className={src !== image.src ? "bg-white opacity-75" : ""}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-          filter:
-            image.dropShadow &&
-            `drop-shadow(${formatDropShadow(image.dropShadow)}`,
-        }}
-      />
+      {src && (
+        <Img
+          draggable={false}
+          src={src || ""}
+          className={src !== image.src ? "bg-white opacity-75" : ""}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            filter:
+              image.dropShadow &&
+              `drop-shadow(${formatDropShadow(image.dropShadow)}`,
+          }}
+        />
+      )}
     </>
   );
 }

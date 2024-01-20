@@ -25,6 +25,11 @@ export type Border = {
   color: string;
 };
 
+export type BorderWithoutStyle = {
+  width: number;
+  color: string;
+};
+
 export type DropShadow = {
   x: number;
   y: number;
@@ -123,14 +128,11 @@ export type Rectangle = Shape & {
 
 export type Triangle = Shape & {
   shapeType: "triangle";
-  backgroundColor: string;
-  borderRadius?: number;
-  border?: Border;
-  borderTop?: Border;
-  borderRight?: Border;
-  borderBottom?: Border;
-  borderLeft?: Border;
+  color: string;
+  cornerRadius?: number;
+  edgeRoundness?: number;
   dropShadow?: DropShadow;
+  triangleBorder?: BorderWithoutStyle;
 };
 
 export type Background = {

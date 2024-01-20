@@ -29,8 +29,6 @@ export default function TextAsset(props: TextAssetProps) {
     filterTextShadow = formatTextShadow(textProperties.textShadow);
   }
 
-  console.log(textShadow);
-
   const containerStyles: CSSProperties = {
     height: `${textProperties.height}px`,
     minWidth: "fit-content",
@@ -42,6 +40,7 @@ export default function TextAsset(props: TextAssetProps) {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
   };
 
   if (!textProperties.border) {
