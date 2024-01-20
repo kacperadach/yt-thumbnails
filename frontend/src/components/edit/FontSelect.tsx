@@ -7,6 +7,8 @@ import {
   loadGoogleFont,
 } from "../../lib/fonts";
 import { Dropdown } from "react-bootstrap";
+import { thumbnail } from "../../lib/signals";
+import { Text } from "../../lib/types";
 
 interface FontSelectProps {
   selectedFont: string;
@@ -16,7 +18,9 @@ interface FontSelectProps {
 export default function FontSelect(props: FontSelectProps) {
   const { selectedFont, onUpdate } = props;
 
-  const [fontFilter, setFontFilter] = useState<"default" | "google">("default");
+  const [fontFilter, setFontFilter] = useState<"default" | "google" | "used">(
+    "default"
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [loadedFonts, setLoadedFonts] = useState<FontOption[]>([]);
   const [visibleFonts, setVisibleFonts] = useState<FontOption[]>([]);
@@ -24,6 +28,15 @@ export default function FontSelect(props: FontSelectProps) {
 
   const observer = useRef<IntersectionObserver | null>(null);
   const loadedFontsRef = useRef(loadedFonts);
+
+  const fontsUsed = useMemo(() => {
+    return (
+      thumbnail.value?.assets
+        .filter((a) => a.type === "text")
+        .map((a) => (a as Text).fontFamily)
+        .filter((a) => a !== undefined) || []
+    );
+  }, [thumbnail.value]);
 
   const allAvailableFonts: FontOption[] = useMemo(() => {
     const defaultFontOptions: FontOption[] = AVAILABLE_DEFAULT_FONTS.map(
@@ -50,6 +63,15 @@ export default function FontSelect(props: FontSelectProps) {
       allFonts.push(...defaultFontOptions);
     } else if (fontFilter === "google") {
       allFonts.push(...googleFontOptions);
+    } else if (fontFilter === "used") {
+      allFonts.push(
+        ...defaultFontOptions.filter((f) =>
+          fontsUsed.find((fu) => fu === f.fontFamily)
+        ),
+        ...googleFontOptions.filter((f) =>
+          fontsUsed.find((fu) => fu === f.fontFamily)
+        )
+      );
     }
 
     // Filter fonts based on the search input
@@ -91,7 +113,7 @@ export default function FontSelect(props: FontSelectProps) {
     });
 
     return allFonts;
-  }, [searchQuery, fontFilter]);
+  }, [searchQuery, fontFilter, fontsUsed]);
 
   const unloadFont = useCallback(
     async (font: FontOption) => {
@@ -220,6 +242,16 @@ export default function FontSelect(props: FontSelectProps) {
       <Dropdown.Menu>
         <div className="flex-column border-bottom py-2">
           <div className="flex justify-center items-center ">
+            {fontsUsed.length > 0 && (
+              <button
+                className={`border rounded mx-2 p-2 ${
+                  fontFilter === "used" && "bg-brand-green text-white"
+                }`}
+                onClick={() => setFontFilter("used")}
+              >
+                Used
+              </button>
+            )}
             <button
               className={`border rounded mx-2 p-2 ${
                 fontFilter === "default" && "bg-brand-green text-white"

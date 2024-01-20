@@ -10,6 +10,7 @@ import {
 } from "../../lib/constants";
 import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
 import LabelAndField from "./LabelAndField";
+import * as Accordion from "@radix-ui/react-accordion";
 
 const IGNORED_FIELDS = ["id", "type", "aspectRatio"];
 
@@ -34,14 +35,14 @@ export default function EditMenu(props: EditMenuProps) {
 
   return (
     <Container fluid className="shadow-sm my-2">
-      {Object.keys(defaultObject).map((key, index) => {
-        if (IGNORED_FIELDS.includes(key) || !filterFields.includes(key)) {
+      {filterFields.map((key, index) => {
+        if (IGNORED_FIELDS.includes(key)) {
           return null;
         }
 
-        if (key === "transparent" && asset.type === "image" && !asset.imageId) {
-          return null;
-        }
+        // if (key === "transparent" && asset.type === "image" && !asset.imageId) {
+        //   return null;
+        // }
 
         let disabled = false;
         let fieldComponent = null;
@@ -54,29 +55,48 @@ export default function EditMenu(props: EditMenuProps) {
           key === "outline"
         ) {
           const obj = (asset[key] as any) || {};
-          fieldComponent = (
-            <EditMenu
-              asset={obj}
-              defaultObject={DEFAULT_BORDER_OBJECT}
-              onUpdate={(newFields: Object) => {
-                const updateFields = { [key]: { ...obj, ...newFields } };
-                if (key === "border") {
-                  updateFields["borderRight"] = undefined;
-                  updateFields["borderLeft"] = undefined;
-                  updateFields["borderTop"] = undefined;
-                  updateFields["borderBottom"] = undefined;
-                } else if (
-                  key === "borderRight" ||
-                  key === "borderLeft" ||
-                  key === "borderTop" ||
-                  key === "borderBottom"
-                ) {
-                  updateFields["border"] = undefined;
-                }
 
-                onUpdate(updateFields);
-              }}
-            />
+          return (
+            <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
+              <Accordion.Item value={key}>
+                <Accordion.Trigger className="w-full flex justify-start">
+                  <label className="font-bold mr-2 whitespace-nowrap cursor-pointer">
+                    {addSpaceBeforeCaps(
+                      capitalizeFirstLetter(
+                        FIELD_RENAME_MAP[
+                          key as keyof typeof FIELD_RENAME_MAP
+                        ] || key
+                      )
+                    )}
+                  </label>
+                </Accordion.Trigger>
+
+                <Accordion.Content>
+                  <EditMenu
+                    asset={obj}
+                    defaultObject={DEFAULT_BORDER_OBJECT}
+                    onUpdate={(newFields: Object) => {
+                      const updateFields = { [key]: { ...obj, ...newFields } };
+                      if (key === "border") {
+                        updateFields["borderRight"] = undefined;
+                        updateFields["borderLeft"] = undefined;
+                        updateFields["borderTop"] = undefined;
+                        updateFields["borderBottom"] = undefined;
+                      } else if (
+                        key === "borderRight" ||
+                        key === "borderLeft" ||
+                        key === "borderTop" ||
+                        key === "borderBottom"
+                      ) {
+                        updateFields["border"] = undefined;
+                      }
+
+                      onUpdate(updateFields);
+                    }}
+                  />
+                </Accordion.Content>
+              </Accordion.Item>
+            </div>
           );
         } else if (
           key === "longShadow" ||

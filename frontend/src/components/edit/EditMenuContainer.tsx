@@ -20,6 +20,7 @@ import { RiArrowLeftUpFill } from "react-icons/ri";
 import { PiRectangleLight } from "react-icons/pi";
 import { FiTriangle } from "react-icons/fi";
 import ImageMenu from "./image/ImageMenu";
+import * as Accordion from "@radix-ui/react-accordion";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
@@ -102,10 +103,10 @@ const FIELDS_BY_TYPE = {
       type: "text",
       fields: [
         "text",
-        "color",
         "fontFamily",
         "fontSize",
         "fontWeight",
+        "color",
         "backgroundColor",
         "padding",
       ],
@@ -116,13 +117,13 @@ const FIELDS_BY_TYPE = {
       type: "border",
       fields: [
         "borderRadius",
+        "longShadow",
+        "textShadow",
         "border",
         "borderLeft",
         "borderRight",
         "borderTop",
         "borderBottom",
-        "longShadow",
-        "textShadow",
       ],
     },
   ],
@@ -245,12 +246,14 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
       </div>
 
       {fieldFilter !== "image" && (
-        <EditMenu
-          defaultObject={defaultObject}
-          onUpdate={onUpdate}
-          asset={thumbnailAsset}
-          filterFields={filterFields}
-        />
+        <Accordion.Root type="multiple">
+          <EditMenu
+            defaultObject={defaultObject}
+            onUpdate={onUpdate}
+            asset={thumbnailAsset}
+            filterFields={filterFields}
+          />
+        </Accordion.Root>
       )}
 
       {fieldFilter === "image" && (

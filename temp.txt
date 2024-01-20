@@ -24,7 +24,6 @@ Fixes:
 
 - defaults need to look a lot better + add text presets
 
-- font should auto use what over texts use, also show all used fonts at top
 - borders/shadows very confusing to use in edit menu
 - order settings more logically, stuff like padding shouldnt be at the top
 - color picker should be in separate menu
@@ -50,4 +49,5 @@ Done:
 - DND drag use anchor point (dont snap to middle)
 - DND rotation
 - before creating new image, allow user to select image/upload
+- font should auto use what over texts use, also show all used fonts at top
 

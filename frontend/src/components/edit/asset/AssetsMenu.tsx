@@ -46,6 +46,13 @@ export default function AssetsMenu() {
   const [showImageChoices, setShowImageChoices] = useState(false);
   const [showTextChoices, setShowTextChoices] = useState(false);
 
+  const fontUsed = thumbnail.value?.assets
+    .filter((a) => a.type === "text")
+    .map((a) => (a as Text).fontFamily)
+    .find((a) => a !== undefined);
+
+  console.log(fontUsed);
+
   const addAsset = (defaultObject: any) => {
     const id = uuidv4();
     isCreatingAsset.value = false;
@@ -192,14 +199,21 @@ export default function AssetsMenu() {
         {showTextChoices && (
           <Row>
             {TEXT_STYLES.map((text, index) => {
+              const textCopy = { ...text };
+              if (fontUsed) {
+                textCopy.fontFamily = fontUsed;
+              }
+
               return (
                 <Col md={12} key={index}>
                   <div
                     className="relative hover:bg-gray-200 cursor-pointer rounded"
                     style={{ height: `${text.height}px` }}
-                    onClick={() => addAsset(text)}
+                    onClick={() => {
+                      addAsset(textCopy);
+                    }}
                   >
-                    <AssetPreview asset={text} />
+                    <AssetPreview asset={textCopy} />
                   </div>
                 </Col>
               );
