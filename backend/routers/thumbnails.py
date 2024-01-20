@@ -1,7 +1,10 @@
+from typing import Optional
+
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from db.models import get_db, User, Thumbnail
 from auth.auth import ValidUserFromJWT
+from slack_bot.slack import send_slack_message
 
 from pydantic import BaseModel
 
@@ -10,6 +13,7 @@ router = APIRouter()
 
 class ThumbnailCreate(BaseModel):
     thumbnail: dict
+    template_id: Optional[str] = None
 
 
 @router.post("/v1/thumbnail")
@@ -18,10 +22,15 @@ async def create_thumbnail(
     db: Session = Depends(get_db),
     user: User = Depends(ValidUserFromJWT()),
 ):
-    thumbnail = Thumbnail(user_id=user.id, thumbnail=thumbnail_create.thumbnail)
+    thumbnail = Thumbnail(
+        user_id=user.id,
+        thumbnail=thumbnail_create.thumbnail,
+        template_id=thumbnail_create.template_id,
+    )
     db.add(thumbnail)
     db.commit()
     db.refresh(thumbnail)
+    send_slack_message(f"User {user.email} created thumbnail {thumbnail.id}")
     return thumbnail
 
 

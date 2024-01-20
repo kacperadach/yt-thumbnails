@@ -12,7 +12,7 @@ import EditMenuContainer from "./EditMenuContainer";
 import ThumbnailPreview from "../thumbnails/ThumbnailComposition";
 import { remToPx } from "../../lib/utils";
 import EditorSidebar from "./EditorSidebar";
-import BackgroundMenu from "./BackgroundMenu";
+import BackgroundMenu from "./background/BackgroundMenu";
 import AssetsMenu from "./asset/AssetsMenu";
 import { useLocation } from "react-router-dom";
 import { fetchThumbnails } from "../../lib/api";
@@ -86,7 +86,6 @@ export default function Editor() {
   };
 
   if (!thumbnail.value) {
-    console.log("no thumbnail");
     return null;
   }
 
@@ -136,12 +135,12 @@ export default function Editor() {
             </div>
           )}
           {selectedMenu.value === "background" && (
-            <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+            <div className="p-6 bg-white rounded-xl shadow-lg items-center">
               <BackgroundMenu />
             </div>
           )}
           {selectedMenu.value === "assets" && (
-            <div className="p-6 mx-10 bg-white rounded-xl shadow-lg items-center">
+            <div className="p-6 bg-white rounded-xl shadow-lg items-center">
               <AssetsMenu />
             </div>
           )}

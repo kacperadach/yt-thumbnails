@@ -94,6 +94,7 @@ export default function EditField(props: EditFieldProps) {
           <div
             style={{
               backgroundColor: value,
+              backgroundImage: value,
               width: "1.5rem",
               height: "1.5rem",
             }}
@@ -159,10 +160,9 @@ export default function EditField(props: EditFieldProps) {
   } else {
     return (
       <input
-        className={`border-2 border-gray-200 rounded-md p-1 ${
+        className={`w-full ml-2 border-2 border-gray-200 rounded-md p-1 ${
           disabled && "bg-gray-200 opacity-60"
         }`}
-        style={{ width: "fit-content" }}
         type={inputType}
         name={fieldName}
         value={value !== undefined ? value : emptyValue}

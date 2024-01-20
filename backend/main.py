@@ -8,7 +8,9 @@ from routers.images import router as image_router
 from routers.videos import router as video_router
 from routers.render import router as render_router
 from routers.tasks import router as task_router
+from routers.templates import router as template_router
 from routers.payment import router as payment_router
+from routers.ai_images import router as ai_image_router
 
 
 @asynccontextmanager
@@ -33,16 +35,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(thumbnail_router, prefix="/api")
 app.include_router(image_router, prefix="/api")
 app.include_router(video_router, prefix="/api")
 app.include_router(render_router, prefix="/api")
 app.include_router(task_router, prefix="/api")
+app.include_router(template_router, prefix="/api")
 app.include_router(payment_router, prefix="/api")
-
-# app.mount(
-#     "/",
-#     StaticFiles(directory="build", html=True),
-#     name="static",
-# )
+app.include_router(ai_image_router, prefix="/api")

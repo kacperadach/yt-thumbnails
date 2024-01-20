@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Arrow } from "../../lib/types";
 import Draggable from "./Draggable";
 import { selectedAssetId, thumbnail, thumbnails } from "../../lib/signals";
+import { continueRender, delayRender } from "remotion";
 
 function calculateBezierMidpoint(
   start: { x: number; y: number },
@@ -77,13 +78,14 @@ function updateArrow(
 
 interface SvgArrowProps {
   arrow: Arrow;
-  containerRef?: React.RefObject<HTMLDivElement>;
 }
+
+// TODO: arrow renders in a different place than on preview
 
 export default function SvgArrow(props: SvgArrowProps) {
   // Define the path for the cubic Bezier curve
 
-  const { arrow, containerRef } = props;
+  const { arrow } = props;
 
   const svgContainerRef = useRef<SVGSVGElement>(null);
 
@@ -103,6 +105,19 @@ export default function SvgArrow(props: SvgArrowProps) {
   } | null>(null);
 
   const [hovered, isHovered] = useState(false);
+  const [delay, setDelay] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!delay) {
+      console.log("delay");
+      setDelay(delayRender());
+    }
+
+    if (svgContainerRef.current && delay !== null) {
+      console.log("continue");
+      setTimeout(() => continueRender(delay as number), 1000);
+    }
+  }, [delay, svgContainerRef.current]);
 
   const startCoordinates = startDragPosition ?? arrow.start;
   const start = {
@@ -140,7 +155,6 @@ export default function SvgArrow(props: SvgArrowProps) {
   return (
     <div style={{ position: "relative" }}>
       <Draggable
-        rotationAngle={arrow.rotation || 0}
         zIndex={100}
         dragEnabled={true}
         containerRef={svgContainerRef}
@@ -185,7 +199,6 @@ export default function SvgArrow(props: SvgArrowProps) {
         />
       </Draggable>
       <Draggable
-        rotationAngle={arrow.rotation || 0}
         zIndex={100}
         dragEnabled={true}
         containerRef={svgContainerRef}
@@ -241,7 +254,6 @@ export default function SvgArrow(props: SvgArrowProps) {
         />
       </Draggable>
       <Draggable
-        rotationAngle={arrow.rotation || 0}
         zIndex={100}
         dragEnabled={true}
         containerRef={svgContainerRef}
@@ -342,8 +354,6 @@ export default function SvgArrow(props: SvgArrowProps) {
               </feMerge>
             </filter>
           )}
-
-          {/* ... other defs ... */}
         </defs>
 
         {/* Path using the arrowhead marker */}
@@ -356,14 +366,6 @@ export default function SvgArrow(props: SvgArrowProps) {
           markerUnits={"userSpaceOnUse"}
           filter="url(#dropshadow)"
         />
-
-        {/* Path for the arrowhead */}
-        {/* <path
-          d={headPathData}
-          fill={headColor}
-          stroke={headColor}
-          style={{ strokeWidth: arrow.headWidth }}
-        /> */}
       </svg>
     </div>
   );

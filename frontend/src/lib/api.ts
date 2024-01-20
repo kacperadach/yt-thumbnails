@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { Thumbnail, ThumbnailAsset } from "./types";
 import { signal } from "@preact/signals-react";
-import { userSession } from "./signals";
-
-export const apiError = signal<string | null>(null);
+import {
+  addErrorAlert,
+  alerts,
+  showSubscriptionDialog,
+  userSession,
+} from "./signals";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -12,6 +15,8 @@ const IMAGE_PATH = "/v1/image";
 const VIDEO_PATH = "/v1/video";
 const RENDER_PATH = "/v1/render";
 const PAYMENT_PATH = "/v1/payment";
+const TEMPLATE_PATH = "/v1/template";
+const AI_IMAGE_PATH = "/v1/ai-image";
 
 export type ApiResponse = Promise<{
   success: boolean;
@@ -40,8 +45,13 @@ async function makeRequest(
     headers: allHeaders,
     body,
   });
+  const data = await response.json();
   if (!response.ok) {
-    apiError.value = response.statusText;
+    if (response.status === 403 && data.detail === "Limit exceeded") {
+      showSubscriptionDialog.value = true;
+    } else {
+      addErrorAlert(data?.detail);
+    }
     return {
       success: false,
       error: response.statusText,
@@ -50,7 +60,7 @@ async function makeRequest(
 
   return {
     success: true,
-    data: await response.json(),
+    data,
   };
 }
 
@@ -75,7 +85,8 @@ export async function fetchThumbnails(): Promise<ApiResponse> {
 }
 
 export async function createThumbnail(
-  thumbnail: Thumbnail
+  thumbnail: Thumbnail,
+  templateId?: string
 ): Promise<ApiResponse> {
   const thumbnailCopy = {
     ...thumbnail,
@@ -87,6 +98,7 @@ export async function createThumbnail(
     "POST",
     JSON.stringify({
       thumbnail: thumbnailCopy,
+      templateId,
     })
   );
 
@@ -152,8 +164,36 @@ export async function uploadImage(selectedFile: File) {
   return await makeRequest(`${apiUrl}${IMAGE_PATH}`, "POST", formData, {});
 }
 
-export async function fetchImages() {
-  return await makeRequest(`${apiUrl}${IMAGE_PATH}`);
+export async function uploadTransparentImage(imageId: string, file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return await makeRequest(
+    `${apiUrl}${IMAGE_PATH}/${imageId}/transparent`,
+    "PUT",
+    formData,
+    {}
+  );
+}
+
+export async function uploadTransparentAIImage(imageId: string, file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return await makeRequest(
+    `${apiUrl}${AI_IMAGE_PATH}/${imageId}/transparent`,
+    "PUT",
+    formData,
+    {}
+  );
+}
+
+export async function fetchImages(imageIds?: string[]) {
+  let url = `${apiUrl}${IMAGE_PATH}`;
+  if (imageIds) {
+    url += "?";
+    url += imageIds.map((id) => `image_id=${id}`).join("&");
+  }
+
+  return await makeRequest(url);
 }
 
 export async function initiateRender(thumbnailId: string) {
@@ -175,4 +215,60 @@ export async function createCheckoutSession(priceId: string) {
     `${apiUrl}${PAYMENT_PATH}/create-checkout-session/${priceId}`,
     "POST"
   );
+}
+
+export async function createCustomerPortalSession() {
+  return await makeRequest(
+    `${apiUrl}${PAYMENT_PATH}/create-customer-portal-session`,
+    "POST"
+  );
+}
+
+export async function saveTemplate(name: string, template: Thumbnail) {
+  return await makeRequest(
+    `${apiUrl}${TEMPLATE_PATH}`,
+    "POST",
+    JSON.stringify({
+      name,
+      template,
+    })
+  );
+}
+
+export async function fetchTemplates() {
+  return await makeRequest(`${apiUrl}${TEMPLATE_PATH}`);
+}
+
+///v1/ai-image/generate/background
+
+export async function generateImage(
+  prompt: string,
+  negativePrompt: string,
+  width: number,
+  height: number
+) {
+  return await makeRequest(
+    `${apiUrl}${AI_IMAGE_PATH}/generate`,
+    "POST",
+    JSON.stringify({
+      prompt,
+      negative_prompt: negativePrompt,
+      width,
+      height,
+    })
+  );
+}
+
+export async function fetchAIImage(imageId: string) {
+  return await makeRequest(`${apiUrl}${AI_IMAGE_PATH}/${imageId}`);
+}
+
+export async function fetchAIImages(imageIds?: string[]) {
+  let url = `${apiUrl}${AI_IMAGE_PATH}`;
+  if (imageIds) {
+    url += "?";
+    url += imageIds.map((id) => `image_id=${id}`).join("&");
+  }
+
+  return await makeRequest(url);
 }

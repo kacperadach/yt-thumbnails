@@ -1,7 +1,7 @@
 import { Spinner } from "react-bootstrap";
-import { VideoResource } from "../lib/types";
+import { VideoResource } from "../../lib/types";
 import { BsX } from "react-icons/bs";
-import { isVideoFailed, isVideoProcessing } from "../lib/utils";
+import { isVideoFailed, isVideoProcessing } from "../../lib/utils";
 
 interface VideoPreviewProps {
   video: VideoResource;

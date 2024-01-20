@@ -9,6 +9,7 @@ import {
   DEFAULT_TEXT_SHADOW_OBJECT,
 } from "../../lib/constants";
 import { capitalizeFirstLetter, addSpaceBeforeCaps } from "../../lib/utils";
+import LabelAndField from "./LabelAndField";
 
 const IGNORED_FIELDS = ["id", "type", "aspectRatio"];
 
@@ -43,10 +44,6 @@ export default function EditMenu(props: EditMenuProps) {
         }
 
         let disabled = false;
-        // if (key === "src" && asset.type === "image") {
-        //   disabled = true;
-        // }
-
         let fieldComponent = null;
         if (
           key === "border" ||
@@ -171,20 +168,14 @@ export default function EditMenu(props: EditMenuProps) {
         }
 
         return (
-          <Row className="flex my-1 items-center">
-            <Col className="flex justify-between items-baseline">
-              <label className="font-bold mx-2 whitespace-nowrap">
-                {addSpaceBeforeCaps(
-                  capitalizeFirstLetter(
-                    FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] ||
-                      key
-                  )
-                )}
-              </label>
-
-              {fieldComponent}
-            </Col>
-          </Row>
+          <LabelAndField
+            label={addSpaceBeforeCaps(
+              capitalizeFirstLetter(
+                FIELD_RENAME_MAP[key as keyof typeof FIELD_RENAME_MAP] || key
+              )
+            )}
+            fieldComponent={fieldComponent}
+          />
         );
       })}
     </Container>

@@ -16,6 +16,7 @@ export type Image = ThumbnailAsset & {
   imageId?: string;
   transparent?: boolean;
   dropShadow?: DropShadow;
+  imageType: "upload" | "ai";
 };
 
 export type Border = {
@@ -136,7 +137,8 @@ export type Background = {
   type: "color" | "image" | "video";
   color?: string;
   imageId?: string;
-  imageSrc?: string;
+  imageType?: "upload" | "ai";
+  src?: string;
   transparent?: boolean;
   zoom?: number;
   x?: number;
@@ -167,5 +169,23 @@ export type ImageResource = {
   url: string;
   url_transparent: string;
   created_at: number;
-  status: "pending" | "ready" | "failed";
+};
+
+export type TemplateResource = {
+  id: string;
+  name: string;
+  template: Thumbnail;
+  created_at: number;
+};
+
+export type AIImageResource = {
+  id: string;
+  url: string;
+  url_transparent: string;
+  created_at: number;
+  status: string;
+  prompt: string;
+  negative_prompt: string;
+  width: number;
+  height: number;
 };

@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProfileHeader from "../auth/ProfileHeader";
 import { APP_NAME } from "../../lib/constants";
 import { useNavigate } from "react-router-dom";
+import { editingThumbnailId } from "../../lib/signals";
 
 const redirect = process.env.REACT_APP_MARKETING_URL_REDIRECT || "/";
 
@@ -17,6 +18,7 @@ export default function Navbar() {
           <div
             onClick={() => {
               navigate("/");
+              editingThumbnailId.value = null;
             }}
             className="flex items-center no-underline cursor-pointer"
           >

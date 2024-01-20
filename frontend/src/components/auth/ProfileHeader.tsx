@@ -1,4 +1,4 @@
-import { Row, Col, Dropdown, Container } from "react-bootstrap";
+import { Row, Col, Dropdown, Container, Spinner } from "react-bootstrap";
 import { FaRegListAlt, FaUser } from "react-icons/fa";
 import { showSubscriptionDialog, userSession } from "../../lib/signals";
 import {
@@ -13,12 +13,17 @@ import {
 } from "@radix-ui/themes";
 import { supabase } from "../../lib/supabase";
 import { MdLogout } from "react-icons/md";
+import { IoSettingsOutline } from "react-icons/io5";
+import { createCustomerPortalSession } from "../../lib/api";
+import { useState } from "react";
 
 export default function ProfileHeader() {
+  const [creatingCustomerPortalSession, setCreatingCustomerPortalSession] =
+    useState(false);
+
   if (!userSession.value) {
     return null;
   }
-
   const { user } = userSession.value;
 
   return (
@@ -55,6 +60,35 @@ export default function ProfileHeader() {
             <Button
               variant="ghost"
               className="w-full"
+              onClick={async () => {
+                setCreatingCustomerPortalSession(true);
+                const response = await createCustomerPortalSession();
+                if (response.success) {
+                  window.location.href = response.data.url;
+                }
+                setCreatingCustomerPortalSession(false);
+              }}
+            >
+              <Flex align="center" justify="center" className="w-25">
+                <IconButton variant="surface" radius="full">
+                  <IoSettingsOutline />
+                </IconButton>
+              </Flex>
+              <Flex align="center" justify="start" className="w-75">
+                {creatingCustomerPortalSession ? (
+                  <Spinner />
+                ) : (
+                  <Text weight="medium" className="text-black">
+                    Manage Subscription
+                  </Text>
+                )}
+              </Flex>
+            </Button>
+          </Flex>
+          <Flex align="center" justify="center" py={"2"}>
+            <Button
+              variant="ghost"
+              className="w-full"
               onClick={() => {
                 showSubscriptionDialog.value = true;
               }}
@@ -66,7 +100,7 @@ export default function ProfileHeader() {
               </Flex>
               <Flex align="center" justify="start" className="w-75">
                 <Text weight="medium" className="text-black">
-                  Manage Subscription
+                  Subscribe
                 </Text>
               </Flex>
             </Button>

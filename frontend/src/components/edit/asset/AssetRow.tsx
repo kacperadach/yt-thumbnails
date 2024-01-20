@@ -19,6 +19,7 @@ import { MdOutlineTextFields } from "react-icons/md";
 import { BsCardImage } from "react-icons/bs";
 import { FaShapes } from "react-icons/fa";
 import { BsPlus, BsTrash } from "react-icons/bs";
+import AssetPreview from "./AssetPreview";
 
 const PREVIEW_WIDTH_REM = 3;
 
@@ -48,22 +49,7 @@ export default function AssetRow(props: AssetRowProps) {
         </div>
       </Col>
       <Col md={3}>
-        <div
-          className="relative"
-          style={{
-            height: `${PREVIEW_WIDTH_REM}rem`,
-            width: `${remToPx(PREVIEW_WIDTH_REM) * (16 / 9)}px`,
-          }}
-          ref={previewDivRef}
-        >
-          <BaseAsset
-            asset={asset}
-            editable={false}
-            pixelScaleFactor={getPixelScaleFactor(
-              previewDivRef.current?.clientWidth || 0
-            )}
-          />
-        </div>
+        <AssetPreview asset={asset} />
       </Col>
       <Col md={3}>
         <button

@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session
 from db.models import get_db, get_db_context_manager, User, Thumbnail, Render, User
 from task_queue import enqueue_task
 from auth.auth import ValidUserFromJWT
+from subscription.utils import check_limits
+from slack_bot.slack import send_slack_message
 
 router = APIRouter()
 
@@ -23,9 +25,7 @@ async def initiate_render(
     db: Session = Depends(get_db),
     user: User = Depends(ValidUserFromJWT()),
 ):
-    user = db.query(User).filter(User.id == user.id).first()
-    if not user:
-        raise HTTPException(status_code=400, detail="Invalid render")
+    check_limits(Render, user, db)
 
     thumbnail = (
         db.query(Thumbnail)
@@ -35,12 +35,6 @@ async def initiate_render(
     )
     if not thumbnail:
         raise HTTPException(status_code=400, detail="Invalid render")
-
-    # renders = (
-    #     db.query(Render)
-    #     .filter(Render.created_at > user.subscription_payment_at)
-    #     .count()
-    # )
 
     render = Render(
         user_id=user.id,
@@ -57,6 +51,7 @@ async def initiate_render(
         {"render_id": render.id, "thumbnail": thumbnail.thumbnail},
     )
 
+    send_slack_message(f"User {user.email} initiated render {render.id}")
     return render
 
 
@@ -66,12 +61,7 @@ async def get_render(
     db: Session = Depends(get_db),
     user: User = Depends(ValidUserFromJWT()),
 ):
-    render = (
-        db.query(Render)
-        .filter(Render.id == render_id)
-        .filter(User.id == user.id)
-        .first()
-    )
+    render = db.query(Render).filter(Render.id == render_id).filter(User.id == user.id).first()
     if not render:
         raise HTTPException(status_code=404, detail="Render not found")
     return render

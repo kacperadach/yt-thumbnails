@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Col, Row, Spinner } from "react-bootstrap";
-import { isPollingVideos, processingVideoId, videos } from "../lib/signals";
+import { isPollingVideos, processingVideoId, videos } from "../../lib/signals";
 import { FaTwitch, FaYoutube } from "react-icons/fa6";
-import { VideoResource } from "../lib/types";
-import { fetchVideos, processVideo } from "../lib/api";
+import { VideoResource } from "../../lib/types";
+import { fetchVideos, processVideo } from "../../lib/api";
 import VideoPreview from "./VideoPreview";
-import { isVideoProcessing } from "../lib/utils";
+import { isVideoProcessing } from "../../lib/utils";
 
 interface VideoGalleryProps {
   onUpdate: (newFields: Object) => void;

@@ -14,9 +14,16 @@ import { signal } from "@preact/signals-react";
 import { MdOutlineTextFields } from "react-icons/md";
 import { BsCardImage } from "react-icons/bs";
 import { FaShapes } from "react-icons/fa";
-import { capitalizeFirstLetter } from "../../../lib/utils";
+import { capitalizeFirstLetter, getPixelScaleFactor } from "../../../lib/utils";
 import EditField from "../EditField";
-import { Arrow, Circle, Image, Text } from "../../../lib/types";
+import {
+  AIImageResource,
+  Arrow,
+  Circle,
+  Image,
+  ImageResource,
+  Text,
+} from "../../../lib/types";
 import {
   DEFAULT_TEXT_OBJECT,
   DEFAULT_IMAGE_OBJECT,
@@ -29,9 +36,15 @@ import { FiCircle } from "react-icons/fi";
 import { RiArrowLeftUpFill } from "react-icons/ri";
 import { PiRectangleLight } from "react-icons/pi";
 import { FiTriangle } from "react-icons/fi";
+import UploadedImageGallery from "../image/UploadedImageGallery";
+import { TEXT_STYLES } from "../../../lib/text/textStyles";
+import TextAsset from "../../thumbnails/Text";
+import AssetPreview from "./AssetPreview";
 
 export default function AssetsMenu() {
   const [showShapeChoices, setShowShapeChoices] = useState(false);
+  const [showImageChoices, setShowImageChoices] = useState(false);
+  const [showTextChoices, setShowTextChoices] = useState(false);
 
   const addAsset = (defaultObject: any) => {
     const id = uuidv4();
@@ -85,7 +98,7 @@ export default function AssetsMenu() {
                 md={3}
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer`}
                 onClick={() => {
-                  addAsset(DEFAULT_TEXT_OBJECT);
+                  setShowTextChoices(true);
                 }}
               >
                 <MdOutlineTextFields size="2rem" />
@@ -95,7 +108,7 @@ export default function AssetsMenu() {
                 md={3}
                 className={`p-3 mx-2 flex flex-column justify-center items-center border p-2 hover:bg-gray-200 cursor-pointer `}
                 onClick={() => {
-                  addAsset(DEFAULT_IMAGE_OBJECT);
+                  setShowImageChoices(true);
                 }}
               >
                 <BsCardImage size="2rem" />
@@ -157,6 +170,40 @@ export default function AssetsMenu() {
               <FiTriangle size="2rem" />
               <label className="font-bold mx-2 ">Triangle</label>
             </Col>
+          </Row>
+        )}
+        {showImageChoices && (
+          <UploadedImageGallery
+            handleSelect={(
+              image: AIImageResource | ImageResource,
+              imageType: "upload" | "ai"
+            ) => {
+              addAsset({
+                ...DEFAULT_IMAGE_OBJECT,
+                src: image.url,
+                imageId: image.id,
+                imageType,
+              });
+            }}
+            onBackClick={() => setShowImageChoices(false)}
+          />
+        )}
+
+        {showTextChoices && (
+          <Row>
+            {TEXT_STYLES.map((text, index) => {
+              return (
+                <Col md={12} key={index}>
+                  <div
+                    className="relative hover:bg-gray-200 cursor-pointer rounded"
+                    style={{ height: `${text.height}px` }}
+                    onClick={() => addAsset(text)}
+                  >
+                    <AssetPreview asset={text} />
+                  </div>
+                </Col>
+              );
+            })}
           </Row>
         )}
 

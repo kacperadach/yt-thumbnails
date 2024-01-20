@@ -18,9 +18,9 @@ export default function Home() {
     "templates"
   );
 
-  const onTemplateSelect = async (template: Thumbnail) => {
+  const onTemplateSelect = async (template: Thumbnail, templateId?: string) => {
     homeLoading.value = true;
-    const response = await createThumbnail(template);
+    const response = await createThumbnail(template, templateId);
     if (response.success) {
       const newThumbnail = response.data as Thumbnail;
       thumbnails.value = [...thumbnails.value, newThumbnail];

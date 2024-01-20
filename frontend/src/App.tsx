@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ApiErrorBanner from "./components/layout/ApiErrorBanner";
+import AlertBanner from "./components/layout/AlertBanner";
 import Editor from "./components/edit/Editor";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/home/Home";
@@ -29,6 +29,7 @@ function App() {
     initializeAnalytics();
   }, []);
 
+  // TODO: add automatic refresh if possible
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       userSession.value = session;
@@ -59,13 +60,11 @@ function App() {
       className="flex flex-column"
     >
       <BrowserRouter>
-        <ApiErrorBanner />
-
+        <AlertBanner />
         <SubscriptionDialog
           open={showSubscriptionDialog.value}
           setOpen={(open: boolean) => (showSubscriptionDialog.value = open)}
         />
-
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

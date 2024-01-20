@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Image, Shape, Text, ThumbnailAsset } from "../../lib/types";
 import { getBaseCssProperties } from "../../lib/utils";
 import {
@@ -12,6 +12,14 @@ import ImageComponent from "./Image";
 import ShapeComponent from "./Shape";
 import styles from "./baseAsset.module.css";
 import Draggable from "./Draggable";
+import { Flex, IconButton } from "@radix-ui/themes";
+import { FaArrowRotateLeft, FaArrowRotateRight } from "react-icons/fa6";
+
+export type DragCorner =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right";
 
 interface BaseAssetProps {
   asset: ThumbnailAsset;
@@ -24,92 +32,19 @@ interface BaseAssetProps {
 export default function BaseAsset(props: BaseAssetProps) {
   const { asset, editable, pixelScaleFactor, containerRef, marketing } = props;
 
-  // const [isDragging, setIsDragging] = useState(false);
   const [dragPosition, setDragPosition] = useState<{
     x: number;
     y: number;
   } | null>(null);
-  // const dragPositionRef = useRef<{
-  //   x: number;
-  //   y: number;
-  // } | null>(null);
 
-  // useEffect(() => {
-  //   dragPositionRef.current = dragPosition;
-  // }, [dragPosition]);
+  const [dragDimensions, setDragDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
-  // useEffect(() => {
-  //   if (!containerRef?.current || !isDragging) {
-  //     return;
-  //   }
+  const [cornerDragging, setCornerDragging] = useState<DragCorner | null>(null);
 
-  //   const onMouseUp = () => {
-  //     // if (selectedAssetId.value !== asset.id) {
-  //     //   return;
-  //     // }
-  //     setIsDragging(false);
-  //     thumbnails.value = thumbnails.value.map((t) => {
-  //       if (t.id !== thumbnail.value?.id) {
-  //         return t;
-  //       }
-
-  //       const newVal = {
-  //         ...thumbnail.value,
-  //         assets: thumbnail.value.assets.map((a) => {
-  //           if (a.id === asset.id) {
-  //             return {
-  //               ...a,
-  //               x: dragPositionRef.current?.x ?? a.x,
-  //               y: dragPositionRef.current?.y ?? a.y,
-  //             };
-  //           }
-  //           return a;
-  //         }),
-  //       };
-  //       return newVal;
-  //     });
-
-  //     setDragPosition(null);
-  //   };
-
-  //   const onMouseMove = (e: any) => {
-  //     const boundingBox =
-  //       containerRef.current?.parentElement?.getBoundingClientRect();
-
-  //     if (!boundingBox) {
-  //       return;
-  //     }
-
-  //     const relativeX = (e.clientX - boundingBox.left) / boundingBox.width;
-  //     const relativeY = (e.clientY - boundingBox.top) / boundingBox.height;
-
-  //     setDragPosition({
-  //       x: relativeX * 100,
-  //       y: relativeY * 100,
-  //     });
-  //   };
-
-  //   document.addEventListener("mousemove", onMouseMove);
-  //   document.addEventListener("mouseup", onMouseUp);
-  //   return () => {
-  //     document.removeEventListener("mousemove", onMouseMove);
-  //     document.removeEventListener("mouseup", onMouseUp);
-  //   };
-  // }, [isDragging]);
-
-  let child;
-  if (asset.type === "text") {
-    child = <TextAsset text={asset as Text} />;
-  } else if (asset.type === "image") {
-    child = <ImageComponent image={(asset as Image)} />;
-  } else if (asset.type === "shape") {
-    child = (
-      <ShapeComponent shape={asset as Shape} containerRef={containerRef} />
-    );
-  }
-
-  const isArrow =
-    asset.type === "shape" && (asset as Shape).shapeType === "arrow";
+  const assetContainerRef = useRef<HTMLDivElement>(null);
 
   const assetWithDragPosition = {
     ...asset,
@@ -120,8 +55,142 @@ export default function BaseAsset(props: BaseAssetProps) {
     assetWithDragPosition.y = dragPosition.y;
   }
 
+  if (dragDimensions !== null) {
+    assetWithDragPosition.width = dragDimensions.width;
+    assetWithDragPosition.height = dragDimensions.height;
+  }
+
+  let child;
+  if (asset.type === "text") {
+    child = <TextAsset text={assetWithDragPosition as Text} />;
+  } else if (asset.type === "image") {
+    child = <ImageComponent image={assetWithDragPosition as Image} />;
+  } else if (asset.type === "shape") {
+    child = <ShapeComponent shape={assetWithDragPosition as Shape} />;
+  }
+
+  const isArrow =
+    asset.type === "shape" && (asset as Shape).shapeType === "arrow";
+
+  const updateAsset = (newValues: object) => {
+    thumbnails.value = thumbnails.value.map((t) => {
+      if (t.id !== thumbnail.value?.id) {
+        return t;
+      }
+
+      const newVal = {
+        ...thumbnail.value,
+        assets: thumbnail.value.assets.map((a) => {
+          if (a.id === asset.id) {
+            return {
+              ...a,
+              ...newValues,
+            };
+          }
+          return a;
+        }),
+      };
+      return newVal;
+    });
+  };
+
+  const handleCornerMouseDown = (e: any, corner: DragCorner) => {
+    e.stopPropagation();
+    setCornerDragging(corner);
+    setDragDimensions({
+      width: asset.width,
+      height: asset.height as number,
+    });
+  };
+
+  const handleCornerDragMouseMove = useCallback(
+    (e: any) => {
+      if (
+        !cornerDragging ||
+        !containerRef?.current ||
+        !assetContainerRef?.current
+      ) {
+        return;
+      }
+
+      const containerRect = containerRef.current.getBoundingClientRect();
+
+      const assetRect = assetContainerRef.current.getBoundingClientRect();
+
+      const relativeX = e.clientX - containerRect.left;
+      const relativeY = e.clientY - containerRect.top;
+
+      const assetXCenter =
+        assetRect.left - containerRect.left + assetRect.width / 2;
+
+      const assetYCenter =
+        assetRect.top - containerRect.top + assetRect.height / 2;
+
+      let newWidth;
+      let newHeight;
+
+      switch (cornerDragging) {
+        case "top-left":
+          newHeight = (assetYCenter - relativeY) * 2;
+          newWidth = (assetXCenter - relativeX) * 2;
+          break;
+        case "bottom-left":
+          newHeight = (relativeY - assetYCenter) * 2;
+          newWidth = (assetXCenter - relativeX) * 2;
+          break;
+        case "top-right":
+          newHeight = (assetYCenter - relativeY) * 2;
+          newWidth = (relativeX - assetXCenter) * 2;
+          break;
+        case "bottom-right":
+          newWidth = (relativeX - assetXCenter) * 2;
+          newHeight = (relativeY - assetYCenter) * 2;
+          break;
+        default:
+          return;
+      }
+
+      newHeight = Math.max(newHeight, 0);
+      newWidth = Math.max(newWidth, 0);
+
+      setDragDimensions({
+        width: newWidth * (1 / pixelScaleFactor),
+        height: newHeight * (1 / pixelScaleFactor),
+      });
+
+      // setDragWidth(newWidth * (1 / pixelScaleFactor));
+    },
+    [cornerDragging]
+  );
+
+  const handleCornerDragMouseUp = useCallback(() => {
+    setCornerDragging(null);
+
+    updateAsset({
+      width: dragDimensions?.width as number,
+      height: dragDimensions?.height as number,
+    });
+
+    setDragDimensions(null);
+  }, [dragDimensions]);
+
+  useEffect(() => {
+    if (dragDimensions === null) {
+      return;
+    }
+
+    window.addEventListener("mousemove", handleCornerDragMouseMove);
+    window.addEventListener("mouseup", handleCornerDragMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleCornerDragMouseMove);
+      window.removeEventListener("mouseup", handleCornerDragMouseUp);
+    };
+  }, [dragDimensions, handleCornerDragMouseMove, handleCornerDragMouseUp]);
+
   return (
     <div
+      ref={assetContainerRef}
       className={`cursor-pointer select-none ${
         marketing && "marketing-fade-in"
       } ${
@@ -141,39 +210,105 @@ export default function BaseAsset(props: BaseAssetProps) {
         selectedAssetId.value = asset.id;
         selectedMenu.value = null;
       }}
-      // onMouseDown={() => {
-      //   if (!editable || selectedAssetId.value !== asset.id) {
-      //     return;
-      //   }
-      //   setIsDragging(true);
-      // }}
     >
+      {selectedAssetId.value === asset.id && !isArrow && (
+        <Flex
+          className="absolute z-100 left-1/2 -top-6"
+          style={{ transform: "translate(-50%, -50%)" }}
+        >
+          <IconButton
+            variant="solid"
+            mx="1"
+            onClick={() => {
+              updateAsset({ rotation: (asset.rotation ?? 0) - 1 });
+            }}
+          >
+            <FaArrowRotateLeft />
+          </IconButton>
+          <IconButton
+            variant="solid"
+            mx="1"
+            onClick={() => {
+              updateAsset({ rotation: (asset.rotation ?? 0) + 1 });
+            }}
+          >
+            <FaArrowRotateRight />
+          </IconButton>
+        </Flex>
+      )}
+
+      {selectedAssetId.value === asset.id && !isArrow && (
+        <>
+          <div
+            style={{
+              position: "absolute",
+              backgroundColor: "white",
+              width: "1rem",
+              height: "1rem",
+              top: 0,
+              left: 0,
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+              cursor: "nwse-resize",
+              zIndex: 1000,
+            }}
+            onMouseDown={(e) => handleCornerMouseDown(e, "top-left")}
+          />
+          <div
+            style={{
+              position: "absolute",
+              backgroundColor: "white",
+              width: "1rem",
+              height: "1rem",
+              top: 0,
+              right: 0,
+              borderRadius: "50%",
+              transform: "translate(50%, -50%)",
+              cursor: "nesw-resize",
+              zIndex: 1000,
+            }}
+            onMouseDown={(e) => handleCornerMouseDown(e, "top-right")}
+          />
+          <div
+            style={{
+              position: "absolute",
+              backgroundColor: "white",
+              width: "1rem",
+              height: "1rem",
+              bottom: 0,
+              left: 0,
+              borderRadius: "50%",
+              transform: "translate(-50%, 50%)",
+              cursor: "nesw-resize",
+              zIndex: 1000,
+            }}
+            onMouseDown={(e) => handleCornerMouseDown(e, "bottom-left")}
+          />
+          <div
+            style={{
+              position: "absolute",
+              backgroundColor: "white",
+              width: "1rem",
+              height: "1rem",
+              bottom: 0,
+              right: 0,
+              borderRadius: "50%",
+              transform: "translate(50%, 50%)",
+              cursor: "nwse-resize",
+              zIndex: 1000,
+            }}
+            onMouseDown={(e) => handleCornerMouseDown(e, "bottom-right")}
+          />
+        </>
+      )}
+
       <Draggable
-        rotationAngle={0}
-        dragEnabled={editable && selectedAssetId.value === asset.id && !isArrow}
+        relativeToClick={!isArrow}
+        dragEnabled={editable && !isArrow}
         containerRef={containerRef}
         onPositionUpdate={(x: number, y: number) => setDragPosition({ x, y })}
         onDragFinish={(x: number, y: number) => {
-          thumbnails.value = thumbnails.value.map((t) => {
-            if (t.id !== thumbnail.value?.id) {
-              return t;
-            }
-
-            const newVal = {
-              ...thumbnail.value,
-              assets: thumbnail.value.assets.map((a) => {
-                if (a.id === asset.id) {
-                  return {
-                    ...a,
-                    x: x,
-                    y: y,
-                  };
-                }
-                return a;
-              }),
-            };
-            return newVal;
-          });
+          updateAsset({ x: x, y: y });
           setDragPosition(null);
         }}
       >

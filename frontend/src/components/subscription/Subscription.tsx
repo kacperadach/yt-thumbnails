@@ -3,6 +3,7 @@ import { Tier } from "../../lib/subscriptions";
 import SubscriptionFeature from "./SubscriptionFeature";
 import { useState } from "react";
 import { createCheckoutSession } from "../../lib/api";
+import { Spinner } from "react-bootstrap";
 
 interface SubscriptionProps {
   tier: Tier;
@@ -13,6 +14,7 @@ export default function Subscription(props: SubscriptionProps) {
   const { tier, recommended } = props;
 
   const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
+  const [creatingCheckoutSession, setCreatingCheckoutSession] = useState(false);
 
   return (
     <div className="relative w-1/3 m-8 hover:scale-110 transition duration-300 ease-in-out overflow-visible">
@@ -100,19 +102,25 @@ export default function Subscription(props: SubscriptionProps) {
           <Flex justify="center" align="center" className="w-full px-10 my-4">
             <Button
               size="4"
+              style={{ minWidth: "12rem" }}
               onClick={async () => {
                 const priceId =
                   period === "monthly"
                     ? tier.priceId.monthly
                     : tier.priceId.yearly;
-
+                setCreatingCheckoutSession(true);
                 const response = await createCheckoutSession(priceId);
                 if (response.success) {
                   window.location.href = response.data.url;
                 }
+                setCreatingCheckoutSession(false);
               }}
             >
-              <Text size="6">Sign Up Now</Text>
+              {creatingCheckoutSession ? (
+                <Spinner />
+              ) : (
+                <Text size="6">Sign Up Now</Text>
+              )}
             </Button>
           </Flex>
         </Flex>

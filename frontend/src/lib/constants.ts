@@ -99,7 +99,7 @@ export const DEFAULT_TEXT_OBJECT: Text = {
   longShadow: DEFAULT_LONG_SHADOW_OBJECT,
   fontFamily: "Arial",
   fontWeight: 400,
-  fontSize: 72,
+  fontSize: 64,
   color: "white",
   textShadow: DEFAULT_TEXT_SHADOW_OBJECT,
 };
@@ -115,6 +115,7 @@ export const DEFAULT_IMAGE_OBJECT: Image = {
   src: DEFAULT_IMAGE_SRC,
   transparent: false,
   dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
+  imageType: "upload",
 };
 
 export const DEFAULT_CIRCLE_OBJECT: Circle = {

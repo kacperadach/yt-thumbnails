@@ -25,6 +25,8 @@ from download import (
 from worker import q
 from cloud_functions.invoke import invoke_download_video
 from auth.auth import ValidUserFromJWT
+from subscription.utils import check_limits
+from slack_bot.slack import send_slack_message
 
 router = APIRouter()
 
@@ -43,6 +45,8 @@ async def process_video(
     db: Session = Depends(get_db),
     user: User = Depends(ValidUserFromJWT()),
 ):
+    check_limits(Video, user, db)
+
     platform = None
     if twitch_pattern.match(video_request.url):
         platform = "twitch"
@@ -65,6 +69,7 @@ async def process_video(
     db.refresh(video)
 
     invoke_download_video(video_request.url, video.id)
+    send_slack_message(f"User {user.email} initiated video download {video_request.url}")
 
     return video
 

@@ -137,36 +137,36 @@ def extract_clip(path, start, end):
     file_extension = os.path.splitext(path)[1]
     output_path = path.rsplit(".", 1)[0] + "_trimmed" + file_extension
     try:
-        if file_extension == ".mp4":
-            command = [
-                "ffmpeg",
-                "-i",
-                path,  # Input file
-                "-ss",
-                str(start),  # Start time
-                "-to",
-                str(end),  # End time
-                "-c",
-                "copy",  # Copy the stream directly, no re-encoding
-                output_path,  # Output file
-            ]
-        elif file_extension == ".webm":
-            command = [
-                "ffmpeg",
-                "-i",
-                path,  # Input file
-                "-ss",
-                str(start),  # Start time
-                "-to",
-                str(end),  # End time
-                "-c:v",
-                "libvpx",  # Video codec for WebM
-                "-c:a",
-                "libvorbis",  # Audio codec for WebM
-                output_path,  # Output file
-            ]
-        else:
-            raise ValueError("Unsupported file format")
+        # if file_extension == ".mp4":
+        command = [
+            "ffmpeg",
+            "-i",
+            path,  # Input file
+            "-ss",
+            str(start),  # Start time
+            "-to",
+            str(end),  # End time
+            # "-c",
+            # "copy",  # Copy the stream directly, no re-encoding
+            output_path,  # Output file
+        ]
+        # elif file_extension == ".webm":
+        #     command = [
+        #         "ffmpeg",
+        #         "-i",
+        #         path,  # Input file
+        #         "-ss",
+        #         str(start),  # Start time
+        #         "-to",
+        #         str(end),  # End time
+        #         "-c:v",
+        #         "libvpx",  # Video codec for WebM
+        #         "-c:a",
+        #         "libvorbis",  # Audio codec for WebM
+        #         output_path,  # Output file
+        #     ]
+        # else:
+        #     raise ValueError("Unsupported file format")
 
         # Execute the command
         subprocess.run(command, check=True)
@@ -178,10 +178,17 @@ def extract_clip(path, start, end):
 
 
 if __name__ == "__main__":
-    extract_clip("nicki.webm", 401, 402)
+    # extract_clip("nicki.webm", 401, 402)
     # download_youtube_vod("https://www.youtube.com/watch?v=LPDTuHcua0o")
     # print(
     #     download_youtube_info("https://www.youtube.com/watch?v=LPDTuHcua0o").get(
     #         "thumbnail"
     #     )
     # )
+    # download_twitch_vod("https://www.twitch.tv/videos/2036419299")
+    # extract_clip("pentakill.mp4", 7092, 7134)
+    # extract_clip("clip.mp4", 7080, 7150)
+    extract_clip("clip.mp4", 13, 54)
+
+    #  1:58:13  3600 + 3480 + 13 = 7093
+    #  1:58:54 3600 + 3480 + 54 = 7134

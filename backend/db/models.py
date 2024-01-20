@@ -4,7 +4,7 @@ import enum
 
 from time import time
 from uuid import uuid4
-from sqlalchemy import create_engine, Column, String, Float, JSON, Enum
+from sqlalchemy import create_engine, Column, String, Float, JSON, Enum, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -34,9 +34,7 @@ def get_db():
 
 
 class BaseTable:
-    id: String = Column(
-        String, primary_key=True, index=True, default=lambda: str(uuid4())
-    )
+    id: String = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
     created_at: float = Column(Float, default=time)
     updated_at: float = Column(Float, default=time)
     deleted_at: float = Column(Float, default=time)
@@ -73,27 +71,51 @@ class Thumbnail(Base, BaseTable):
     __tablename__ = "thumbnails"
 
     user_id: String = Column(String, index=True)
-    thumbnail = Column(JSON, index=False)
+    thumbnail = Column(JSON)
+    template_id: String = Column(String, index=True)
+
+
+class ImageProcessStatus(enum.Enum):
+    PENDING = "pending"
+    PROCESSING = "processing"
+    DONE = "done"
+    FAILED = "failed"
 
 
 class Image(Base, BaseTable):
     __tablename__ = "images"
 
     user_id: String = Column(String, index=True)
-    url: String = Column(String, index=False)
-    url_transparent: String = Column(String, index=False)
-    status: String = Column(String, index=False)
+    url: String = Column(String)
+    url_transparent: String = Column(String)
+
+
+class AIImage(Base, BaseTable):
+    __tablename__ = "ai_images"
+
+    user_id: String = Column(String, index=True)
+    url: String = Column(String)
+    url_transparent: String = Column(String)
+
+    status: String = Column(String)
+    runpod_id: String = Column(String, index=True)
+    prompt: String = Column(String)
+    negative_prompt: String = Column(String)
+    width: int = Column(Integer)
+    height: int = Column(Integer)
+    execution_time: float = Column(Integer)
+    delay_time: float = Column(Integer)
 
 
 class Video(Base, BaseTable):
     __tablename__ = "videos"
 
     user_id: String = Column(String, index=True)
-    url: String = Column(String, index=False)
-    original_url: String = Column(String, index=False)
+    url: String = Column(String)
+    original_url: String = Column(String)
     platform: String = Column(String, index=True)
-    thumbnail_url: String = Column(String, index=False)
-    status: String = Column(String, index=False)
+    thumbnail_url: String = Column(String)
+    status: String = Column(String)
 
 
 class Render(Base, BaseTable):
@@ -101,6 +123,14 @@ class Render(Base, BaseTable):
 
     user_id: String = Column(String, index=True)
     thumbnail_id: String = Column(String, index=True)
-    url: String = Column(String, index=False)
-    status: String = Column(String, index=False)
-    error_message: String = Column(String, index=False)
+    url: String = Column(String)
+    status: String = Column(String)
+    error_message: String = Column(String)
+
+
+class Template(Base, BaseTable):
+    __tablename__ = "templates"
+
+    user_id: String = Column(String, index=True)
+    name: String = Column(String)
+    template = Column(JSON)

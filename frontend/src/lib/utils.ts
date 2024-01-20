@@ -65,7 +65,9 @@ export function formatBoxShadow(boxShadow: BoxShadow) {
 }
 
 export function formatTextShadow(textShadow: TextShadow) {
-  return `${textShadow.x}px ${textShadow.y}px ${textShadow.blur}px ${textShadow.color}`;
+  return `${textShadow.x || 0}px ${textShadow.y || 0}px ${
+    textShadow.blur || 0
+  }px ${textShadow.color || "black"}`;
 }
 
 export function getBaseCssProperties(

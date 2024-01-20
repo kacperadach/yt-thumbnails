@@ -13,6 +13,7 @@ from db.models import (
     SubscriptionTier,
     SubscriptionStatus,
 )
+from slack_bot.slack import send_slack_message
 
 router = APIRouter()
 
@@ -52,14 +53,11 @@ def create_stripe_user(email: str):
         email=email,
         idempotency_key=email,
     )
-    print(f"Created stripe customer: {customer.id}")
     return customer.id
 
 
 def find_product_by_price_id(price_id: str):
-    return next(
-        (product for product in PRODUCTS if product["price_id"] == price_id), None
-    )
+    return next((product for product in PRODUCTS if product["price_id"] == price_id), None)
 
 
 @router.post("/v1/payment/create-checkout-session/{price_id}")
@@ -99,11 +97,16 @@ async def create_checkout_session(
             },
         )
     except Exception as e:
-        print(e)
+        send_slack_message(
+            f"ERROR: User {user.email} failed to start checkout session for {product['tier'].value}"
+        )
         raise HTTPException(
             status_code=500, detail="Failed to create Stripe checkout session"
         ) from e
 
+    send_slack_message(
+        f"User {user.email} started checkout session for {product['tier'].value}"
+    )
     return {"url": checkout_session.url}
 
 
@@ -120,6 +123,7 @@ async def create_customer_portal_session(
     session = stripe.billing_portal.Session.create(
         customer=user.stripe_customer_id, return_url=os.environ["APP_BASE_URL"]
     )
+    send_slack_message(f"User {user.email} started customer portal session")
     return {"url": session.url}
 
 
@@ -140,6 +144,8 @@ async def webhook(
         raise HTTPException(status_code=400, detail="Invalid payload") from e
     except stripe.error.SignatureVerificationError as e:
         raise HTTPException(status_code=400, detail="Invalid signature") from e
+
+    send_slack_message(f"New Stripe webhook received: {event['type']}")
 
     if event["type"] == "invoice.payment_succeeded":
         invoice = event["data"]["object"]
@@ -164,6 +170,9 @@ async def webhook(
         user.subscription_payment_at = time()
 
         db.commit()
+        send_slack_message(
+            f"Payment succeeded for user {user.email} for tier {product['tier'].value}"
+        )
     elif event["type"] == "invoice.payment_failed":
         invoice = event["data"]["object"]
         subscription_id = invoice["subscription"]
@@ -183,3 +192,6 @@ async def webhook(
 
         user.subscription_status.value = SubscriptionStatus.PAYMENT_FAILED.value
         db.commit()
+        send_slack_message(
+            f"Payment failed for user {user.email} for tier {product['tier'].value}"
+        )

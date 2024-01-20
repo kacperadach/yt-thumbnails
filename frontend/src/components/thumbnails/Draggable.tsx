@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+const DRAG_START_TIME_THRESHOLD_MS = 150;
 
 interface DraggableProps {
   dragEnabled: boolean;
@@ -7,7 +9,7 @@ interface DraggableProps {
   onDragFinish: (x: number, y: number) => void;
   children: React.ReactNode;
   zIndex?: number;
-  rotationAngle: number;
+  relativeToClick?: boolean;
 }
 
 export default function Draggable(props: DraggableProps) {
@@ -18,7 +20,7 @@ export default function Draggable(props: DraggableProps) {
     children,
     onPositionUpdate,
     zIndex,
-    rotationAngle,
+    relativeToClick,
   } = props;
 
   const [isDragging, setIsDragging] = useState(false);
@@ -30,6 +32,16 @@ export default function Draggable(props: DraggableProps) {
     x: number;
     y: number;
   } | null>(null);
+  const [initialClickOffset, setInitialClickOffset] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
+  const [dragStartTimer, setDragStartTimer] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
+  const draggableContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     dragPositionRef.current = dragPosition;
@@ -41,16 +53,16 @@ export default function Draggable(props: DraggableProps) {
     }
 
     const onMouseUp = () => {
-      //   if (selectedAssetId.value !== asset.id) {
-      //     return;
-      //   }
+      if (dragStartTimer) {
+        clearTimeout(dragStartTimer);
+        setDragStartTimer(null);
+      }
       setIsDragging(false);
-      onDragFinish(
-        dragPositionRef.current?.x ?? 0,
-        dragPositionRef.current?.y ?? 0
-      );
-
+      if (dragPositionRef.current) {
+        onDragFinish(dragPositionRef.current.x, dragPositionRef.current.y);
+      }
       setDragPosition(null);
+      setInitialClickOffset(null);
     };
 
     const onMouseMove = (e: any) => {
@@ -58,20 +70,35 @@ export default function Draggable(props: DraggableProps) {
         containerRef.current as HTMLDivElement
       ).getBoundingClientRect();
 
-      if (!boundingBox) {
+      if (!boundingBox || !draggableContainerRef.current) {
         return;
       }
 
-      const relativeX = (e.clientX - boundingBox.left) / boundingBox.width;
-      const relativeY = (e.clientY - boundingBox.top) / boundingBox.height;
+      let clickDiffX = 0;
+      let clickDiffY = 0;
+      if (initialClickOffset) {
+        const initialClickX = initialClickOffset?.x ?? 0;
+        const initialClickY = initialClickOffset?.y ?? 0;
+
+        clickDiffX =
+          draggableContainerRef.current?.getBoundingClientRect().width / 2 -
+          initialClickX;
+
+        clickDiffY =
+          draggableContainerRef.current?.getBoundingClientRect().height / 2 -
+          initialClickY;
+      }
+
+      const relativeX =
+        (e.clientX + clickDiffX - boundingBox.left) / boundingBox.width;
+      const relativeY =
+        (e.clientY + clickDiffY - boundingBox.top) / boundingBox.height;
 
       setDragPosition({
         x: relativeX * 100,
         y: relativeY * 100,
       });
       onPositionUpdate(relativeX * 100, relativeY * 100);
-
-      console.log("update", relativeX * 100, relativeY * 100);
     };
 
     document.addEventListener("mousemove", onMouseMove);
@@ -84,6 +111,7 @@ export default function Draggable(props: DraggableProps) {
 
   return (
     <div
+      ref={draggableContainerRef}
       style={{ zIndex: zIndex || 0, width: "100%", height: "100%" }}
       onMouseDown={(e) => {
         if (!dragEnabled) {
@@ -91,7 +119,27 @@ export default function Draggable(props: DraggableProps) {
         }
         e.stopPropagation();
 
-        setIsDragging(true);
+        const boundingBox = (
+          e.currentTarget as HTMLDivElement
+        ).getBoundingClientRect();
+
+        setDragStartTimer(
+          setTimeout(() => {
+            setIsDragging(true);
+
+            const offsetX = e.clientX - boundingBox.left;
+            const offsetY = e.clientY - boundingBox.top;
+            if (relativeToClick) {
+              setInitialClickOffset({ x: offsetX, y: offsetY });
+            }
+          }, DRAG_START_TIME_THRESHOLD_MS)
+        );
+      }}
+      onMouseUp={() => {
+        if (dragStartTimer) {
+          clearTimeout(dragStartTimer);
+          setDragStartTimer(null);
+        }
       }}
     >
       {children}

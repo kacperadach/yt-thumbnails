@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { ImageResource, Shape, ThumbnailAsset } from "../../lib/types";
+import { Image, ImageResource, Shape, ThumbnailAsset } from "../../lib/types";
 import { capitalizeFirstLetter } from "../../lib/utils";
 import {
   DEFAULT_TEXT_OBJECT,
@@ -15,10 +15,11 @@ import { MdOutlineTextFields } from "react-icons/md";
 import { RxBorderAll, RxImage } from "react-icons/rx";
 import { BsCardImage, BsTrash } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
-import UploadedImageGallery from "../UploadedImageGallery";
+import UploadedImageGallery from "./image/UploadedImageGallery";
 import { RiArrowLeftUpFill } from "react-icons/ri";
 import { PiRectangleLight } from "react-icons/pi";
 import { FiTriangle } from "react-icons/fi";
+import ImageMenu from "./image/ImageMenu";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
@@ -242,21 +243,23 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
           )}
         </div>
       </div>
-      <EditMenu
-        defaultObject={defaultObject}
-        onUpdate={onUpdate}
-        asset={thumbnailAsset}
-        filterFields={filterFields}
-      />
+
+      {fieldFilter !== "image" && (
+        <EditMenu
+          defaultObject={defaultObject}
+          onUpdate={onUpdate}
+          asset={thumbnailAsset}
+          filterFields={filterFields}
+        />
+      )}
+
       {fieldFilter === "image" && (
-        <UploadedImageGallery
-          handleSelect={(image: ImageResource) => {
-            onUpdate({
-              src: image.url_transparent,
-              imageId: image.id,
-              transparent: true,
-            });
-          }}
+        <ImageMenu
+          selectedImageId={(thumbnailAsset as Image)?.imageId || ""}
+          transparent={(thumbnailAsset as Image).transparent || false}
+          x={(thumbnailAsset as Image).x || 50}
+          y={(thumbnailAsset as Image).y || 50}
+          onUpdate={onUpdate}
         />
       )}
     </div>

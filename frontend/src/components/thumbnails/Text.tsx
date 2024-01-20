@@ -1,13 +1,8 @@
 import { CSSProperties } from "react";
 import { Text } from "../../lib/types";
 import { generateFullLongShadow } from "../../lib/textShadow";
-import {
-  formatBorder,
-  formatTextShadow,
-  getBaseCssProperties,
-} from "../../lib/utils";
+import { formatBorder, formatTextShadow } from "../../lib/utils";
 import { DEFAULT_TEXT_PROPERTIES } from "../../lib/constants";
-import BaseAsset from "./BaseAsset";
 
 interface TextAssetProps {
   text: Text;
@@ -22,15 +17,19 @@ export default function TextAsset(props: TextAssetProps) {
   };
 
   let textShadow = "";
+  let filterTextShadow = "";
   if (textProperties.longShadow && textProperties.longShadow.width > 0) {
     textShadow = `${generateFullLongShadow(
       textProperties.longShadow.width,
       textProperties.longShadow.color
     )}`;
-  } else if (textProperties.textShadow) {
-    textShadow = formatTextShadow(textProperties.textShadow);
   }
 
+  if (textProperties.textShadow && textProperties.textShadow.blur > 0) {
+    filterTextShadow = formatTextShadow(textProperties.textShadow);
+  }
+
+  console.log(textShadow);
 
   const containerStyles: CSSProperties = {
     height: `${textProperties.height}px`,
@@ -38,7 +37,6 @@ export default function TextAsset(props: TextAssetProps) {
     // height: `${textProperties.height * pixelScaleFactor}px`,
     backgroundColor: textProperties.backgroundColor,
     padding: `${textProperties.padding}px`,
-    textShadow: textShadow,
     borderRadius: `${textProperties.borderRadius}px`,
     border: textProperties.border && formatBorder(textProperties.border, 1),
     display: "flex",
@@ -68,13 +66,33 @@ export default function TextAsset(props: TextAssetProps) {
   }
 
   const textStyles: CSSProperties = {
-    color: textProperties.color,
+    backgroundColor: textProperties.color,
+    backgroundImage: textProperties.color,
     font: `${textProperties.fontWeight} ${textProperties.fontSize}px ${textProperties.fontFamily}`,
+    WebkitTextFillColor: "transparent",
+    WebkitBackgroundClip: "text",
+    backgroundClip: "text", // Standard property, as a fallback
+    backgroundSize: "cover",
+    filter: `drop-shadow(${filterTextShadow})`,
+    margin: 0,
+    position: "absolute",
+  };
+
+  const shadowStyles: CSSProperties = {
+    ...textStyles,
+    // color: "transparent", // Makes the text itself transparent
+    WebkitTextFillColor: "", // Remove the transparent fill
+    WebkitBackgroundClip: "", // Remove the background clip
+    backgroundClip: "", // Standard property, as a fallback
+    textShadow,
+    backgroundColor: "transparent",
+    color: "transparent",
   };
 
   return (
     <div style={containerStyles}>
-      <span style={textStyles}>{text.text}</span>
+      <h1 style={shadowStyles}>{text.text}</h1>
+      <h1 style={textStyles}>{text.text}</h1>
     </div>
   );
 }
