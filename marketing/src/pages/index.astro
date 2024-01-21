@@ -1,0 +1,149 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FeatureList from "../components/FeatureList.tsx";
+import Wave from "../components/Wave.tsx";
+import Header from "../components/Header.tsx";
+import LaurelPraise from "../components/LaurelPraise.tsx";
+import Testimonial from "../components/Testimonial.tsx";
+import Footer from "../components/Footer.tsx";
+---
+
+<Layout title="Simple Thumbnail">
+  <main>
+    <Header
+      blogHref="https://blog.simplethumbnail.com"
+      loginHref="https://app.simplethumbnail.com"
+    />
+
+    <div id="top-section">
+      <div class="column">
+        <h1>Create high-quality thumbnails with</h1>
+        <h1><span class="text-gradient">SimpleThumbnail</span></h1>
+        <button id="cta-button"
+          ><a href="https://app.simplethumbnail.com">Start Creating</a></button
+        >
+        <LaurelPraise />
+      </div>
+    </div>
+
+    <Wave direction="up" fill="#08d087" />
+    <div id="middle-section">
+      <FeatureList />
+    </div>
+    <Wave direction="down" fill="rgba(16, 160, 120, 0.33" />
+
+    <div class="flex justify-center">
+      <div class="m-8">
+        <Testimonial
+          name="Alex Andonian"
+          text=" Wow I just love Simple Thumbnail! It is an amazing app. I replaced my editor now that I can easily create thumbnails myself."
+          imageSrc="/ando_headshot.jpeg"
+          position="left"
+        />
+      </div>
+      <div class="m-8">
+        <Testimonial
+          name="Alex Andonian"
+          text=" Wow I just love Simple Thumbnail! It is an amazing app. I replaced my editor now that I can easily create thumbnails myself."
+          imageSrc="/ando_headshot.jpeg"
+          position="center"
+        />
+      </div>
+      <div class="m-8">
+        <Testimonial
+          name="Alex Andonian"
+          text=" Wow I just love Simple Thumbnail! It is an amazing app. I replaced my editor now that I can easily create thumbnails myself."
+          imageSrc="/ando_headshot.jpeg"
+          position="right"
+        />
+      </div>
+    </div>
+
+    <Footer />
+  </main>
+</Layout>
+
+<style>
+  main {
+    color: black;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    margin: 0.5rem;
+  }
+
+  @keyframes gleam {
+    0% {
+      background-position: 0% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .text-gradient {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: gleam 3s linear forwards;
+  }
+
+  #login-button a {
+    background: rgb(var(--accent));
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: black;
+  }
+
+  .header-button a:hover {
+    color: rgb(var(--accent));
+    border-bottom: 0.1rem solid rgb(var(--accent));
+  }
+
+  #top-section {
+    margin: 0.5rem;
+  }
+
+  #cta-button {
+    background: var(--accent-gradient);
+    background-size: 200% 100%;
+    background-position: 0%;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+
+    margin-top: 1rem;
+    animation: gleam 3s linear 3s forwards;
+    cursor: pointer;
+  }
+
+  #cta-button a {
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+  }
+
+  #middle-section {
+    background: linear-gradient(
+      rgb(var(--accent)),
+      rgba(var(--accent-light), 33%)
+    );
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
