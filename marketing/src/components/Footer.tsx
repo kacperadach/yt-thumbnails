@@ -1,12 +1,6 @@
 import { MdOutlineCopyright } from "react-icons/md";
 
-interface FooterProps {
-  termsLink: string;
-  privacyLink: string;
-}
-
-export default function Footer(props: FooterProps) {
-  const { termsLink, privacyLink } = props;
+export default function Footer() {
   return (
     <div className="w-full flex bg-brand p-6 justify-center text-white">
       <div className="w-auto">

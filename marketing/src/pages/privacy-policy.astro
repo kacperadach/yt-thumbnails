@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.tsx";
+import Footer from "../components/Footer.tsx";
+import PrivacyPolicyComponent from "../components/PrivacyPolicy";
+---
+
+<Layout title="Simple Thumbnail Privacy Policy}">
+    <Header
+        blogHref="https://blog.simplethumbnail.com"
+        loginHref="https://app.simplethumbnail.com"
+    />
+    <main>
+        <div class="flex flex-col items-center  mt-16">
+            <h1 class="text-4xl font-bold">Privacy Policy</h1>
+            <PrivacyPolicyComponent />
+        </div>
+    </main>
+    <Footer />
+</Layout>
+
+
+<style>
+    main {
+     flex-grow: 1;
+    }
+
+</style>

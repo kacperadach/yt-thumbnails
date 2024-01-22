@@ -58,11 +58,11 @@ export default function Subscription(props: SubscriptionProps) {
             label="Custom Templates"
           />
 
-          {/* <SubscriptionFeature
-          value={tier.aiImages}
-          isMonthly={true}
-          label="AI Generated Images"
-        /> */}
+          <SubscriptionFeature
+            value={tier.aiImages}
+            isMonthly={true}
+            label="AI Generated Images"
+          />
 
           <Flex justify="center" align="center" className="w-full" my="5">
             <Text weight="bold" size="9" mx="1">

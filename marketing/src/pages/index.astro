@@ -9,16 +9,15 @@ import Footer from "../components/Footer.tsx";
 ---
 
 <Layout title="Simple Thumbnail">
-  <main>
-    <Header
+   <Header
       blogHref="https://blog.simplethumbnail.com"
       loginHref="https://app.simplethumbnail.com"
     />
-
+  <main>
     <div id="top-section">
       <div class="column">
         <h1>Create high-quality thumbnails with</h1>
-        <h1><span class="text-gradient">SimpleThumbnail</span></h1>
+        <h1><span class="text-gradient text-gleam">SimpleThumbnail</span></h1>
         <button id="cta-button"
           ><a href="https://app.simplethumbnail.com">Start Creating</a></button
         >
@@ -35,32 +34,31 @@ import Footer from "../components/Footer.tsx";
     <div class="flex justify-center">
       <div class="m-8">
         <Testimonial
-          name="Alex Andonian"
-          text=" Wow I just love Simple Thumbnail! It is an amazing app. I replaced my editor now that I can easily create thumbnails myself."
-          imageSrc="/ando_headshot.jpeg"
+          name="Ethan Parker"
+          text="I just love how east to use Simple Thumbnail is! I can create stunning thumbnails in minutes with minimal effort."
+          imageSrc="/Ethan_Parker.png"
           position="left"
         />
       </div>
       <div class="m-8">
         <Testimonial
-          name="Alex Andonian"
-          text=" Wow I just love Simple Thumbnail! It is an amazing app. I replaced my editor now that I can easily create thumbnails myself."
-          imageSrc="/ando_headshot.jpeg"
+          name="Olivia Bennett"
+          text="Simple Thumbnail has everything you need to create amazing thumbnails. I love the ability to create custom templates."
+          imageSrc="/Olivia_Bennett.png"
           position="center"
         />
       </div>
       <div class="m-8">
         <Testimonial
-          name="Alex Andonian"
-          text=" Wow I just love Simple Thumbnail! It is an amazing app. I replaced my editor now that I can easily create thumbnails myself."
-          imageSrc="/ando_headshot.jpeg"
+          name="James Marshall"
+          text="The abiltiy to add AI generated images has been a game changer for me. Simple Thumbnail has saved me so much time and money!"
+          imageSrc="/James_Marshall.png"
           position="right"
         />
       </div>
     </div>
-
-    <Footer />
   </main>
+  <Footer />
 </Layout>
 
 <style>
@@ -79,22 +77,6 @@ import Footer from "../components/Footer.tsx";
     margin: 0.5rem;
   }
 
-  @keyframes gleam {
-    0% {
-      background-position: 0% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  .text-gradient {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% 100%;
-    animation: gleam 3s linear forwards;
-  }
 
   #login-button a {
     background: rgb(var(--accent));
@@ -115,7 +97,7 @@ import Footer from "../components/Footer.tsx";
 
   #cta-button {
     background: var(--accent-gradient);
-    background-size: 200% 100%;
+    background-size: 220% 100%;
     background-position: 0%;
     border: none;
     border-radius: 0.5rem;

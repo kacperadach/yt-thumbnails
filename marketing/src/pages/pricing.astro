@@ -1,0 +1,44 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.tsx";
+import Subscription from "../components/pricing/Subscription.tsx";
+import { STARTER_TIER, PRO_TIER, PREMIUM_TIER } from "../components/pricing/subscription.ts";
+import Footer from "../components/Footer.tsx";
+---
+
+<Layout title="Simple Thumbnail Pricing">
+    <Header
+        blogHref="https://blog.simplethumbnail.com"
+        loginHref="https://app.simplethumbnail.com"
+    />
+    <main>
+        <div class="m-auto mt-16">
+            <div class="flex-grow flex flex-col">
+                <div class="flex justify-center font-bold">
+                <h1 class="text-3xl">
+                    Unlock more powerful features with a SimpleThumbnail subscription
+                </h1>
+                </div>
+                <div class="flex mt-16 justify-center">
+                    <Subscription tier={STARTER_TIER} appUrl={"https://app.simplethumbnail.com"} client:only />
+                    <Subscription tier={PRO_TIER} recommended={true} appUrl={"https://app.simplethumbnail.com"} client:only />
+                    <Subscription tier={PREMIUM_TIER} appUrl={"https://app.simplethumbnail.com"} client:only />
+                </div>
+                <div class="flex justify-center w-full mt-16">
+                    <div class="w-64">
+                        <img src="/powered_by_stripe.png" alt="Powered by Stripe" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>
+
+
+<style>
+    main {
+     flex-grow: 1;
+    }
+
+</style>

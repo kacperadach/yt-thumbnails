@@ -17,13 +17,14 @@ export default function Testimonial(props: TestimonialProps) {
         position === "left" && "testimonial-left"
       } ${position === "right" && "testimonial-right"}`}
     >
-      <div className="w-full mb-2">
-        <RiDoubleQuotesL size="2rem" />
-      </div>
-
-      <p className="p-4 text-gray-600">{text}</p>
-      <div className="w-full my-2 flex justify-end">
-        <RiDoubleQuotesR size="2rem" />
+      <div style={{ minHeight: "20rem" }}>
+        <div className="w-full mb-2">
+          <RiDoubleQuotesL size="2rem" />
+        </div>
+        <p className="p-4 text-gray-600">{text}</p>
+        <div className="w-full my-2 flex justify-end">
+          <RiDoubleQuotesR size="2rem" />
+        </div>
       </div>
 
       <div className="relative h-24 flex flex-col">
@@ -38,7 +39,7 @@ export default function Testimonial(props: TestimonialProps) {
             d="M0,60 C240,120 240,0 480,60 C720,120 720,0 960,60 C1200,120 1200,0 1440,60 L1440,120 L0,120 Z"
           ></path>
         </svg>
-        <div className="bg-brand flex flex-1 text-white justify-center pt-6">
+        <div className="bg-brand flex flex-1 text-white justify-center pt-6 -my-1">
           <span>{name}</span>
         </div>
       </div>

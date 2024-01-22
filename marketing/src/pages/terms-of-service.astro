@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.tsx";
+import Footer from "../components/Footer.tsx";
+import TermsOfServiceComponent from "../components/TermsOfService";
+---
+
+<Layout title="Simple Thumbnail Terms of Service">
+    <Header
+        blogHref="https://blog.simplethumbnail.com"
+        loginHref="https://app.simplethumbnail.com"
+    />
+    <main>
+        <div class="flex flex-col items-center mt-16">
+            <h1 class="text-4xl font-bold">Terms of Service</h1>
+            <TermsOfServiceComponent />
+        </div>
+    </main>
+    <Footer />
+</Layout>
+
+
+<style>
+    main {
+     flex-grow: 1;
+    }
+
+</style>

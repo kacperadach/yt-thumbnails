@@ -17,7 +17,9 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <div class="layout-container">
+      <slot />
+    </div>
   </body>
 </html>
 <style is:global>
@@ -34,7 +36,8 @@ const { title } = Astro.props;
     color: black;
   }
   body {
-    margin: 0px;
+   
+    min-height: 100vh;
   }
   code {
     font-family:
@@ -47,4 +50,30 @@ const { title } = Astro.props;
       Courier New,
       monospace;
   }
+
+   @keyframes gleam {
+    0% {
+      background-position: 0% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+   .text-gradient {
+      background-image: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 100%;
+  }
+
+  .text-gleam {
+    animation: gleam 3s linear forwards;
+  }
+
+  .layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* This makes the Layout take the full viewport height */
+}
 </style>
