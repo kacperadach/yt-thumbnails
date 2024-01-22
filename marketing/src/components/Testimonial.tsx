@@ -1,5 +1,5 @@
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
-import "./Testimonial.css";
+import "./testimonial.css";
 
 interface TestimonialProps {
   name: string;

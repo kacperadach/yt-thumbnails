@@ -1,0 +1,22 @@
+runtime: nodejs18
+
+service: marketing
+
+handlers:
+  # Serve all static files with URL ending with a file extension
+  - url: /(.*\..+)$
+    static_files: dist/\1
+    upload: dist/(.*\..+)$
+  # Catch all handler to serve index.html
+  - url: /pricing
+    static_files: dist/pricing/index.html
+    upload: dist/pricing/index.html
+  - url: /privacy-policy
+    static_files: dist/privacy-policy/index.html
+    upload: dist/privacy-policy/index.html
+  - url: /terms-of-service
+    static_files: dist/terms-of-service/index.html
+    upload: dist/terms-of-service/index.html 
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html

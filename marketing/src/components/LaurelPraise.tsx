@@ -1,4 +1,4 @@
-import { BsStar, BsStarFill } from "react-icons/bs";
+import { BsStarFill } from "react-icons/bs";
 
 export default function LaurelPraise() {
   return (
@@ -6,11 +6,11 @@ export default function LaurelPraise() {
       <div className="absolute w-full h-full flex flex-col items-center justify-center text-sm font-bold">
         <span>#1 Thumbnail App</span>
         <div className="flex">
-            <BsStarFill />
-            <BsStarFill />
-            <BsStarFill />
-            <BsStarFill />
-            <BsStarFill />
+          <BsStarFill />
+          <BsStarFill />
+          <BsStarFill />
+          <BsStarFill />
+          <BsStarFill />
         </div>
       </div>
       <img src="/laurel.svg" alt="laurel" />

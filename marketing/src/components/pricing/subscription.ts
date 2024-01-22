@@ -1,20 +1,20 @@
-// export type Tier = {
-//   name: string;
-//   price: {
-//     monthly: number;
-//     yearly: number;
-//   };
-//   videos: number | "Unlimited";
-//   images: number | "Unlimited";
-//   aiImages: number | "Unlimited";
-//   aiLora: number | "Unlimited";
-//   renders: number | "Unlimited";
-//   customTemplates: number | "Unlimited";
-//   priceId: {
-//     monthly: string;
-//     yearly: string;
-//   };
-// };
+export type Tier = {
+  name: string;
+  price: {
+    monthly: number;
+    yearly: number;
+  };
+  videos: number | "Unlimited";
+  images: number | "Unlimited";
+  aiImages: number | "Unlimited";
+  aiLora: number | "Unlimited";
+  renders: number | "Unlimited";
+  customTemplates: number | "Unlimited";
+  priceId: {
+    monthly: string;
+    yearly: string;
+  };
+};
 
 export const STARTER_TIER: Tier = {
   name: "Starter",

@@ -2,6 +2,7 @@ import SubscriptionFeature from "./SubscriptionFeature";
 import { useState } from "react";
 import * as Switch from "@radix-ui/react-switch";
 import "./styles.css";
+import type { Tier } from "./subscription";
 
 interface SubscriptionProps {
   tier: Tier;
@@ -24,10 +25,10 @@ export default function Subscription(props: SubscriptionProps) {
           className="absolute w-auto bg-brand text-white top-0 -left-5 p-1 rounded-md z-20"
           style={{ transform: "rotate(-20deg)" }}
         >
-          <div weight="medium">Recommended</div>
+          <div className="text-medium">Recommended</div>
         </div>
       )}
-      <div style={{ minWidth: "25rem" }}>
+      <div style={{ minWidth: "20rem" }}>
         <div className="flex flex-col justify-center items-start px-4">
           <div className="flex justify-center items-center w-full">
             <div className="text-4xl my-4 text-gradient">{tier.name}</div>
@@ -110,7 +111,6 @@ export default function Subscription(props: SubscriptionProps) {
 
           <div className="flex justify-center items-center w-full px-10 my-8">
             <div
-              size="4"
               style={{ minWidth: "12rem" }}
               className="bg-brand text-white text-center p-2 rounded-lg text-2xl cursor-pointer"
             >
