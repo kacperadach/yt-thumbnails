@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, Query
 from sqlalchemy.orm import Session
 from db.models import get_db, User, Thumbnail
 from auth.auth import ValidUserFromJWT
@@ -36,15 +36,16 @@ async def create_thumbnail(
 
 @router.get("/v1/thumbnail")
 async def get_user_thumbnails(
+    thumbnail_id: list[str] = Query(None),
     db: Session = Depends(get_db),
     user: User = Depends(ValidUserFromJWT()),
 ):
-    return (
-        db.query(Thumbnail)
-        .filter(Thumbnail.user_id == user.id)
-        .order_by(Thumbnail.created_at.desc())
-        .all()
-    )
+    query = db.query(Thumbnail).filter(Thumbnail.user_id == user.id)
+
+    if thumbnail_id and len(thumbnail_id) > 0:
+        query = query.filter(Thumbnail.id.in_(thumbnail_id))
+
+    return query.order_by(Thumbnail.created_at.desc()).all()
 
 
 @router.put("/v1/thumbnail/{thumbnail_id}")

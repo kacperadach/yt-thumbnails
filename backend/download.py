@@ -201,6 +201,63 @@ def extract_clip(path, start, end):
     except ValueError as e:
         print(e)
 
+def extract_clip_2_step_mp4(path: str, start: int, end: int, buffer=30):
+    file_extension = os.path.splitext(path)[1]
+    intermediate_output_path = (
+        path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_intermediate" + file_extension
+    )
+    final_output_path = (
+        path.rsplit(".", 1)[0] + f"_{int(start)}_{int(end)}" + "_trimmed" + file_extension
+    )
+
+    # with tempfile.NamedTemporaryFile(suffix=file_extension, delete=True) as temp_file:
+    #     shutil.copy2(path, temp_file.name)
+    #     temp_input_path = temp_file.name
+    try:
+        # Step 1: Fast cut with buffer
+
+        adjusted_start_time = max(0, start - buffer)
+        adjusted_end_time = end + buffer
+        fast_cut_command = [
+            "ffmpeg",
+            "-i",
+            path,  # Input file
+            "-ss",
+            str(adjusted_start_time),  # Start time with buffer
+            "-to",
+            str(adjusted_end_time),  # End time with buffer
+            "-c",
+            "copy",  # Copy the stream directly, no re-encoding
+            intermediate_output_path,  # Intermediate output file
+        ]
+        subprocess.run(fast_cut_command, check=True)
+
+        # Step 2: Precise cut with re-encoding
+        precise_start_time = buffer if start > buffer else start
+        precise_end_time = end - start + buffer
+        precise_cut_command = [
+            "ffmpeg",
+            "-i",
+            intermediate_output_path,  # Intermediate file as input
+            "-ss",
+            str(precise_start_time),  # Adjusted start time for precise cut
+            "-to",
+            str(precise_end_time),  # Adjusted end time for precise cut
+            "-c:v",
+            "libx264",  # Re-encode video
+            "-c:a",
+            "aac",  # Re-encode audio
+            final_output_path,  # Final output file
+        ]
+        subprocess.run(precise_cut_command, check=True)
+
+        print(f"Clip extracted successfully to {final_output_path}")
+        return final_output_path
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+    except ValueError as e:
+        print(e)
+
 
 if __name__ == "__main__":
     # extract_clip("nicki.webm", 401, 402)
@@ -218,4 +275,7 @@ if __name__ == "__main__":
     #  1:58:13  3600 + 3480 + 13 = 7093
     #  1:58:54 3600 + 3480 + 54 = 7134
 
-    download_youtube_vod("https://www.youtube.com/watch?v=1RCMYG8RUSE")
+    # download_youtube_vod("https://www.youtube.com/watch?v=1RCMYG8RUSE")
+
+    # download_twitch_vod("https://www.twitch.tv/videos/2044459054", resolution=99999)
+    extract_clip_2_step_mp4("/tmp/video.mp4", 6452, 6493)

@@ -30,7 +30,11 @@ export default function Editor() {
         return;
       }
 
-      const response = await fetchThumbnails();
+      const thumbnailId = location.pathname
+        .replace("edit", "")
+        .replaceAll("/", "");
+
+      const response = await fetchThumbnails([thumbnailId]);
       if (!response.success) {
         return;
       }
@@ -38,9 +42,7 @@ export default function Editor() {
       thumbnails.value = response.data;
 
       if (!editingThumbnailId.value) {
-        editingThumbnailId.value = location.pathname
-          .replace("edit", "")
-          .replaceAll("/", "");
+        editingThumbnailId.value = thumbnailId;
       }
     };
 

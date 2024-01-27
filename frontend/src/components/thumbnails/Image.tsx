@@ -32,8 +32,6 @@ export default function ImageComponent(props: ImageProps) {
 
   const src = image.src || imageRes?.url || aiImageRes?.url;
 
-  console.log(src);
-
   return (
     <>
       {src !== image.src && (

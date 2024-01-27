@@ -23,7 +23,7 @@ import {
 import debounce from "lodash/debounce";
 import { Session } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
-import imglyRemoveBackground from "@imgly/background-removal";
+import imglyRemoveBackground, { preload } from "@imgly/background-removal";
 
 export type AlertMessage = {
   id: string;
@@ -108,13 +108,31 @@ effect(() => {
 
 const processingImagesIds = signal<string[]>([]);
 
+const preloadedImgly = signal(true);
+
+const imglyConfig = {
+  progress: (
+    args_0: string,
+    args_1: number,
+    args_2: number,
+    ...args_3: unknown[]
+  ) => console.log(args_0, args_1, args_2, ...args_3),
+  proxyToWorker: true,
+  publicPath: 'https://yt-thumbnail-assets.s3.amazonaws.com/imgly/',
+};
+
+// effect(() => {
+//   preload(imglyConfig);
+//   preloadedImgly.value = true;
+// });
+
 const makeBackgroundTransparent = (
   allImages: Array<AIImageResource | ImageResource>,
   imageType: "upload" | "ai",
   uploadFunction: (id: string, file: File) => Promise<any>,
   updateFunction: (newImage: AIImageResource | ImageResource) => void
 ) => {
-  if (!thumbnail.value) {
+  if (!thumbnail.value || !preloadedImgly.value) {
     return;
   }
 
@@ -146,7 +164,8 @@ const makeBackgroundTransparent = (
       return;
     }
 
-    imglyRemoveBackground(image.url, { progress: (p) => console.log(p) })
+    console.log("processing image", image.url);
+    imglyRemoveBackground(image.url, imglyConfig)
       .then((blob: Blob) => {
         // The result is a blob encoded as PNG. It can be converted to an URL to be used as HTMLImage.src
         // const url = URL.createObjectURL(blob);

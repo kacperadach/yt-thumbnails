@@ -69,8 +69,16 @@ type ThumbnailResource = {
   thumbnail: Thumbnail;
 };
 
-export async function fetchThumbnails(): Promise<ApiResponse> {
-  const apiResponse = await makeRequest(`${apiUrl}${THUMBNAIL_PATH}`);
+export async function fetchThumbnails(
+  thumbnailIds?: string[]
+): Promise<ApiResponse> {
+  let url = `${apiUrl}${THUMBNAIL_PATH}`;
+  if (thumbnailIds) {
+    url += "?";
+    url += thumbnailIds.map((id) => `thumbnail_id=${id}`).join("&");
+  }
+
+  const apiResponse = await makeRequest(url);
 
   if (!apiResponse.success) {
     return apiResponse;

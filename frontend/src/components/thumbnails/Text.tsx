@@ -64,9 +64,11 @@ export default function TextAsset(props: TextAssetProps) {
     }
   }
 
+  const isGradient = textProperties.color.includes('gradient');
+
   const textStyles: CSSProperties = {
-    backgroundColor: textProperties.color,
-    backgroundImage: textProperties.color,
+    backgroundColor: isGradient ? 'transparent' : textProperties.color,
+    backgroundImage: isGradient ? textProperties.color : 'none',
     font: `${textProperties.fontWeight} ${textProperties.fontSize}px ${textProperties.fontFamily}`,
     WebkitTextFillColor: "transparent",
     WebkitBackgroundClip: "text",
@@ -79,13 +81,13 @@ export default function TextAsset(props: TextAssetProps) {
 
   const shadowStyles: CSSProperties = {
     ...textStyles,
-    // color: "transparent", // Makes the text itself transparent
+    backgroundImage: "none",
+    color: "transparent",
     WebkitTextFillColor: "", // Remove the transparent fill
     WebkitBackgroundClip: "", // Remove the background clip
     backgroundClip: "", // Standard property, as a fallback
     textShadow,
     backgroundColor: "transparent",
-    color: "transparent",
   };
 
   return (
