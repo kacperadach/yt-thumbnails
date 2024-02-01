@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AlertBanner from "./components/layout/AlertBanner";
 import Editor from "./components/edit/Editor";
@@ -8,9 +7,6 @@ import Home from "./components/home/Home";
 import Navbar from "./components/layout/Navbar";
 import MarketingPage from "./marketing/MarketingPage";
 import { initializeAnalytics } from "./lib/ga";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa, ThemeMinimal } from "@supabase/auth-ui-shared";
-import { Spinner } from "react-bootstrap";
 import { showSubscriptionDialog, userSession } from "./lib/signals";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";

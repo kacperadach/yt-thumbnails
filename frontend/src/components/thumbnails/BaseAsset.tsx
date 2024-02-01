@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Image, Shape, Text, ThumbnailAsset } from "../../lib/types";
-import { getBaseCssProperties } from "../../lib/utils";
+import { getBaseCssProperties, getFilterEffects } from "../../lib/utils";
 import {
   selectedAssetId,
   selectedMenu,
@@ -14,6 +14,7 @@ import styles from "./baseAsset.module.css";
 import Draggable from "./Draggable";
 import { Flex, IconButton } from "@radix-ui/themes";
 import { FaArrowRotateLeft, FaArrowRotateRight } from "react-icons/fa6";
+import AssetContextMenu from "./AssetContextMenu";
 
 export type DragCorner =
   | "top-left"
@@ -26,11 +27,11 @@ interface BaseAssetProps {
   editable: boolean;
   pixelScaleFactor: number;
   containerRef?: React.RefObject<HTMLDivElement>;
-  marketing?: boolean;
+  isRender: boolean;
 }
 
 export default function BaseAsset(props: BaseAssetProps) {
-  const { asset, editable, pixelScaleFactor, containerRef, marketing } = props;
+  const { asset, editable, pixelScaleFactor, containerRef, isRender } = props;
 
   const [dragPosition, setDragPosition] = useState<{
     x: number;
@@ -62,9 +63,9 @@ export default function BaseAsset(props: BaseAssetProps) {
 
   let child;
   if (asset.type === "text") {
-    child = <TextAsset text={assetWithDragPosition as Text} />;
+    child = <TextAsset text={assetWithDragPosition as Text}  />;
   } else if (asset.type === "image") {
-    child = <ImageComponent image={assetWithDragPosition as Image} />;
+    child = <ImageComponent image={assetWithDragPosition as Image} isRender={isRender} />;
   } else if (asset.type === "shape") {
     child = <ShapeComponent shape={assetWithDragPosition as Shape} />;
   }
@@ -188,12 +189,12 @@ export default function BaseAsset(props: BaseAssetProps) {
     };
   }, [dragDimensions, handleCornerDragMouseMove, handleCornerDragMouseUp]);
 
+  const filterString = getFilterEffects(assetWithDragPosition);
+
   return (
     <div
       ref={assetContainerRef}
       className={`cursor-pointer select-none ${
-        marketing && "marketing-fade-in"
-      } ${
         editable &&
         selectedAssetId.value !== asset.id &&
         !isArrow &&
@@ -251,6 +252,7 @@ export default function BaseAsset(props: BaseAssetProps) {
               transform: "translate(-50%, -50%)",
               cursor: "nwse-resize",
               zIndex: 1000,
+              outline: "1px solid black",
             }}
             onMouseDown={(e) => handleCornerMouseDown(e, "top-left")}
           />
@@ -266,6 +268,7 @@ export default function BaseAsset(props: BaseAssetProps) {
               transform: "translate(50%, -50%)",
               cursor: "nesw-resize",
               zIndex: 1000,
+              outline: "1px solid black",
             }}
             onMouseDown={(e) => handleCornerMouseDown(e, "top-right")}
           />
@@ -281,6 +284,7 @@ export default function BaseAsset(props: BaseAssetProps) {
               transform: "translate(-50%, 50%)",
               cursor: "nesw-resize",
               zIndex: 1000,
+              outline: "1px solid black",
             }}
             onMouseDown={(e) => handleCornerMouseDown(e, "bottom-left")}
           />
@@ -296,6 +300,7 @@ export default function BaseAsset(props: BaseAssetProps) {
               transform: "translate(50%, 50%)",
               cursor: "nwse-resize",
               zIndex: 1000,
+              outline: "1px solid black",
             }}
             onMouseDown={(e) => handleCornerMouseDown(e, "bottom-right")}
           />
@@ -328,7 +333,10 @@ export default function BaseAsset(props: BaseAssetProps) {
             />
           </>
         )}
-        {child}
+
+        <AssetContextMenu assetId={asset.id} enabled={editable}>
+          <div style={{ filter: filterString }}>{child}</div>
+        </AssetContextMenu>
       </Draggable>
     </div>
   );

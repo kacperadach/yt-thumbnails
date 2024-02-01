@@ -8,6 +8,15 @@ const STEP_SIZE_MAP = {
   fontWeight: 100,
   edgeRoundness: 0.01,
   cornerRadius: 5,
+  blur: 0.5,
+  brightness: 0.1,
+  contrast: 10,
+  grayscale: 5,
+  hueRotate: 15,
+  invert: 5,
+  opacity: 5,
+  saturate: 10,
+  sepia: 5,
 };
 
 interface EditFieldProps {

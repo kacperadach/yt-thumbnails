@@ -10,12 +10,22 @@ import { useNavigate } from "react-router-dom";
 import Option from "./Option";
 import { Text } from "@radix-ui/themes";
 
-export default function Library() {
+interface LibraryProps {
+  selectedTab: "create" | "library";
+}
+
+export default function Library(props: LibraryProps) {
+  const { selectedTab } = props;
+
   const navigate = useNavigate();
 
   const [fetchedThumbnails, setFetchedThumbnails] = useState(false);
 
   useEffect(() => {
+    if (selectedTab !== "library" || fetchedThumbnails) {
+      return;
+    }
+
     const getThumbnails = async () => {
       homeLoading.value = true;
       const response = await fetchThumbnails();
@@ -27,7 +37,11 @@ export default function Library() {
     };
 
     getThumbnails();
-  }, []);
+  }, [selectedTab]);
+
+  if (selectedTab !== "library") {
+    return null;
+  }
 
   return (
     <Container fluid>

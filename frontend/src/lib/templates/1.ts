@@ -86,7 +86,8 @@ export default {
       x: 25,
       y: 50,
       width: EDITOR_WIDTH * 0.6,
-      aspectRatio: "1/1",
+      height: EDITOR_WIDTH * 0.6,
+
       zIndex: 1,
       border: {
         width: 16,
@@ -105,7 +106,8 @@ export default {
       type: "image",
       x: 80,
       y: 50,
-      width: EDITOR_WIDTH * 0.5,
+      width: EDITOR_WIDTH * 0.8,
+      height: EDITOR_HEIGHT * 0.9,
       zIndex: 4,
       src: DEFAULT_IMAGE_SRC,
     },

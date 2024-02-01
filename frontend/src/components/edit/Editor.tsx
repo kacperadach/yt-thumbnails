@@ -57,6 +57,7 @@ export default function Editor() {
       }
       const previewWidth = previewRef.current?.clientWidth;
       setPreviewWidth(previewWidth - remToPx(3));
+      // setPreviewWidth(1280);
     };
 
     setWidth();

@@ -15,7 +15,7 @@ export default function Header(props: HeaderProps) {
         }}
       >
         <a href="/">
-          <img src="/logo.png" alt="logo" className="w-full h-full" />
+          <img src="/logo.webp" alt="logo" className="w-full h-full" />
         </a>
       </div>
       <div className="flex mr-2">

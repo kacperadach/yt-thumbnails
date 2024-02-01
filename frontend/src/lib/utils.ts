@@ -5,6 +5,7 @@ import {
   Border,
   BoxShadow,
   DropShadow,
+  FilterEffects,
   Shape,
   TextShadow,
   Thumbnail,
@@ -82,7 +83,7 @@ export function getBaseCssProperties(
   }
 
   let baseCssProperties: CSSProperties = {
-    zIndex: asset.zIndex,
+    zIndex: Math.max(asset.zIndex, 0),
     width: `${width}px`,
     aspectRatio: asset.aspectRatio,
     transform: `rotate(${rotation}deg) scale(${pixelScaleFactor}) translate(-50%, -50%)`,
@@ -100,7 +101,57 @@ export function getBaseCssProperties(
   return baseCssProperties;
 }
 
+export function getFilterEffects(asset: FilterEffects) {
+  let effects: string[] = [];
+
+  if (asset.blur) {
+    effects.push(`blur(${asset.blur}px)`);
+  }
+
+  if (asset.brightness !== undefined && asset.brightness !== 1) {
+    effects.push(`brightness(${asset.brightness})`);
+  }
+
+  if (asset.contrast !== undefined && asset.contrast !== 100) {
+    effects.push(`contrast(${asset.contrast}%)`);
+  }
+
+  if (asset.dropShadow && asset.dropShadow.blur !== 0) {
+    effects.push(`drop-shadow(${formatDropShadow(asset.dropShadow)})`);
+  }
+
+  if (asset.grayscale) {
+    effects.push(`grayscale(${asset.grayscale}%)`);
+  }
+
+  if (asset.hueRotate) {
+    effects.push(`hue-rotate(${asset.hueRotate}deg)`);
+  }
+
+  if (asset.invert) {
+    effects.push(`invert(${asset.invert}%)`);
+  }
+
+  if (asset.opacity !== undefined && asset.opacity !== 100) {
+    effects.push(`opacity(${asset.opacity}%)`);
+  }
+
+  if (asset.saturate !== undefined && asset.saturate !== 100) {
+    effects.push(`saturate(${asset.saturate}%)`);
+  }
+
+  if (asset.sepia) {
+    effects.push(`sepia(${asset.sepia}%)`);
+  }
+
+  return effects.join(" ");
+}
+
 export function capitalizeFirstLetter(s: string) {
+  if (!s || s.length === 0) {
+    return s;
+  }
+
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
@@ -238,5 +289,22 @@ export function typeString(
       // Update the text with the current substring
       setter(str.substring(0, i + 1));
     }, timeInterval * i);
+  }
+}
+
+export function getOperatingSystem() {
+  const userAgent = window.navigator.userAgent;
+
+  // Check for Windows
+  if (userAgent.indexOf("Windows") !== -1) {
+    return "Windows";
+  }
+  // Check for MacOS
+  else if (userAgent.indexOf("Mac") !== -1) {
+    return "MacOS";
+  }
+  // Add additional checks here if needed (e.g., for Linux, iOS, Android)
+  else {
+    return "unknown";
   }
 }

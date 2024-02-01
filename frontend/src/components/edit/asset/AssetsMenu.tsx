@@ -40,17 +40,19 @@ import UploadedImageGallery from "../image/UploadedImageGallery";
 import { TEXT_STYLES } from "../../../lib/text/textStyles";
 import TextAsset from "../../thumbnails/Text";
 import AssetPreview from "./AssetPreview";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Tooltip } from "@radix-ui/themes";
+import FontSelect from "../FontSelect";
 
 export default function AssetsMenu() {
-  const [choices, setChoices] = useState<"text" | "image" | "shape" | null>(
-    null
-  );
-
   const fontUsed = thumbnail.value?.assets
     .filter((a) => a.type === "text")
     .map((a) => (a as Text).fontFamily)
     .find((a) => a !== undefined);
+
+  const [previewFont, setPreviewFont] = useState(fontUsed || "Arial");
+  const [choices, setChoices] = useState<"text" | "image" | "shape" | null>(
+    null
+  );
 
   const addAsset = (defaultObject: any) => {
     const id = uuidv4();
@@ -91,12 +93,14 @@ export default function AssetsMenu() {
       <div>
         <div className="flex justify-center w-full cursor-pointer my-2">
           {!isCreatingAsset.value && (
-            <div
-              className="p-3 border mx-2 hover:bg-gray-200"
-              onClick={() => (isCreatingAsset.value = true)}
-            >
-              <BsPlus size="2rem" />
-            </div>
+            <Tooltip content="Add New Asset" dir="top">
+              <div
+                className="p-3 border mx-2 hover:bg-gray-200"
+                onClick={() => (isCreatingAsset.value = true)}
+              >
+                <BsPlus size="2rem" />
+              </div>
+            </Tooltip>
           )}
           {isCreatingAsset.value && (
             <Row className="flex w-full justify-center flex">
@@ -149,59 +153,78 @@ export default function AssetsMenu() {
 
         {choices === "shape" && (
           <Row className="flex justify-center w-full">
-            <Flex
-              style={{ width: "fit-content" }}
-              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
-              direction="column"
-              justify="center"
-              align="center"
+            <Col
+              md={12}
+              className="flex justify-center hover:bg-gray-200 cursor-pointer rounded"
               onClick={() => {
                 addAsset(DEFAULT_CIRCLE_OBJECT);
               }}
             >
-              <FiCircle size="2rem" />
-              <label className="font-bold mx-2">Circle</label>
-            </Flex>
-
-            <Flex
-              style={{ width: "fit-content" }}
-              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
-              direction="column"
-              justify="center"
-              align="center"
+              <Flex
+                style={{ minWidth: "7rem" }}
+                className="p-3 m-2"
+                direction="column"
+                justify="center"
+                align="center"
+              >
+                <FiCircle size="2rem" />
+                <label className="font-bold mx-2">Circle</label>
+              </Flex>
+            </Col>
+            <Col
+              md={12}
+              className="flex justify-center hover:bg-gray-200 cursor-pointer rounded"
               onClick={() => {
                 addAsset(DEFAULT_ARROW_OBJECT);
               }}
             >
-              <RiArrowLeftUpFill size="2rem" />
-              <label className="font-bold mx-2 ">Arrow</label>
-            </Flex>
-            <Flex
-              style={{ width: "fit-content" }}
-              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
-              direction="column"
-              justify="center"
-              align="center"
+              <Flex
+                style={{ minWidth: "7rem" }}
+                className="p-3 m-2"
+                direction="column"
+                justify="center"
+                align="center"
+              >
+                <RiArrowLeftUpFill size="2rem" />
+                <label className="font-bold mx-2 ">Arrow</label>
+              </Flex>
+            </Col>
+            <Col
+              md={12}
+              className="flex justify-center hover:bg-gray-200 cursor-pointer rounded"
               onClick={() => {
                 addAsset(DEFAULT_RECTANGLE_OBJECT);
               }}
             >
-              <PiRectangleLight size="2rem" />
-              <label className="font-bold mx-2 ">Rectangle</label>
-            </Flex>
-            <Flex
-              style={{ width: "fit-content" }}
-              className="border p-3 m-2 hover:bg-gray-200 cursor-pointer"
-              direction="column"
-              justify="center"
-              align="center"
+              <Flex
+                style={{ minWidth: "7rem" }}
+                className="p-3 m-2"
+                direction="column"
+                justify="center"
+                align="center"
+              >
+                <PiRectangleLight size="2rem" />
+                <label className="font-bold mx-2 ">Rectangle</label>
+              </Flex>
+            </Col>
+            <Col
+              md={12}
+              className="flex justify-center hover:bg-gray-200 cursor-pointer rounded"
               onClick={() => {
                 addAsset(DEFAULT_TRIANGLE_OBJECT);
               }}
             >
-              <FiTriangle size="2rem" />
-              <label className="font-bold mx-2 ">Triangle</label>
-            </Flex>
+              <Flex
+                style={{ minWidth: "7rem" }}
+                className="p-3 m-2"
+                direction="column"
+                justify="center"
+                align="center"
+              >
+                <FiTriangle size="2rem" />
+                <label className="font-bold mx-2 ">Triangle</label>
+              </Flex>
+            </Col>
           </Row>
         )}
         {choices === "image" && (
@@ -217,33 +240,43 @@ export default function AssetsMenu() {
                 imageType,
               });
             }}
-            onBackClick={() => setChoices("image")}
+            onBackClick={() => setChoices(null)}
           />
         )}
 
         {choices === "text" && (
-          <Row>
-            {TEXT_STYLES.map((text, index) => {
-              const textCopy = { ...text };
-              if (fontUsed) {
-                textCopy.fontFamily = fontUsed;
-              }
+          <>
+            <Row>
+              <Col md={12}>
+                <Flex align="center">
+                  <label className="font-medium mr-2">Preview Font</label>
+                  <FontSelect
+                    selectedFont={previewFont}
+                    onUpdate={(font: string) => setPreviewFont(font)}
+                  />
+                </Flex>
+              </Col>
+            </Row>
+            <Row>
+              {TEXT_STYLES.map((text, index) => {
+                const textCopy = { ...text, fontFamily: previewFont };
 
-              return (
-                <Col md={12} key={index}>
-                  <div
-                    className="relative hover:bg-gray-200 cursor-pointer rounded"
-                    style={{ height: `${text.height}px` }}
-                    onClick={() => {
-                      addAsset(textCopy);
-                    }}
-                  >
-                    <AssetPreview asset={textCopy} />
-                  </div>
-                </Col>
-              );
-            })}
-          </Row>
+                return (
+                  <Col md={12} key={index}>
+                    <div
+                      className="relative hover:bg-gray-200 cursor-pointer rounded"
+                      style={{ height: "5rem" }}
+                      onClick={() => {
+                        addAsset(textCopy);
+                      }}
+                    >
+                      <AssetPreview asset={textCopy} />
+                    </div>
+                  </Col>
+                );
+              })}
+            </Row>
+          </>
         )}
 
         {!isCreatingAsset.value && (

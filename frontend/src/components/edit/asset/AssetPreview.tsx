@@ -26,6 +26,7 @@ export default function AssetPreview(props: AssetPreviewProps) {
         pixelScaleFactor={getPixelScaleFactor(
           previewDivRef.current?.clientWidth || 0
         )}
+        isRender={false}
       />
     </div>
   );

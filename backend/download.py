@@ -277,5 +277,5 @@ if __name__ == "__main__":
 
     # download_youtube_vod("https://www.youtube.com/watch?v=1RCMYG8RUSE")
 
-    # download_twitch_vod("https://www.twitch.tv/videos/2044459054", resolution=99999)
-    extract_clip_2_step_mp4("/tmp/video.mp4", 6452, 6493)
+    # download_twitch_vod("https://www.twitch.tv/videos/2047830688", resolution=99999)
+    extract_clip_2_step_mp4("video.mp4", 9275, 9308)

@@ -2,22 +2,37 @@ import { Thumbnail as RemotionThumbnail } from "@remotion/player";
 import { Video } from "remotion";
 import { Background, Image, Thumbnail } from "../../lib/types";
 import ImageComponent from "./Image";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { getFilterEffects } from "../../lib/utils";
+import { thumbnail } from "../../lib/signals";
 
 const MAX_ERROR_COUNT = 50;
 const FPS = 30;
 
 interface BackgroundProps {
-  marketing?: boolean;
   background: Background;
   width: number;
+  height: number;
+  isRender: boolean;
 }
 
 export default function BackgroundComponent(props: BackgroundProps) {
-  const { marketing, background, width } = props;
+  const { background, width, height, isRender } = props;
 
   const [videoSrc, setVideoSrc] = useState(background.videoSrc || "");
   const [errorCount, setErrorCount] = useState(0);
+
+  const zIndex = useMemo(() => {
+    const minZIndex = thumbnail.value?.assets.reduce((acc, asset) => {
+      return Math.min(acc, asset.zIndex);
+    }, 0);
+
+    if (!minZIndex) {
+      return 0;
+    }
+
+    return minZIndex - 1;
+  }, [thumbnail.value]);
 
   useEffect(() => {
     setVideoSrc(background.videoSrc || "");
@@ -41,6 +56,8 @@ export default function BackgroundComponent(props: BackgroundProps) {
     [videoSrc, width, background.videoSrc]
   );
 
+  const filterString = getFilterEffects(background);
+
   return (
     <>
       <div
@@ -50,11 +67,11 @@ export default function BackgroundComponent(props: BackgroundProps) {
           height: "100%",
           backgroundColor: background.color,
           backgroundImage: background.color,
+          zIndex,
         }}
       />
       {background.type === "video" && videoSrc && (
         <div
-          className={`${marketing && "marketing-fade-in"}`}
           style={{
             position: "absolute",
             width: "100%",
@@ -64,7 +81,8 @@ export default function BackgroundComponent(props: BackgroundProps) {
             top: `${background.y || 0}%`,
             left: `${background.x || 0}%`,
             transformOrigin: "top left",
-            zIndex: 0,
+            zIndex,
+            filter: filterString,
           }}
         >
           <RemotionThumbnail
@@ -85,11 +103,12 @@ export default function BackgroundComponent(props: BackgroundProps) {
             background: background.color,
             width: "100%",
             height: "100%",
-            zIndex: 0,
+            zIndex,
             transform: `translate(-50%, -50%) scale(${background.zoom || 1})`,
             top: `${background.y || 50}%`,
             left: `${background.x || 50}%`,
             transformOrigin: "50% 50%",
+            filter: filterString,
           }}
         >
           <ImageComponent
@@ -97,8 +116,11 @@ export default function BackgroundComponent(props: BackgroundProps) {
               {
                 src: background.src,
                 transparent: background.transparent,
+                width,
+                height,
               } as Image
             }
+            isRender={isRender}
           />
         </div>
       )}

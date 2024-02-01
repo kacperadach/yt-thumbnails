@@ -1,5 +1,5 @@
 import { Spinner } from "react-bootstrap";
-import SimpleThumbnail from "../../logo.png";
+import SimpleThumbnail from "../../logo.webp";
 import { Box, Flex } from "@radix-ui/themes";
 import { useState, useEffect } from "react";
 import { typeString } from "../../lib/utils";

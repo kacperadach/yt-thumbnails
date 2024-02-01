@@ -10,12 +10,13 @@ import { Thumbnail } from "../../lib/types";
 import { createThumbnail } from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 import SubscriptionDialog from "../subscription/SubscriptionDialog";
+import CreateThumbnail from "./CreateThumbnail";
 
 export default function Home() {
   const navigate = useNavigate();
 
-  const [selectedTab, setSelectedTab] = useState<"templates" | "library">(
-    "templates"
+  const [selectedTab, setSelectedTab] = useState<"create" | "library">(
+    "create"
   );
 
   const onTemplateSelect = async (template: Thumbnail, templateId?: string) => {
@@ -58,10 +59,14 @@ export default function Home() {
               </Flex>
             </Flex>
           )}
-          {selectedTab === "templates" && (
+          <CreateThumbnail
+            selectedTab={selectedTab}
+            onTemplateSelect={onTemplateSelect}
+          />
+          {/* {selectedTab === "templates" && (
             <Templates onTemplateSelect={onTemplateSelect} />
-          )}
-          {selectedTab === "library" && <Library />}
+          )} */}
+          <Library selectedTab={selectedTab} />
         </Col>
       </Row>
     </Container>

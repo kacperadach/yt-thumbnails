@@ -2,7 +2,12 @@ import { Text, Button, Flex } from "@radix-ui/themes";
 import { HiMiniSparkles } from "react-icons/hi2";
 import LabelAndField from "../LabelAndField";
 import SelectableImage from "./SelectableImage";
-import { AIImageResource, DropShadow, ImageResource } from "../../../lib/types";
+import {
+  AIImageResource,
+  DropShadow,
+  ImageOutline,
+  ImageResource,
+} from "../../../lib/types";
 import EditField from "../EditField";
 import UploadedImageGallery from "./UploadedImageGallery";
 import { useState } from "react";
@@ -11,7 +16,10 @@ import AIImageGenerator from "./AIImageGenerator";
 import { Accordion } from "react-bootstrap";
 import AccordionItem from "../AccordionItem";
 import EditMenu from "../EditMenu";
-import { DEFAULT_DROP_SHADOW_OBJECT } from "../../../lib/constants";
+import {
+  DEFAULT_DROP_SHADOW_OBJECT,
+  DEFAULT_IMAGE_OUTLINE,
+} from "../../../lib/constants";
 
 interface ImageMenuProps {
   selectedImageId: string;
@@ -23,6 +31,7 @@ interface ImageMenuProps {
   onUpdate: (value: any) => void;
   aiImageWidth?: number;
   aiImageHeight?: number;
+  imageOutline?: ImageOutline;
 }
 
 export default function ImageMenu(props: ImageMenuProps) {
@@ -36,6 +45,7 @@ export default function ImageMenu(props: ImageMenuProps) {
     onUpdate,
     aiImageWidth,
     aiImageHeight,
+    imageOutline,
   } = props;
 
   const [showImageGallery, setShowImageGallery] = useState(false);
@@ -74,7 +84,7 @@ export default function ImageMenu(props: ImageMenuProps) {
 
   return (
     <>
-      <Flex mb="4">
+      <Flex mt="4" mb="2">
         <Button
           className="w-full py-4"
           onClick={() => setShowImageGenerator(true)}
@@ -180,9 +190,26 @@ export default function ImageMenu(props: ImageMenuProps) {
               />
             }
           />
+          <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
+            <AccordionItem
+              value={"imageOutline"}
+              label={"Image Outline"}
+              body={
+                <EditMenu
+                  asset={imageOutline}
+                  defaultObject={DEFAULT_IMAGE_OUTLINE}
+                  onUpdate={(newFields: Object) => {
+                    onUpdate({
+                      imageOutline: { ...imageOutline, ...newFields },
+                    });
+                  }}
+                />
+              }
+            />
+          </div>
         </>
       )}
-      {dropShadow && (
+      {/* {dropShadow && (
         <div className="py-2 border-b-2 border-gray-200 cursor-pointer">
           <AccordionItem
             value={"dropShadow"}
@@ -198,7 +225,7 @@ export default function ImageMenu(props: ImageMenuProps) {
             }
           />
         </div>
-      )}
+      )} */}
 
       {showImageGallery && (
         <UploadedImageGallery

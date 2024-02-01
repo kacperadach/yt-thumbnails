@@ -1,13 +1,32 @@
-export type ThumbnailAsset = {
+export type FilterEffects = {
+  blur?: number;
+  brightness?: number;
+  contrast?: number;
+  dropShadow?: DropShadow;
+  grayscale?: number;
+  hueRotate?: number;
+  invert?: number;
+  opacity?: number;
+  saturate?: number;
+  sepia?: number;
+};
+
+export type ThumbnailAsset = FilterEffects & {
   id: string;
   type: "image" | "text" | "shape";
   x: number;
   y: number;
   width: number;
-  height?: number;
+  height: number;
   zIndex: number;
   rotation?: number;
   aspectRatio?: string;
+};
+
+export type ImageOutline = {
+  width: number;
+  color: string;
+  blur: number;
 };
 
 export type Image = ThumbnailAsset & {
@@ -15,8 +34,8 @@ export type Image = ThumbnailAsset & {
   src: string;
   imageId?: string;
   transparent?: boolean;
-  dropShadow?: DropShadow;
   imageType: "upload" | "ai";
+  imageOutline: ImageOutline;
 };
 
 export type Border = {
@@ -75,12 +94,13 @@ export type Text = ThumbnailAsset & {
   color?: string;
   longShadow?: LongShadow;
   textShadow?: TextShadow;
+  letterSpacing?: number;
 };
 
 export type Shape = ThumbnailAsset & {
   type: "shape";
   shapeType: "circle" | "arrow" | "rectangle" | "triangle";
-  dropShadow?: DropShadow;
+  // dropShadow?: DropShadow;
   boxShadow?: BoxShadow;
 };
 
@@ -122,7 +142,7 @@ export type Rectangle = Shape & {
   borderRight?: Border;
   borderBottom?: Border;
   borderLeft?: Border;
-  dropShadow?: DropShadow;
+  // dropShadow?: DropShadow;
 };
 
 export type Triangle = Shape & {
@@ -130,11 +150,11 @@ export type Triangle = Shape & {
   color: string;
   cornerRadius?: number;
   edgeRoundness?: number;
-  dropShadow?: DropShadow;
+  // dropShadow?: DropShadow;
   triangleBorder?: BorderWithoutStyle;
 };
 
-export type Background = {
+export type Background = FilterEffects & {
   type: "color" | "image" | "video";
   color?: string;
   imageId?: string;

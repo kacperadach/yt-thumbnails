@@ -126,6 +126,20 @@ export class TextShadowMulti implements ITextShadow {
 export const DEFAULT_LONG_SHADOW_PIXELS = 12;
 export const DEFAULT_FULL_LONG_SHADOW_PIXELS = 10;
 
+export function generateImageLongShadow(width: number, shadowColor: string) {
+  const shadows: TextShadow[] = [];
+  for (let i = 1; i <= width; i++) {
+    shadows.push(new TextShadow(`${i}px ${i}px 0px ${shadowColor}`));
+    shadows.push(new TextShadow(`${-i}px ${i}px 0px ${shadowColor}`));
+    shadows.push(new TextShadow(`${i}px ${-i}px 0px ${shadowColor}`));
+    shadows.push(new TextShadow(`${-i}px ${-i}px 0px ${shadowColor}`));
+
+
+  }
+
+  return new TextShadowMulti(shadows);
+}
+
 export function generateFullLongShadow(
   maxPixels: number = DEFAULT_FULL_LONG_SHADOW_PIXELS,
   shadowColor: string

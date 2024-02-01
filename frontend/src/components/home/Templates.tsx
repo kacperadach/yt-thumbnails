@@ -1,4 +1,4 @@
-import { Col, Row } from "react-bootstrap";
+import { Container, Col, Row } from "react-bootstrap";
 import { Thumbnail } from "../../lib/types";
 import { TEMPLATES } from "../../lib/templates/templates";
 import Option from "./Option";
@@ -43,67 +43,69 @@ export default function Templates(props: TemplatesProps) {
   }, [templateType]);
 
   return (
-    <div>
-      <Row className="my-2">
-        <Flex>
-          <Button
-            mx="2"
-            variant={templateType === "default" ? "solid" : "outline"}
-            onClick={() => setTemplateType("default")}
-          >
-            Default
-          </Button>
-          <Button
-            mx="2"
-            variant={templateType === "custom" ? "solid" : "outline"}
-            onClick={() => setTemplateType("custom")}
-          >
-            Custom
-          </Button>
-        </Flex>
-      </Row>
-      <Row className="flex">
-        {templates.value.length === 0 &&
-          fetchedTemplates &&
-          templateType === "custom" && (
-            <Col>
-              <div className="flex flex-column justify-center items-center">
-                <PiMaskSadLight size="5rem" className="text-brand-green" />
-                <h1 className="text-2xl font-bold text-center">
-                  No custom templates found
-                </h1>
-                <Text>
-                  To create a custom template, first create a Thumbnail and then
-                  save it as a template.
-                </Text>
-              </div>
-            </Col>
-          )}
+    <Container fluid>
+      <div>
+        <Row className="my-2">
+          <Flex>
+            <Button
+              mx="2"
+              variant={templateType === "default" ? "solid" : "outline"}
+              onClick={() => setTemplateType("default")}
+            >
+              Default
+            </Button>
+            <Button
+              mx="2"
+              variant={templateType === "custom" ? "solid" : "outline"}
+              onClick={() => setTemplateType("custom")}
+            >
+              Custom
+            </Button>
+          </Flex>
+        </Row>
+        <Row className="flex">
+          {templates.value.length === 0 &&
+            fetchedTemplates &&
+            templateType === "custom" && (
+              <Col>
+                <div className="flex flex-column justify-center items-center">
+                  <PiMaskSadLight size="5rem" className="text-brand-green" />
+                  <h1 className="text-2xl font-bold text-center">
+                    No custom templates found
+                  </h1>
+                  <Text>
+                    To create a custom template, first create a Thumbnail and
+                    then save it as a template.
+                  </Text>
+                </div>
+              </Col>
+            )}
 
-        {templateType === "custom" &&
-          templates.value.map((template, index) => {
-            return (
-              <Option
-                key={index}
-                thumbnailOption={template.template}
-                onSelect={() =>
-                  onTemplateSelect(template.template, template.id)
-                }
-              />
-            );
-          })}
+          {templateType === "custom" &&
+            templates.value.map((template, index) => {
+              return (
+                <Option
+                  key={index}
+                  thumbnailOption={template.template}
+                  onSelect={() =>
+                    onTemplateSelect(template.template, template.id)
+                  }
+                />
+              );
+            })}
 
-        {templateType === "default" &&
-          TEMPLATES.map((template, index) => {
-            return (
-              <Option
-                key={index}
-                thumbnailOption={template}
-                onSelect={onTemplateSelect}
-              />
-            );
-          })}
-      </Row>
-    </div>
+          {templateType === "default" &&
+            TEMPLATES.map((template, index) => {
+              return (
+                <Option
+                  key={index}
+                  thumbnailOption={template}
+                  onSelect={onTemplateSelect}
+                />
+              );
+            })}
+        </Row>
+      </div>
+    </Container>
   );
 }

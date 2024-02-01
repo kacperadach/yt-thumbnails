@@ -15,7 +15,7 @@ export default function Option(props: OptionProps) {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  console.log(containerRef.current?.clientWidth);
+  console.log(thumbnailOption);
 
   return (
     <Col

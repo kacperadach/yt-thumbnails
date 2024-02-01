@@ -41,6 +41,7 @@ export default function TextAsset(props: TextAssetProps) {
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+    position: "relative",
   };
 
   if (!textProperties.border) {
@@ -64,11 +65,11 @@ export default function TextAsset(props: TextAssetProps) {
     }
   }
 
-  const isGradient = textProperties.color.includes('gradient');
+  const isGradient = textProperties.color.includes("gradient");
 
   const textStyles: CSSProperties = {
-    backgroundColor: isGradient ? 'transparent' : textProperties.color,
-    backgroundImage: isGradient ? textProperties.color : 'none',
+    backgroundColor: isGradient ? "transparent" : textProperties.color,
+    backgroundImage: isGradient ? textProperties.color : "none",
     font: `${textProperties.fontWeight} ${textProperties.fontSize}px ${textProperties.fontFamily}`,
     WebkitTextFillColor: "transparent",
     WebkitBackgroundClip: "text",
@@ -77,6 +78,7 @@ export default function TextAsset(props: TextAssetProps) {
     filter: `drop-shadow(${filterTextShadow})`,
     margin: 0,
     position: "absolute",
+    letterSpacing: `${textProperties.letterSpacing}px`,
   };
 
   const shadowStyles: CSSProperties = {

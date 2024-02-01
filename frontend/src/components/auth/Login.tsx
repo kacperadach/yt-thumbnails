@@ -2,7 +2,7 @@ import { Box, Container, Flex, Link } from "@radix-ui/themes";
 import { supabase } from "../../lib/supabase";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa, ThemeMinimal } from "@supabase/auth-ui-shared";
-import SimpleThumbnail from "../../logo.png";
+import SimpleThumbnail from "../../logo.webp";
 
 export default function Login() {
   return (
@@ -17,7 +17,13 @@ export default function Login() {
     >
       <Box className="rounded-xl shadow-lg p-4 bg-white">
         <Flex align="center" justify="center">
-          <img src={SimpleThumbnail} alt="SimpleThumbnail" className="w-32 " />
+          <img
+            src={SimpleThumbnail}
+            alt="SimpleThumbnail"
+            className="w-32"
+            width="8rem"
+            height="8rem"
+          />
         </Flex>
         <Flex align="center" justify="center" className="my-2">
           <h2>

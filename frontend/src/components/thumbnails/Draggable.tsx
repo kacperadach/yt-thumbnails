@@ -122,9 +122,11 @@ export default function Draggable(props: DraggableProps) {
         flex: 1,
       }}
       onMouseDown={(e) => {
-        if (!dragEnabled) {
+        if (!dragEnabled || e.button === 2 || (e.button === 0 && e.ctrlKey)) {
           return;
         }
+        console.log("DRAGGING", e.button);
+
         e.stopPropagation();
 
         const boundingBox = (

@@ -13,6 +13,7 @@ import {
   BoxShadow,
   TextShadow,
   BorderWithoutStyle,
+  FilterEffects,
 } from "./types";
 
 export const APP_NAME = "Simple Thumbnail";
@@ -57,6 +58,13 @@ export const DEFAULT_LONG_SHADOW_OBJECT: LongShadow = {
   color: "black",
 };
 
+export const DEFAULT_EMPTY_DROP_OBJECT: DropShadow = {
+  x: 0,
+  y: 0,
+  blur: 0,
+  color: "black",
+};
+
 export const DEFAULT_DROP_SHADOW_OBJECT: DropShadow = {
   x: 0,
   y: 8,
@@ -77,6 +85,26 @@ export const DEFAULT_TEXT_SHADOW_OBJECT: TextShadow = {
   y: 8,
   blur: 8,
   color: "black",
+};
+
+export const EMPTY_TEXT_SHADOW_OBJECT: TextShadow = {
+  x: 0,
+  y: 0,
+  blur: 0,
+  color: "black",
+};
+
+export const DEFAULT_EMPTY_EFFECTS_OBJECT: FilterEffects = {
+  blur: 0,
+  brightness: 1,
+  contrast: 100,
+  dropShadow: DEFAULT_EMPTY_DROP_OBJECT,
+  grayscale: 0,
+  hueRotate: 0,
+  invert: 0,
+  opacity: 100,
+  saturate: 100,
+  sepia: 0,
 };
 
 export const DEFAULT_TEXT_OBJECT: Text = {
@@ -103,6 +131,14 @@ export const DEFAULT_TEXT_OBJECT: Text = {
   fontSize: 64,
   color: "white",
   textShadow: DEFAULT_TEXT_SHADOW_OBJECT,
+  letterSpacing: 0,
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
+};
+
+export const DEFAULT_IMAGE_OUTLINE = {
+  width: 0,
+  color: "black",
+  blur: 0,
 };
 
 export const DEFAULT_IMAGE_OBJECT: Image = {
@@ -111,12 +147,14 @@ export const DEFAULT_IMAGE_OBJECT: Image = {
   x: 50,
   y: 50,
   width: EDITOR_WIDTH * 0.2,
+  height: EDITOR_HEIGHT * 0.2,
   zIndex: 0,
   rotation: 0,
   src: DEFAULT_IMAGE_SRC,
   transparent: false,
-  dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
   imageType: "upload",
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
+  imageOutline: DEFAULT_IMAGE_OUTLINE,
 };
 
 export const DEFAULT_CIRCLE_OBJECT: Circle = {
@@ -133,8 +171,8 @@ export const DEFAULT_CIRCLE_OBJECT: Circle = {
   border: DEFAULT_BORDER_OBJECT,
   outline: DEFAULT_OUTLINE_OBJECT,
   backgroundColor: "transparent",
-  dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
   boxShadow: DEFAULT_BOX_SHADOW_OBJECT,
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
 };
 
 export const DEFAULT_ARROW_OBJECT: Arrow = {
@@ -143,8 +181,8 @@ export const DEFAULT_ARROW_OBJECT: Arrow = {
   shapeType: "arrow",
   x: 50,
   y: 50,
-  width: EDITOR_WIDTH * 0.3,
-  height: EDITOR_HEIGHT * 0.15,
+  width: EDITOR_WIDTH,
+  height: EDITOR_HEIGHT,
   zIndex: 0,
   rotation: 25,
   headWidth: 80,
@@ -155,17 +193,18 @@ export const DEFAULT_ARROW_OBJECT: Arrow = {
   headColor: "red",
   tailColor: "red",
   start: {
-    x: 0,
-    y: 0,
+    x: 30,
+    y: 180,
   },
   middle: {
-    x: 50,
-    y: 50,
+    x: 45,
+    y: 150,
   },
   end: {
-    x: 100,
-    y: 100,
+    x: 60,
+    y: 275,
   },
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
 };
 
 export const DEFAULT_RECTANGLE_OBJECT: Rectangle = {
@@ -186,6 +225,7 @@ export const DEFAULT_RECTANGLE_OBJECT: Rectangle = {
   borderLeft: EMPTY_BORDER_OBJECT,
   dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
   backgroundColor: "green",
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
 };
 
 export const DEFAULT_BORDER_WITHOUT_STYLE_OBJECT: BorderWithoutStyle = {
@@ -208,6 +248,7 @@ export const DEFAULT_TRIANGLE_OBJECT: Triangle = {
   dropShadow: DEFAULT_DROP_SHADOW_OBJECT,
   color: "yellow",
   triangleBorder: DEFAULT_BORDER_WITHOUT_STYLE_OBJECT,
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
 };
 
 export const TEMPLATE_PREVIEW_WIDTH = 25;
@@ -218,5 +259,10 @@ export const BLANK_TEMPLATE: Thumbnail = {
   background: {
     type: "color",
     color: "white",
+    ...DEFAULT_EMPTY_EFFECTS_OBJECT,
   },
 };
+
+// export const DEFAULT_EMPTY_TEXT_OBJECT: Text = {
+
+// }

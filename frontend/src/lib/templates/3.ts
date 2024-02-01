@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Thumbnail } from "../types";
-import { DEFAULT_IMAGE_SRC } from "../constants";
+import { DEFAULT_IMAGE_SRC, EDITOR_WIDTH } from "../constants";
 
 export default {
   id: uuidv4(),
@@ -15,12 +15,14 @@ export default {
       type: "image",
       x: 30.9,
       y: 52.3,
-      width: 800,
+      width: 768,
+      height: 768,
       zIndex: 1,
       rotation: 0,
       src: DEFAULT_IMAGE_SRC,
       transparent: false,
-      dropShadow: { blur: 42, color: "rgb(0, 0, 0)", x: 0, y: 0 },
+      // dropShadow: { blur: 42, color: "rgb(0, 0, 0)", x: 0, y: 0 },
+      imageOutline: { blur: 0, color: "white", width: 20 },
     },
     {
       id: uuidv4(),

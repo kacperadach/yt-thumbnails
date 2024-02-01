@@ -20,6 +20,7 @@ export default function ThumbnailRender() {
           thumbnail={thumbnail}
           width={EDITOR_WIDTH}
           editable={false}
+          isRender={true}
         />
       )}
       width={EDITOR_WIDTH}

@@ -38,13 +38,16 @@ import {
   loadGoogleFont,
 } from "../../lib/fonts";
 import BackgroundComponent from "./Background";
+import AssetContextMenu from "./AssetContextMenu";
+import Swal from "sweetalert2";
 
 export function ThumbnailComposition(props: Record<string, unknown>) {
-  const { thumbnail, width, editable, marketing = false } = props;
+  const { thumbnail, width, height, editable, isRender } = props;
 
   const { background, assets } = thumbnail as Thumbnail;
 
   const pixelScaleFactor = getPixelScaleFactor(width as number);
+
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -90,15 +93,20 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
       return;
     }
     const handleKeyPress = (event: any) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "c") {
-        // Control + C or Command + C
-        copiedAssetId.value = selectedAsset.value?.id || null;
-      }
-      if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+      // if ((event.ctrlKey || event.metaKey) && event.key === "c") {
+      //   // Control + C or Command + C
+      //   copiedAssetId.value = selectedAsset.value?.id || null;
+      // }
+      if ((event.ctrlKey || event.metaKey) && event.key === "d") {
         // Control + V or Command + V
-        if (!copiedAssetId.value) {
+        // if (!copiedAssetId.value) {
+        //   return;
+        // }
+
+        if (!selectedAssetId.value) {
           return;
         }
+        event.stopPropagation();
 
         thumbnails.value = thumbnails.value.map((t) => {
           if (t.id !== (thumbnail as Thumbnail).id) {
@@ -106,17 +114,16 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
           }
 
           const copiedAsset = t.assets.find(
-            (a) => a.id === copiedAssetId.value
+            (a) => a.id === selectedAssetId.value
           );
 
           const newAsset = {
-            ...copiedAsset,
+            ...selectedAsset.value,
             id: uuidv4(),
             x: (copiedAsset?.x || 0) + 1,
             y: (copiedAsset?.y || 0) + 1,
           };
 
-          copiedAssetId.value = newAsset.id;
           selectedAssetId.value = newAsset.id;
 
           return {
@@ -126,22 +133,40 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
         });
       }
 
-      if (event.key === "Delete") {
+      if (event.key === "Delete" || event.key === "Backspace") {
         // for Delete key
         if (!selectedAssetId.value) {
           return;
         }
-        thumbnails.value = thumbnails.value.map((t) => {
-          if (t.id !== (thumbnail as Thumbnail).id) {
-            return t;
-          }
 
-          return {
-            ...t,
-            assets: t.assets.filter((a) => {
-              return a.id !== selectedAssetId.value;
-            }),
-          };
+        if (document.activeElement?.tagName === "INPUT") {
+          // If it's an input, do nothing
+          return;
+        }
+
+        Swal.fire({
+          title: "Warning!",
+          text: "Are you sure you want to delete this asset?",
+          icon: "warning",
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+          showCancelButton: true,
+          confirmButtonColor: "#08d087",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            thumbnails.value = thumbnails.value.map((t) => {
+              if (t.id !== (thumbnail as Thumbnail).id) {
+                return t;
+              }
+
+              return {
+                ...t,
+                assets: t.assets.filter((a) => {
+                  return a.id !== selectedAssetId.value;
+                }),
+              };
+            });
+          }
         });
       }
 
@@ -240,17 +265,17 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
 
   return (
     <AbsoluteFill
-      className="border"
+      className="outline-black"
       style={{
-        backgroundColor: background.color,
         position: "relative",
       }}
       ref={containerRef}
     >
       <BackgroundComponent
-        marketing={marketing as boolean}
         background={background as Background}
         width={width as number}
+        height={height as number}
+        isRender={isRender as boolean}
       />
       <>
         {assets.map((asset) => {
@@ -261,7 +286,7 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
               editable={!!editable}
               pixelScaleFactor={pixelScaleFactor}
               containerRef={containerRef}
-              marketing={marketing as boolean}
+              isRender={isRender as boolean}
             />
           );
         })}
@@ -276,16 +301,15 @@ interface ThumbnailPreviewProps {
   width?: number;
   height?: number;
   selectedAssetId?: string;
-  marketing?: boolean;
 }
 
 export default function ThumbnailPreview(props: ThumbnailPreviewProps) {
-  const { thumbnail, width, height, editable, marketing } = props;
+  const { thumbnail, width, height, editable } = props;
 
   return (
     <RemotionThumbnail
       component={ThumbnailComposition}
-      inputProps={{ thumbnail, width, height, editable, marketing }}
+      inputProps={{ thumbnail, width, height, editable }}
       compositionWidth={Math.round(width || 1280)}
       compositionHeight={Math.round(height || 720)}
       frameToDisplay={0}

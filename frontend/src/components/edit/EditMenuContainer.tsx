@@ -15,17 +15,36 @@ import { MdOutlineTextFields } from "react-icons/md";
 import { RxBorderAll, RxImage } from "react-icons/rx";
 import { BsCardImage, BsTrash } from "react-icons/bs";
 import { FiCircle } from "react-icons/fi";
+import { FaMagic } from "react-icons/fa";
 import { RiArrowLeftUpFill } from "react-icons/ri";
 import { PiRectangleLight } from "react-icons/pi";
 import { FiTriangle } from "react-icons/fi";
 import ImageMenu from "./image/ImageMenu";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Tooltip } from "@radix-ui/themes";
+import Swal from "sweetalert2";
 
 const POSITIONING_GROUP = {
   icon: <FaArrowsUpDownLeftRight size="2rem" />,
   type: "positioning",
   fields: ["x", "y", "width", "height", "zIndex", "rotation"],
+};
+
+const EFFECTS_GROUP = {
+  icon: <FaMagic size="2rem" />,
+  type: "effects",
+  fields: [
+    "blur",
+    "brightness",
+    "contrast",
+    "dropShadow",
+    "grayscale",
+    "hueRotate",
+    "invert",
+    "opacity",
+    "saturate",
+    "sepia",
+  ],
 };
 
 const FIELDS_BY_TYPE = {
@@ -43,6 +62,7 @@ const FIELDS_BY_TYPE = {
       ],
     },
     POSITIONING_GROUP,
+    EFFECTS_GROUP,
   ],
   rectangle: [
     {
@@ -51,6 +71,7 @@ const FIELDS_BY_TYPE = {
       fields: ["width", "height", "backgroundColor"],
     },
     POSITIONING_GROUP,
+    EFFECTS_GROUP,
     {
       icon: <RxBorderAll size="2rem" />,
       type: "border",
@@ -83,6 +104,7 @@ const FIELDS_BY_TYPE = {
       ],
     },
     POSITIONING_GROUP,
+    EFFECTS_GROUP,
   ],
   circle: [
     {
@@ -99,14 +121,16 @@ const FIELDS_BY_TYPE = {
       ],
     },
     POSITIONING_GROUP,
+    EFFECTS_GROUP,
   ],
   image: [
     {
       icon: <BsCardImage size="2rem" />,
       type: "image",
-      fields: ["src", "transparent", "dropShadow"],
+      fields: ["src", "transparent", "imageOutline"],
     },
     POSITIONING_GROUP,
+    EFFECTS_GROUP,
   ],
   text: [
     {
@@ -117,19 +141,21 @@ const FIELDS_BY_TYPE = {
         "fontFamily",
         "fontSize",
         "fontWeight",
+        "letterSpacing",
         "color",
         "backgroundColor",
         "padding",
+        "longShadow",
+        "textShadow",
       ],
     },
     POSITIONING_GROUP,
+    EFFECTS_GROUP,
     {
       icon: <RxBorderAll size="2rem" />,
       type: "border",
       fields: [
         "borderRadius",
-        "longShadow",
-        "textShadow",
         "border",
         "borderLeft",
         "borderRight",
@@ -222,36 +248,53 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
               group.fields.some((field) => defaultObject[field] !== undefined)
             ) {
               return (
-                <div
-                  key={index}
-                  className={`p-3 border mx-2 ${
-                    fieldFilter === group.type && "bg-gray-200"
-                  }`}
-                  onClick={() => {
-                    if (group.type === "shape") {
-                      setFieldFilter((thumbnailAsset as Shape).shapeType);
-                    } else {
-                      setFieldFilter(group.type);
-                    }
-                  }}
-                >
-                  {group.icon}
-                </div>
+                <Tooltip content={capitalizeFirstLetter(group.type)} dir="top">
+                  <div
+                    key={index}
+                    className={`p-3 border mx-2 ${
+                      fieldFilter === group.type && "bg-gray-200"
+                    }`}
+                    onClick={() => {
+                      if (group.type === "shape") {
+                        setFieldFilter((thumbnailAsset as Shape).shapeType);
+                      } else {
+                        setFieldFilter(group.type);
+                      }
+                    }}
+                  >
+                    {group.icon}
+                  </div>
+                </Tooltip>
               );
             }
             return null;
           })}
           {handleDelete && (
-            <div
-              className={`p-3 border mx-2 bg-red-200`}
-              onClick={() => {
-                if (handleDelete) {
-                  handleDelete();
-                }
-              }}
-            >
-              <BsTrash size="2rem" />
-            </div>
+            <Tooltip content="Delete">
+              <div
+                className={`p-3 border mx-2 bg-red-200`}
+                onClick={() => {
+                  if (!handleDelete) {
+                    return;
+                  }
+                  Swal.fire({
+                    title: "Warning!",
+                    text: "Are you sure you want to delete this asset?",
+                    icon: "warning",
+                    confirmButtonText: "Delete",
+                    cancelButtonText: "Cancel",
+                    showCancelButton: true,
+                    confirmButtonColor: "#08d087",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      handleDelete();
+                    }
+                  });
+                }}
+              >
+                <BsTrash size="2rem" />
+              </div>
+            </Tooltip>
           )}
         </div>
       </div>
@@ -274,6 +317,7 @@ export default function EditMenuContainer(props: EditMenuContainerProps) {
             y={(thumbnailAsset as Image).y || 50}
             dropShadow={(thumbnailAsset as Image).dropShadow}
             onUpdate={onUpdate}
+            imageOutline={(thumbnailAsset as Image).imageOutline}
           />
         )}
       </Accordion.Root>

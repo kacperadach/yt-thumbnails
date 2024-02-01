@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import SimpleThumbnail from "../../logo.png";
+import SimpleThumbnail from "../../logo_small.webp";
 import { Container, Row, Col } from "react-bootstrap";
 import ProfileHeader from "../auth/ProfileHeader";
 import { APP_NAME } from "../../lib/constants";
@@ -27,8 +26,14 @@ export default function Navbar() {
             }}
             className="flex items-center no-underline cursor-pointer"
           >
-            <img src={SimpleThumbnail} alt="SimpleThumbnail" className="w-16" />
-            <div className="logoText">
+            <img
+              src={SimpleThumbnail}
+              alt="SimpleThumbnail"
+              className="w-16"
+              width={"4rem"}
+              height={"4rem"}
+            />
+            <div className="logoText text-2xl">
               <span>{APP_NAME}</span>
             </div>
           </div>

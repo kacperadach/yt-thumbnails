@@ -34,6 +34,10 @@ export default function EditMenu(props: EditMenuProps) {
     filterFields = Object.keys(defaultObject),
   } = props;
 
+  if (!asset) {
+    return null;
+  }
+
   return (
     <Container fluid className="my-2">
       {filterFields.map((key, index) => {
@@ -233,6 +237,7 @@ export default function EditMenu(props: EditMenuProps) {
             />
           );
         } else {
+          console.log(asset, key);
           fieldComponent = (
             <EditField
               key={index}

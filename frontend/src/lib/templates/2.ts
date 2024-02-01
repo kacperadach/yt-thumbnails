@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Thumbnail } from "../types";
-import { DEFAULT_IMAGE_SRC } from "../constants";
+import { DEFAULT_IMAGE_SRC, EDITOR_HEIGHT, EDITOR_WIDTH } from "../constants";
 
 export default {
   id: uuidv4(),
@@ -15,7 +15,8 @@ export default {
       type: "image",
       x: 50,
       y: 50,
-      width: 850,
+      width: EDITOR_WIDTH * 1,
+      height: EDITOR_HEIGHT * 1,
       zIndex: 3,
       rotation: 0,
       src: DEFAULT_IMAGE_SRC,

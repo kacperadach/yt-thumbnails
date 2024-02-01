@@ -106,7 +106,6 @@ export default function MarketingPage() {
                 width={previewWidth}
                 height={previewWidth * (9 / 16)}
                 editable={false}
-                marketing={true}
               />
             )}
           </div>

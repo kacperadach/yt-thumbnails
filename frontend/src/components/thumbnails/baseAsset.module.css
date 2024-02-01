@@ -34,8 +34,8 @@
     background: 
     repeating-linear-gradient(
       to bottom, 
-      white 0%, 
-      white 50%, 
+      grey 0%, 
+      grey 50%, 
       transparent 50%, 
       transparent 100%
     );
@@ -57,8 +57,8 @@
     background: 
     repeating-linear-gradient(
       to bottom, 
-      white 0%, 
-      white 50%, 
+      grey 0%, 
+      grey 50%, 
       transparent 50%, 
       transparent 100%
     );
@@ -80,8 +80,8 @@
     background: 
     repeating-linear-gradient(
       to left, 
-      white 0%, 
-      white 50%, 
+      grey 0%, 
+      grey 50%, 
       transparent 50%, 
       transparent 100%
     );
@@ -103,8 +103,8 @@
     background: 
     repeating-linear-gradient(
       to left, 
-      white 0%, 
-      white 50%, 
+      grey 0%, 
+      grey 50%, 
       transparent 50%, 
       transparent 100%
     );

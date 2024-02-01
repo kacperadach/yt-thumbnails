@@ -1,0 +1,42 @@
+import {
+  DEFAULT_LONG_SHADOW_OBJECT,
+  DEFAULT_TEXT_PLACEHOLDER,
+  DEFAULT_TEXT_SHADOW_OBJECT,
+  EDITOR_HEIGHT,
+  EDITOR_WIDTH,
+  EMPTY_BORDER_OBJECT,
+  DEFAULT_EMPTY_EFFECTS_OBJECT,
+  EMPTY_TEXT_SHADOW_OBJECT,
+} from "../constants";
+import { Text } from "../types";
+
+export default {
+  id: "",
+  type: "text",
+  x: 50,
+  y: 50,
+  width: EDITOR_WIDTH * 0.4,
+  height: EDITOR_HEIGHT * 0.2,
+  zIndex: 0,
+  rotation: 0,
+  text: DEFAULT_TEXT_PLACEHOLDER,
+  padding: 20,
+  backgroundColor: "transparent",
+  borderRadius: 15,
+  border: EMPTY_BORDER_OBJECT,
+  borderTop: EMPTY_BORDER_OBJECT,
+  borderRight: EMPTY_BORDER_OBJECT,
+  borderBottom: EMPTY_BORDER_OBJECT,
+  borderLeft: EMPTY_BORDER_OBJECT,
+  longShadow: {
+    width: 8,
+    color: "black",
+  },
+  fontFamily: "Arial",
+  fontWeight: 800,
+  fontSize: 64,
+  color: "white",
+  textShadow: EMPTY_TEXT_SHADOW_OBJECT,
+  letterSpacing: -2,
+  ...DEFAULT_EMPTY_EFFECTS_OBJECT,
+} as Text;

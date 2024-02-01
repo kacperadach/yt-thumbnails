@@ -5,10 +5,11 @@ import {
 } from "react-icons/hi";
 import { Thumbnail } from "../../lib/types";
 import { BLANK_TEMPLATE } from "../../lib/constants";
+import { PiImagesDuotone, PiPencilLineBold } from "react-icons/pi";
 
 interface HomeSidebarProps {
-  selectedTab: "templates" | "library";
-  setSelectedTab: (tab: "templates" | "library") => void;
+  selectedTab: "create" | "library";
+  setSelectedTab: (tab: "create" | "library") => void;
   onTemplateSelect: (template: Thumbnail) => void;
 }
 
@@ -18,15 +19,18 @@ export default function HomeSidebar(props: HomeSidebarProps) {
   return (
     <div className="flex-column rounded-xl shadow-lg">
       <div
-        className={`flex flex-column justify-center w-full items-center my-2 py-4 hover:bg-gray-200 rounded cursor-pointer `}
+        className={`flex flex-column justify-center w-full items-center my-2 py-4 hover:bg-gray-200 rounded cursor-pointer  ${
+          selectedTab === "create" && "bg-gray-200"
+        }`}
         onClick={() => {
-          onTemplateSelect(BLANK_TEMPLATE);
+          setSelectedTab("create");
+          // onTemplateSelect(BLANK_TEMPLATE);
         }}
       >
-        <HiPencilAlt size="3rem" />
-        <span>Start from Scratch</span>
+        <PiPencilLineBold size="3rem" />
+        <span className="font-medium">Create Thumbnail</span>
       </div>
-      <div
+      {/* <div
         className={`flex flex-column justify-center w-full items-center my-2 py-4 hover:bg-gray-200 rounded cursor-pointer ${
           selectedTab === "templates" && "bg-gray-200"
         }`}
@@ -36,7 +40,7 @@ export default function HomeSidebar(props: HomeSidebarProps) {
       >
         <HiOutlineTemplate size="3rem" />
         <span>Templates</span>
-      </div>
+      </div> */}
       <div
         className={`flex flex-column justify-center w-full items-center my-2 py-4 hover:bg-gray-200 rounded cursor-pointer ${
           selectedTab === "library" && "bg-gray-200"
@@ -45,8 +49,8 @@ export default function HomeSidebar(props: HomeSidebarProps) {
           setSelectedTab("library");
         }}
       >
-        <HiOutlineLibrary size="3rem" />
-        <span>Library</span>
+        <PiImagesDuotone size="3rem" />
+        <span className="font-medium">Library</span>
       </div>
     </div>
   );
