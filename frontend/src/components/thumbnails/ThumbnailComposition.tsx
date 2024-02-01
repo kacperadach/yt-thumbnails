@@ -34,7 +34,7 @@ import {
 import { useSignalEffect } from "@preact/signals-react";
 import {
   AVAILABLE_DEFAULT_FONTS,
-  GOOGLE_FONTS,
+  getAllGoogleFonts,
   loadGoogleFont,
 } from "../../lib/fonts";
 import BackgroundComponent from "./Background";
@@ -52,40 +52,45 @@ export function ThumbnailComposition(props: Record<string, unknown>) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useSignalEffect(() => {
-    const unloadedGoogleFonts = assets
-      .filter((a) => a.type === "text")
-      .map((a) => (a as Text).fontFamily)
-      .filter(
-        (f) =>
-          f &&
-          !AVAILABLE_DEFAULT_FONTS.includes(f) &&
-          !loadedFonts.value.includes(f)
-      ) as string[];
+    const loadFonts = async () => {
+      const unloadedGoogleFonts = assets
+        .filter((a) => a.type === "text")
+        .map((a) => (a as Text).fontFamily)
+        .filter(
+          (f) =>
+            f &&
+            !AVAILABLE_DEFAULT_FONTS.includes(f) &&
+            !loadedFonts.value.includes(f)
+        ) as string[];
 
-    if (unloadedGoogleFonts.length === 0) {
-      return;
-    }
-
-    const render = delayRender();
-
-    loadedFonts.value = [...loadedFonts.value, ...unloadedGoogleFonts];
-
-    const promises = unloadedGoogleFonts.map((font) => {
-      const fontOption = GOOGLE_FONTS.find((f) => f.fontFamily === font);
-      if (!fontOption) {
-        return Promise.resolve();
+      if (unloadedGoogleFonts.length === 0) {
+        return;
       }
-      return loadGoogleFont({
-        name: font,
-        fontFamily: fontOption.fontFamily,
-        import: fontOption.load,
-        type: "google",
-      });
-    });
 
-    Promise.all(promises).then(() => {
-      continueRender(render);
-    });
+      const render = delayRender();
+
+      loadedFonts.value = [...loadedFonts.value, ...unloadedGoogleFonts];
+
+      const googleFonts = await getAllGoogleFonts();
+
+      const promises = unloadedGoogleFonts.map((font) => {
+        const fontOption = googleFonts.find((f) => f.fontFamily === font);
+        if (!fontOption) {
+          return Promise.resolve();
+        }
+        return loadGoogleFont({
+          name: font,
+          fontFamily: fontOption.fontFamily,
+          import: fontOption.load,
+          type: "google",
+        });
+      });
+
+      Promise.all(promises).then(() => {
+        continueRender(render);
+      });
+    };
+    loadFonts();
   });
 
   useEffect(() => {

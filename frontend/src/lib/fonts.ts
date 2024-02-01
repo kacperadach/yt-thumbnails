@@ -1,5 +1,3 @@
-import { getAvailableFonts } from "@remotion/google-fonts";
-
 export const AVAILABLE_DEFAULT_FONTS = [
   "Arial",
   "Comic Sans MS",
@@ -30,7 +28,10 @@ export type FontOption = {
   isItalic?: boolean;
 };
 
-export const GOOGLE_FONTS: GoogleFont[] = getAvailableFonts();
+export async function getAllGoogleFonts() {
+  const { getAvailableFonts } = await import("@remotion/google-fonts");
+  return getAvailableFonts();
+}
 
 export async function getGoogleFontUrl(font: FontOption) {
   const loadedFont = await font.import();
@@ -69,7 +70,9 @@ export async function loadGoogleFont(font: FontOption) {
 }
 
 export async function loadIfGoogleFont(fontName: string) {
-  const font = GOOGLE_FONTS.find((f) => f.fontFamily === fontName);
+  const font = (await getAllGoogleFonts()).find(
+    (f) => f.fontFamily === fontName
+  );
   if (!font) {
     return;
   }

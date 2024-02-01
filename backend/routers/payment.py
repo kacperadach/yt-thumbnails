@@ -21,27 +21,27 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 PRODUCTS = [
     {
-        "price_id": "price_1OYDnoJt0yxdyPvTwGh2U1qJ",
+        "price_id": "price_1ObPcHJt0yxdyPvT5pl27vS9",
         "tier": SubscriptionTier.STARTER_MONTHLY,
     },
     {
-        "price_id": "price_1OYDoAJt0yxdyPvT566MRVcO",
+        "price_id": "price_1ObPcHJt0yxdyPvTzBo5d0xS",
         "tier": SubscriptionTier.STARTER_YEARLY,
     },
     {
-        "price_id": "price_1OYDomJt0yxdyPvTTG7tYXzj",
+        "price_id": "price_1ObPcEJt0yxdyPvTdBTHUusn",
         "tier": SubscriptionTier.PRO_MONTHLY,
     },
     {
-        "price_id": "price_1OYDoyJt0yxdyPvT98OG9r1i",
+        "price_id": "price_1ObPcEJt0yxdyPvTfNrCfZwW",
         "tier": SubscriptionTier.PRO_YEARLY,
     },
     {
-        "price_id": "price_1OYDpwJt0yxdyPvTSanqpPMc",
+        "price_id": "price_1ObPc9Jt0yxdyPvTj44eensX",
         "tier": SubscriptionTier.PREMIUM_MONTHLY,
     },
     {
-        "price_id": "price_1OYDq8Jt0yxdyPvTYdKEERI3",
+        "price_id": "price_1ObPc9Jt0yxdyPvTkcSpCKCt",
         "tier": SubscriptionTier.PREMIUM_YEARLY,
     },
 ]
@@ -57,7 +57,9 @@ def create_stripe_user(email: str):
 
 
 def find_product_by_price_id(price_id: str):
-    return next((product for product in PRODUCTS if product["price_id"] == price_id), None)
+    return next(
+        (product for product in PRODUCTS if product["price_id"] == price_id), None
+    )
 
 
 @router.post("/v1/payment/create-checkout-session/{price_id}")

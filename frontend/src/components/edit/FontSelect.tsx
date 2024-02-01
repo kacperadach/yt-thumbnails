@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import {
   AVAILABLE_DEFAULT_FONTS,
   FontOption,
-  GOOGLE_FONTS,
+  getAllGoogleFonts,
   getGoogleFontUrl,
   loadGoogleFont,
 } from "../../lib/fonts";
@@ -25,6 +25,16 @@ export default function FontSelect(props: FontSelectProps) {
   const [loadedFonts, setLoadedFonts] = useState<FontOption[]>([]);
   const [visibleFonts, setVisibleFonts] = useState<FontOption[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const [googleFonts, setGoogleFonts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const setFonts = async () => {
+      setGoogleFonts(await getAllGoogleFonts());
+    };
+
+    setFonts();
+  }, []);
 
   const observer = useRef<IntersectionObserver | null>(null);
   const loadedFontsRef = useRef(loadedFonts);
@@ -49,7 +59,7 @@ export default function FontSelect(props: FontSelectProps) {
         };
       }
     );
-    const googleFontOptions: FontOption[] = GOOGLE_FONTS.map((font) => {
+    const googleFontOptions: FontOption[] = googleFonts.map((font) => {
       return {
         name: font.fontFamily,
         fontFamily: font.fontFamily,
@@ -113,7 +123,7 @@ export default function FontSelect(props: FontSelectProps) {
     });
 
     return allFonts;
-  }, [searchQuery, fontFilter, fontsUsed]);
+  }, [searchQuery, fontFilter, fontsUsed, googleFonts]);
 
   const unloadFont = useCallback(
     async (font: FontOption) => {

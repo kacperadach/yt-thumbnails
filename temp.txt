@@ -58,3 +58,8 @@ Done:
 - order settings more logically, stuff like padding shouldnt be at the top
 - color picker should be in separate menu
 - edit menu needs to scroll, cant be scrolling page
+
+
+https://github.com/youtube/api-samples/blob/master/python/upload_thumbnail.py
+
+Recommendation for thumbnail bro: hard contrast (white borders around Rush) don't generate as many clicks anymore, the best practice is to over-sharpen the face and apply a slight blur and darken/lighten the contour around the person, instead of a hard solid contour.
