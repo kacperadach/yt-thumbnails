@@ -104,12 +104,14 @@ export default function Subscription(props: SubscriptionProps) {
               size="4"
               style={{ minWidth: "12rem" }}
               onClick={async () => {
-                const priceId =
-                  period === "monthly"
-                    ? tier.priceId.monthly
-                    : tier.priceId.yearly;
+                // const priceId =
+                //   period === "monthly"
+                //     ? tier.priceId.monthly
+                //     : tier.priceId.yearly;
                 setCreatingCheckoutSession(true);
-                const response = await createCheckoutSession(priceId);
+                const response = await createCheckoutSession(
+                  tier.name.toLowerCase() + "_" + period
+                );
                 if (response.success) {
                   window.location.href = response.data.url;
                 }

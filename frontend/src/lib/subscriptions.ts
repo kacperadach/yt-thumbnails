@@ -10,10 +10,10 @@ export type Tier = {
   aiLora: number | "Unlimited";
   renders: number | "Unlimited";
   customTemplates: number | "Unlimited";
-  priceId: {
-    monthly: string;
-    yearly: string;
-  };
+  // priceId: {
+  //   monthly: string;
+  //   yearly: string;
+  // };
 };
 
 export const STARTER_TIER: Tier = {
@@ -28,10 +28,10 @@ export const STARTER_TIER: Tier = {
   aiLora: 1,
   renders: 10,
   customTemplates: 10,
-  priceId: {
-    monthly: "price_1OYDnoJt0yxdyPvTwGh2U1qJ",
-    yearly: "price_1OYDoAJt0yxdyPvT566MRVcO",
-  },
+  // priceId: {
+  //   monthly: "price_1OYDnoJt0yxdyPvTwGh2U1qJ",
+  //   yearly: "price_1OYDoAJt0yxdyPvT566MRVcO",
+  // },
 };
 
 export const PRO_TIER: Tier = {
@@ -46,10 +46,10 @@ export const PRO_TIER: Tier = {
   aiLora: 1,
   renders: 100,
   customTemplates: 30,
-  priceId: {
-    monthly: "price_1OYDomJt0yxdyPvTTG7tYXzj",
-    yearly: "price_1OYDoyJt0yxdyPvT98OG9r1i",
-  },
+  // priceId: {
+  //   monthly: "price_1OYDomJt0yxdyPvTTG7tYXzj",
+  //   yearly: "price_1OYDoyJt0yxdyPvT98OG9r1i",
+  // },
 };
 
 export const PREMIUM_TIER: Tier = {
@@ -64,8 +64,8 @@ export const PREMIUM_TIER: Tier = {
   aiLora: 5,
   renders: "Unlimited",
   customTemplates: "Unlimited",
-  priceId: {
-    monthly: "price_1OYDpwJt0yxdyPvTSanqpPMc",
-    yearly: "price_1OYDq8Jt0yxdyPvTYdKEERI3",
-  },
+  // priceId: {
+  //   monthly: "price_1OYDpwJt0yxdyPvTSanqpPMc",
+  //   yearly: "price_1OYDq8Jt0yxdyPvTYdKEERI3",
+  // },
 };

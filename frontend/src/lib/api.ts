@@ -218,9 +218,9 @@ export async function fetchRender(renderId: string) {
   return await makeRequest(`${apiUrl}${RENDER_PATH}/${renderId}`);
 }
 
-export async function createCheckoutSession(priceId: string) {
+export async function createCheckoutSession(tier: string) {
   return await makeRequest(
-    `${apiUrl}${PAYMENT_PATH}/create-checkout-session/${priceId}`,
+    `${apiUrl}${PAYMENT_PATH}/create-checkout-session/${tier}`,
     "POST"
   );
 }

@@ -57,18 +57,20 @@ def create_stripe_user(email: str):
 
 
 def find_product_by_price_id(price_id: str):
-    return next(
-        (product for product in PRODUCTS if product["price_id"] == price_id), None
-    )
+    return next((product for product in PRODUCTS if product["price_id"] == price_id), None)
 
 
-@router.post("/v1/payment/create-checkout-session/{price_id}")
+def find_product_by_tier(tier: str):
+    return next((product for product in PRODUCTS if product["tier"].value == tier), None)
+
+
+@router.post("/v1/payment/create-checkout-session/{tier}")
 async def create_checkout_session(
-    price_id: str,
+    tier: str,
     user: User = Depends(ValidUserFromJWT()),
     db: Session = Depends(get_db),
 ):
-    product = find_product_by_price_id(price_id)
+    product = find_product_by_tier(tier)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
@@ -81,7 +83,7 @@ async def create_checkout_session(
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    "price": price_id,
+                    "price": product["price_id"],
                     "quantity": 1,
                 },
             ],
@@ -94,7 +96,7 @@ async def create_checkout_session(
                 "address": "auto",
             },
             metadata={
-                "price_id": price_id,
+                "price_id": product["price_id"],
                 "user_id": user.id,
             },
         )
